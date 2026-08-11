@@ -122,8 +122,12 @@ export const LangeyGrammar: React.FC<LangeyGrammarProps> = ({
   };
 
   const mdToHtml = (md: string): string => {
-    const escapeHtml = (s: string) => s.replace(/&/g, '&amp;').replace(/</g, '<').replace(/>/g, '>');
-    const formatInline = (s: string) => escapeHtml(s).replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>').replace(/\*(.*?)\*/g, '<em>$1</em>');
+    const escapeHtml = (s: string) =>
+      s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+    const formatInline = (s: string) =>
+      escapeHtml(s)
+        .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+        .replace(/\*(.*?)\*/g, '<em>$1</em>');
     const lines = md.split('\n');
     let inList = false;
     let inTable = false;
@@ -180,17 +184,17 @@ export const LangeyGrammar: React.FC<LangeyGrammarProps> = ({
 
       if (/^###\s+/.test(line)) {
         if (inList) { out += '</ul>'; inList = false; }
-        out += `<h3>${escapeHtml(line.replace(/^###\s+/, ''))}</h3>`;
+        out += `<h3>${formatInline(line.replace(/^###\s+/, ''))}</h3>`;
         continue;
       }
       if (/^##\s+/.test(line)) {
         if (inList) { out += '</ul>'; inList = false; }
-        out += `<h2>${escapeHtml(line.replace(/^##\s+/, ''))}</h2>`;
+        out += `<h2>${formatInline(line.replace(/^##\s+/, ''))}</h2>`;
         continue;
       }
       if (/^#\s+/.test(line)) {
         if (inList) { out += '</ul>'; inList = false; }
-        out += `<h1>${escapeHtml(line.replace(/^#\s+/, ''))}</h1>`;
+        out += `<h1>${formatInline(line.replace(/^#\s+/, ''))}</h1>`;
         continue;
       }
       if (/^\s*-\s+/.test(line)) {
@@ -1037,7 +1041,7 @@ export const LangeyGrammar: React.FC<LangeyGrammarProps> = ({
               <ExercisesTemplate {...getExerciseTemplateProps()} title={currentExerciseTitle} onTranslate={handleTranslate} />
             ) : isLectureVisible && topic !== 'None' ? (
               <div
-                className="mx-auto max-w-[680px] py-1 text-left text-sm leading-[1.7] text-[#222] max-lg:box-border max-lg:w-full max-lg:px-3 [&_h1]:my-2.5 [&_h1]:text-left [&_h2]:my-2.5 [&_h2]:text-left [&_h3]:my-2.5 [&_h3]:text-left [&_hr]:my-4 [&_hr]:border-0 [&_hr]:border-t [&_hr]:border-black/15 [&_li]:my-1 [&_ol]:my-2.5 [&_ol]:mb-3.5 [&_ol]:pl-[1.1rem] [&_ol]:list-outside [&_p]:my-2 [&_p]:text-left [&_ul]:my-2.5 [&_ul]:mb-3.5 [&_ul]:pl-[1.1rem] [&_ul]:list-outside"
+                className="mx-auto max-w-[680px] py-1 text-left text-sm leading-[1.7] text-[#222] max-lg:box-border max-lg:w-full max-lg:px-3 [&_b]:font-bold [&_em]:italic [&_h1]:my-2.5 [&_h1]:text-left [&_h1]:text-[1.35rem] [&_h1]:leading-snug [&_h1]:font-bold [&_h1]:text-[#111] [&_h2]:my-2.5 [&_h2]:text-left [&_h2]:text-[1.15rem] [&_h2]:leading-snug [&_h2]:font-bold [&_h2]:text-[#111] [&_h3]:my-2.5 [&_h3]:text-left [&_h3]:text-base [&_h3]:leading-snug [&_h3]:font-semibold [&_h3]:text-[#111] [&_hr]:my-4 [&_hr]:border-0 [&_hr]:border-t [&_hr]:border-black/15 [&_li]:my-1 [&_ol]:my-2.5 [&_ol]:mb-3.5 [&_ol]:pl-[1.1rem] [&_ol]:list-outside [&_p]:my-2 [&_p]:text-left [&_strong]:font-bold [&_ul]:my-2.5 [&_ul]:mb-3.5 [&_ul]:pl-[1.1rem] [&_ul]:list-outside"
                 dangerouslySetInnerHTML={{ __html: mdToHtml(lectureMarkdown) }}
               />
             ) : topic === 'None' ? (
