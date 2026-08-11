@@ -70,7 +70,7 @@ const CARD_STATUS_NEW = 'border-green-500/34 bg-green-500/12 text-green-700';
 const CARD_STATUS_REVISE = 'border-blue-500/34 bg-blue-500/12 text-blue-700';
 
 const GERMAN_CONTAINER =
-  'relative inline-flex items-center justify-center max-lg:static max-lg:w-full max-lg:flex-1 max-lg:justify-center max-lg:pt-10';
+  'relative inline-flex items-center justify-center max-lg:static max-lg:w-full max-lg:flex-1 max-lg:flex-col max-lg:justify-center max-lg:pt-10';
 
 const GERMAN_CONTAINER_ANSWER = 'max-lg:flex-none max-lg:pt-0';
 
@@ -80,7 +80,7 @@ const GERMAN_TEXT =
 const GERMAN_TEXT_WITH_ANSWER = 'mb-5';
 
 const PLAY_BTN =
-  'absolute top-[-75px] left-1/2 h-[50px] w-[50px] -translate-x-1/2 cursor-pointer border-0 bg-transparent opacity-95 hover:opacity-100 max-md:top-[-55px] max-md:h-10 max-md:w-10 max-lg:top-[15%] max-lg:h-[50px] max-lg:w-[50px]';
+  'absolute top-[-75px] left-1/2 flex h-[50px] w-[50px] -translate-x-1/2 cursor-pointer items-center justify-center border-0 bg-transparent opacity-95 hover:opacity-100 max-lg:relative max-lg:top-auto max-lg:left-auto max-lg:mb-3 max-lg:h-20 max-lg:w-20 max-lg:translate-x-0';
 
 const ENGLISH_TEXT =
   'text-[28px] font-medium text-[#666] max-lg:text-center max-lg:text-xl max-lg:font-normal';
@@ -379,7 +379,7 @@ export const LangeyVocabulary: React.FC<LangeyVocabularyProps> = ({
                 <div className={cx(GERMAN_CONTAINER, showAnswer && GERMAN_CONTAINER_ANSWER)}>
                   {showAnswer && currentCard && currentCard.german_sentence && currentCard.german_sentence.trim().length > 0 && (
                     <button className={PLAY_BTN} onClick={(e) => { e.stopPropagation(); handlePlayAudio(); }} aria-label="Play pronunciation">
-                      <svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true" className="block size-full fill-[#474747]">
+                      <svg width="40" height="40" viewBox="0 0 24 24" aria-hidden="true" className="block size-5 fill-[#474747] max-lg:size-10">
                         <polygon points="8,5 19,12 8,19" />
                       </svg>
                     </button>
