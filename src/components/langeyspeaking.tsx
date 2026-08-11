@@ -44,11 +44,11 @@ const ACTION_BTN = cx(
   'enabled:hover:-translate-y-px enabled:hover:from-[#333] enabled:hover:to-[#555]',
   'enabled:hover:shadow-[0_6px_10px_-1px_rgba(0,0,0,0.15),0_4px_6px_-1px_rgba(0,0,0,0.1)]',
   'enabled:active:translate-y-0 enabled:active:shadow-[0_2px_4px_-1px_rgba(0,0,0,0.1),0_1px_2px_-1px_rgba(0,0,0,0.06)]',
-  'disabled:cursor-not-allowed disabled:border disabled:border-black/10 disabled:bg-black/15 disabled:text-black/40',
+  'disabled:cursor-not-allowed disabled:border disabled:border-black/10 disabled:bg-none disabled:bg-black/15 disabled:text-black/40',
   'disabled:shadow-[0_2px_4px_-1px_rgba(0,0,0,0.06),0_1px_2px_-1px_rgba(0,0,0,0.04)]',
   '[&_svg]:h-4 [&_svg]:w-4 [&_svg]:transition-transform [&_svg]:duration-200',
-  'max-lg:!h-auto max-lg:!min-h-[46px] max-lg:!w-0 max-lg:!min-w-0 max-lg:flex-[1_1_0%] max-lg:!rounded-xl max-lg:!border-[#eee] max-lg:!bg-white max-lg:!px-2.5 max-lg:!py-3 max-lg:!text-sm max-lg:!font-medium max-lg:!text-[#333] max-lg:!shadow-none max-lg:enabled:hover:!translate-y-0',
-  'max-lg:disabled:!border-black/10 max-lg:disabled:!bg-black/15 max-lg:disabled:!text-black/40',
+  'max-lg:!h-auto max-lg:!min-h-[46px] max-lg:!w-0 max-lg:!min-w-0 max-lg:flex-[1_1_0%] max-lg:!rounded-xl max-lg:!border-[#eee] max-lg:bg-none max-lg:!bg-white max-lg:!px-2.5 max-lg:!py-3 max-lg:!text-sm max-lg:!font-medium max-lg:!text-[#333] max-lg:!shadow-none max-lg:enabled:hover:!translate-y-0',
+  'max-lg:disabled:!border-black/10 max-lg:disabled:bg-none max-lg:disabled:!bg-black/15 max-lg:disabled:!text-black/40',
   'max-sm:min-w-[80px] max-sm:flex-1 max-sm:px-3.5 max-sm:text-[13px]',
 );
 

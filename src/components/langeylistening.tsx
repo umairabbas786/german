@@ -62,10 +62,10 @@ const ACTION_BTN = cx(
   'bg-gradient-to-br from-black to-neutral-700 text-white shadow-md backdrop-blur-sm transition-all duration-300',
   'enabled:hover:-translate-y-px enabled:hover:from-neutral-700 enabled:hover:to-neutral-600 enabled:hover:shadow-lg',
   'enabled:active:translate-y-0 enabled:active:shadow-sm',
-  'disabled:cursor-not-allowed disabled:border-black/10 disabled:bg-black/15 disabled:text-black/40 disabled:shadow-sm',
+  'disabled:cursor-not-allowed disabled:border-black/10 disabled:bg-none disabled:bg-black/15 disabled:text-black/40 disabled:shadow-sm',
   'max-lg:min-h-[46px] max-lg:h-auto max-lg:min-w-0 max-lg:w-0 max-lg:flex-1 max-lg:basis-0',
-  'max-lg:rounded-xl max-lg:border-[#eee] max-lg:bg-white max-lg:px-2.5 max-lg:py-3 max-lg:text-sm max-lg:font-medium max-lg:text-[#333] max-lg:shadow-none',
-  'max-lg:enabled:hover:translate-y-0 max-lg:disabled:border-black/10 max-lg:disabled:bg-black/15 max-lg:disabled:text-black/40',
+  'max-lg:rounded-xl max-lg:border-[#eee] max-lg:bg-none max-lg:bg-white max-lg:px-2.5 max-lg:py-3 max-lg:text-sm max-lg:font-medium max-lg:text-[#333] max-lg:shadow-none',
+  'max-lg:enabled:hover:translate-y-0 max-lg:disabled:border-black/10 max-lg:disabled:bg-none max-lg:disabled:bg-black/15 max-lg:disabled:text-black/40',
   'max-sm:min-w-[80px] max-sm:flex-1 max-sm:px-3.5 max-sm:py-2 max-sm:text-[13px]',
 );
 
