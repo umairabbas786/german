@@ -73,7 +73,7 @@ const HINT_BAR = cx(
   'rounded-2xl border border-black/15 bg-[rgba(248,248,248,0.9)] p-4 px-5',
   'shadow-[0_8px_20px_-5px_rgba(0,0,0,0.1),0_6px_8px_-5px_rgba(0,0,0,0.04)] backdrop-blur-[12px]',
   'max-lg:fixed max-lg:inset-x-0 max-lg:bottom-0 max-lg:z-[420] max-lg:max-w-none',
-  'max-lg:min-h-[calc(100px+env(safe-area-inset-bottom,0px))] max-lg:rounded-none max-lg:border-0 max-lg:bg-white max-lg:p-6 max-lg:px-8 max-lg:pb-[calc(24px+env(safe-area-inset-bottom,0px))] max-lg:shadow-none max-lg:backdrop-blur-none',
+  'max-lg:min-h-[calc(100px+env(safe-area-inset-bottom,0px))] max-lg:rounded-none max-lg:border-0 max-lg:p-6 max-lg:px-8 max-lg:pb-[calc(24px+env(safe-area-inset-bottom,0px))] max-lg:shadow-none max-lg:backdrop-blur-none',
 );
 
 const HINT_BAR_PRACTICE = cx(

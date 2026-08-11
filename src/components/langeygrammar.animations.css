@@ -98,6 +98,18 @@
   opacity: 0.6;
 }
 
+@media (max-width: 1024px) {
+  .gg-glow-border,
+  .gg-glow-border-muted {
+    background: linear-gradient(90deg, #e2bea9, #b8b0d3) !important;
+  }
+
+  .gg-glow-border::before,
+  .gg-glow-border-muted::before {
+    display: none;
+  }
+}
+
 .gg-help-btn-glow::before {
   content: '';
   position: absolute;

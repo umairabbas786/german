@@ -87,11 +87,12 @@
 }
 
 @media (max-width: 1024px) {
+  .speaking-hint-glow-mobile {
+    background: linear-gradient(90deg, #e2bea9, #b8b0d3) !important;
+  }
+
   .speaking-hint-glow-mobile::before {
-    inset: 0;
-    border-radius: 0;
-    background: linear-gradient(90deg, #e2bea9, #b8b0d3);
-    animation: none;
+    display: none;
   }
 }
 

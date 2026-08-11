@@ -155,9 +155,9 @@ const HINT_BAR = cx(
   'bg-[rgba(248,248,248,0.9)] px-5 py-4 shadow-lg backdrop-blur-xl',
   'before:rounded-2xl before:opacity-80',
   GLOW_BORDER,
-  'max-lg:relative max-lg:inset-auto max-lg:bottom-auto max-lg:shrink-0 max-lg:overflow-hidden max-lg:rounded-none max-lg:border-0 max-lg:bg-white max-lg:px-8 max-lg:py-6',
+  'max-lg:relative max-lg:inset-auto max-lg:bottom-auto max-lg:shrink-0 max-lg:overflow-hidden max-lg:rounded-none max-lg:border-0 max-lg:bg-[linear-gradient(90deg,#e2bea9,#b8b0d3)] max-lg:px-8 max-lg:py-6',
   'max-lg:pb-[calc(24px+env(safe-area-inset-bottom,0px))] max-lg:shadow-none max-lg:backdrop-blur-none',
-  'max-lg:before:inset-0 max-lg:before:rounded-none max-lg:before:bg-gradient-to-r max-lg:before:from-[#e2bea9] max-lg:before:to-[#b8b0d3] max-lg:before:opacity-80 max-lg:before:z-0',
+  'max-lg:before:hidden',
 );
 
 const HINT_CONTENT = cx(
@@ -237,8 +237,8 @@ const STATS_HINT_BAR = cx(
   'before:rounded-[14px] before:opacity-60',
   GLOW_BORDER,
   'max-lg:fixed max-lg:inset-x-0 max-lg:bottom-0 max-lg:z-[420] max-lg:m-0 max-lg:max-w-none max-lg:min-h-[calc(100px+env(safe-area-inset-bottom,0px))]',
-  'max-lg:overflow-hidden max-lg:rounded-none max-lg:border-0 max-lg:bg-white max-lg:px-8 max-lg:py-6 max-lg:pb-[calc(24px+env(safe-area-inset-bottom,0px))] max-lg:shadow-none max-lg:backdrop-blur-none',
-  'max-lg:before:inset-0 max-lg:before:rounded-none max-lg:before:bg-gradient-to-r max-lg:before:from-[#e2bea9] max-lg:before:to-[#b8b0d3] max-lg:before:opacity-80 max-lg:before:z-0',
+  'max-lg:overflow-hidden max-lg:rounded-none max-lg:border-0 max-lg:bg-[linear-gradient(90deg,#e2bea9,#b8b0d3)] max-lg:px-8 max-lg:py-6 max-lg:pb-[calc(24px+env(safe-area-inset-bottom,0px))] max-lg:shadow-none max-lg:backdrop-blur-none',
+  'max-lg:before:hidden',
   'max-sm:mb-[calc(20px+env(safe-area-inset-bottom,10px))] max-sm:mt-11 max-sm:min-h-[75px] max-sm:px-4 max-sm:py-3',
 );
 

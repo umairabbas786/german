@@ -682,8 +682,8 @@ export const LangeyReading: React.FC<LangeyReadingProps> = ({
             <div className={cx(
               'relative m-0 flex w-full max-w-[800px] min-h-20 items-center justify-center rounded-2xl border border-black/15 bg-[rgba(248,248,248,0.9)] px-5 py-4 shadow-[0_8px_20px_-5px_rgba(0,0,0,0.1),0_6px_8px_-5px_rgba(0,0,0,0.04)] backdrop-blur-xl',
               'before:pointer-events-none before:absolute before:-inset-px before:-z-10 before:animate-settings-glow before:rounded-2xl before:bg-[linear-gradient(45deg,rgba(120,119,198,0.5),rgba(255,206,84,0.5),rgba(120,119,198,0.5),rgba(255,206,84,0.5))] before:bg-size-[400%_400%] before:opacity-80 before:content-[""]',
-              'max-lg:relative max-lg:max-w-none max-lg:flex-none max-lg:overflow-hidden max-lg:rounded-none max-lg:border-0 max-lg:bg-white max-lg:px-8 max-lg:py-6 max-lg:pb-[calc(24px+env(safe-area-inset-bottom,0px))] max-lg:shadow-none max-lg:backdrop-blur-none',
-              'max-lg:before:inset-0 max-lg:before:rounded-none max-lg:before:bg-[linear-gradient(90deg,#e2bea9,#b8b0d3)] max-lg:before:opacity-80',
+              'max-lg:relative max-lg:max-w-none max-lg:flex-none max-lg:overflow-hidden max-lg:rounded-none max-lg:border-0 max-lg:bg-[linear-gradient(90deg,#e2bea9,#b8b0d3)] max-lg:px-8 max-lg:py-6 max-lg:pb-[calc(24px+env(safe-area-inset-bottom,0px))] max-lg:shadow-none max-lg:backdrop-blur-none',
+              'max-lg:before:hidden',
               isFullscreen && 'hidden'
             )}>
               <div className="relative z-1 max-w-full text-center text-sm leading-normal font-bold break-words text-[#333] max-lg:w-full max-lg:max-w-none max-lg:text-base max-lg:font-normal max-lg:text-[#1a1a1a] max-lg:leading-6">
@@ -822,8 +822,8 @@ export const LangeyReading: React.FC<LangeyReadingProps> = ({
       <div className={cx(
         'relative mx-auto flex w-full max-w-[600px] min-h-[70px] items-center justify-center overflow-hidden rounded-[14px] border border-black/15 bg-[rgba(248,248,248,0.85)] px-5 py-4 shadow-[0_6px_16px_-4px_rgba(0,0,0,0.08),0_4px_6px_-2px_rgba(0,0,0,0.04)] backdrop-blur-[10px]',
         'before:pointer-events-none before:absolute before:-inset-px before:-z-10 before:animate-settings-glow before:rounded-[14px] before:bg-[linear-gradient(45deg,rgba(120,119,198,0.3),rgba(255,206,84,0.3),rgba(120,119,198,0.3),rgba(255,206,84,0.3))] before:bg-size-[400%_400%] before:opacity-60 before:content-[""]',
-        'max-lg:fixed max-lg:right-0 max-lg:bottom-0 max-lg:left-0 max-lg:z-[420] max-lg:mx-0 max-lg:max-w-none max-lg:min-h-[calc(100px+env(safe-area-inset-bottom,0px))] max-lg:rounded-none max-lg:border-0 max-lg:bg-white max-lg:px-8 max-lg:py-6 max-lg:pb-[calc(24px+env(safe-area-inset-bottom,0px))] max-lg:shadow-none max-lg:backdrop-blur-none',
-        'max-lg:before:inset-0 max-lg:before:rounded-none max-lg:before:bg-[linear-gradient(90deg,#e2bea9,#b8b0d3)] max-lg:before:opacity-80',
+        'max-lg:fixed max-lg:right-0 max-lg:bottom-0 max-lg:left-0 max-lg:z-[420] max-lg:mx-0 max-lg:max-w-none max-lg:min-h-[calc(100px+env(safe-area-inset-bottom,0px))] max-lg:rounded-none max-lg:border-0 max-lg:bg-[linear-gradient(90deg,#e2bea9,#b8b0d3)] max-lg:px-8 max-lg:py-6 max-lg:pb-[calc(24px+env(safe-area-inset-bottom,0px))] max-lg:shadow-none max-lg:backdrop-blur-none',
+        'max-lg:before:hidden',
         'max-sm:mt-11 max-sm:mb-[calc(20px+env(safe-area-inset-bottom,10px))] max-sm:min-h-[75px] max-sm:px-4 max-sm:py-3'
       )}>
         <div className="relative z-1 max-w-full text-center text-sm leading-normal font-bold break-words text-[#333] max-lg:w-full max-lg:max-w-none max-lg:text-base max-lg:font-normal max-lg:text-[#1a1a1a] max-lg:leading-6">

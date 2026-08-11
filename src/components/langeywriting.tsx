@@ -132,8 +132,8 @@ const HINT_BAR = cx(
   'shadow-[0_8px_20px_-5px_rgba(0,0,0,0.1),0_6px_8px_-5px_rgba(0,0,0,0.04)] backdrop-blur-xl',
   'before:content-[""] before:rounded-2xl before:opacity-80',
   GLOW_BORDER,
-  'max-lg:relative max-lg:inset-auto max-lg:bottom-auto max-lg:shrink-0 max-lg:overflow-hidden max-lg:rounded-none max-lg:border-0 max-lg:bg-white max-lg:px-8 max-lg:py-6 max-lg:pb-[calc(24px+env(safe-area-inset-bottom,0px))] max-lg:shadow-none max-lg:backdrop-blur-none',
-  'max-lg:before:inset-0 max-lg:before:rounded-none max-lg:before:bg-gradient-to-r max-lg:before:from-[#e2bea9] max-lg:before:to-[#b8b0d3] max-lg:before:opacity-80 max-lg:before:z-0',
+  'max-lg:relative max-lg:inset-auto max-lg:bottom-auto max-lg:shrink-0 max-lg:overflow-hidden max-lg:rounded-none max-lg:border-0 max-lg:bg-[linear-gradient(90deg,#e2bea9,#b8b0d3)] max-lg:px-8 max-lg:py-6 max-lg:pb-[calc(24px+env(safe-area-inset-bottom,0px))] max-lg:shadow-none max-lg:backdrop-blur-none',
+  'max-lg:before:hidden',
 );
 
 const HINT_BAR_STATS = cx(HINT_BAR, 'min-h-16 max-w-[600px] justify-between gap-3');
