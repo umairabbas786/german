@@ -840,9 +840,10 @@ export const LangeyLandingPage: React.FC = () => {
                 onReset={handleResetJourney}
               />
             )}
-            {mainTab !== 'settings' && (
-              <SettingsIconButton onClick={() => handleMainTabChange('settings')} />
-            )}
+            <SettingsIconButton
+              active={mainTab === 'settings'}
+              onClick={() => handleMainTabChange('settings')}
+            />
             {displayedRoadmapProgress !== null && renderRoadmapProgressPill()}
             {isFeatureTab && canShowStatsMode && (
               <button

@@ -389,7 +389,7 @@ export const Settings: React.FC<SettingsProps> = ({ level, onLevelChange }) => {
       </div>
 
       {/* Subscription Management */}
-      <div className="mt-[26px] max-sm:mt-0">
+      <div className="mt-[26px] mb-[26px] max-sm:mt-0 max-sm:mb-6">
         <h2 className="mb-[18px] text-left text-xs font-semibold tracking-wider text-gray-600 uppercase max-sm:mb-3 max-sm:text-[10px]">
           SUBSCRIPTION MANAGEMENT
         </h2>
