@@ -54,9 +54,9 @@ const ACTION_BTN = cx(
 
 const HELP_BTN = cx(
   ACTION_BTN,
-  'speaking-glow-border speaking-help-btn-mobile relative gap-1.5 !border-black/15 !bg-[rgba(248,248,248,0.9)] !text-black/80 backdrop-blur-[12px]',
+  'speaking-glow-border speaking-help-btn-mobile relative gap-1.5 !border-black/15 !bg-none !bg-[rgba(248,248,248,0.9)] !text-black/80 backdrop-blur-[12px]',
   'enabled:hover:!bg-[rgba(248,248,248,0.95)]',
-  'disabled:!border-black/15 disabled:!bg-[rgba(248,248,248,0.9)] disabled:!text-black/30 disabled:!opacity-100',
+  'disabled:!border-black/15 disabled:!bg-none disabled:!bg-[rgba(248,248,248,0.9)] disabled:!text-black/30 disabled:!opacity-100',
   'disabled:!shadow-[0_4px_6px_-1px_rgba(0,0,0,0.1),0_2px_4px_-1px_rgba(0,0,0,0.06)]',
   'max-lg:!border-transparent max-lg:!bg-gradient-to-r max-lg:!from-[#e2bea9] max-lg:!to-[#b8b0d3] max-lg:!text-black max-lg:enabled:hover:!bg-gradient-to-r max-lg:enabled:hover:!from-[#e2bea9] max-lg:enabled:hover:!to-[#b8b0d3]',
 );
@@ -947,9 +947,11 @@ export const LangeySpeaking: React.FC<LangeySpeakingProps> = ({
           <button
             className={cx(
               ACTION_BTN,
+              '!bg-none',
               isSessionActive
                 ? '!bg-white !text-[#D32F2F] enabled:hover:!bg-[#f5f5f5] enabled:hover:!text-[#B71C1C] max-lg:enabled:hover:!bg-white'
                 : '!bg-white !text-black enabled:hover:!bg-[#f5f5f5] enabled:hover:!text-black max-lg:enabled:hover:!bg-white',
+              'disabled:!bg-none disabled:!bg-black/15 disabled:!text-black/40',
             )}
             onClick={handleStartStop}
             disabled={(topic === 'None' && !customTopic) || isBlocked}
@@ -959,8 +961,8 @@ export const LangeySpeaking: React.FC<LangeySpeakingProps> = ({
           <button
             className={cx(
               ACTION_BTN,
-              '!bg-white !text-[#333] enabled:hover:!bg-[#f5f5f5] max-lg:enabled:hover:!bg-white',
-              'disabled:!border-black/20 disabled:!bg-white disabled:!text-black/30 disabled:!opacity-100 disabled:!shadow-[0_2px_4px_-1px_rgba(0,0,0,0.06)]',
+              '!bg-none !bg-white !text-[#333] enabled:hover:!bg-[#f5f5f5] max-lg:enabled:hover:!bg-white',
+              'disabled:!border-black/20 disabled:!bg-none disabled:!bg-white disabled:!text-black/30 disabled:!opacity-100 disabled:!shadow-[0_2px_4px_-1px_rgba(0,0,0,0.06)]',
             )}
             onClick={handleMuteUnmute}
             disabled={!isSessionActive}
