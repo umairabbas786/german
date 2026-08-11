@@ -6,6 +6,9 @@ export interface VocabularyProgressData {
   new: number;
 }
 
+const PIE_CHART_CONTAINER =
+  'size-[420px] max-md:size-60 max-[480px]:size-[210px] max-lg:size-[min(90vw,280px)] lg:max-[1366px]:size-[min(90vw,280px)]';
+
 export function VocabularyProgressChart({ data }: { data: VocabularyProgressData }) {
   const total = Math.max(data.done + data.learning + data.new, 1);
   const circumference = 2 * Math.PI * 45;
@@ -38,14 +41,44 @@ export function VocabularyProgressChart({ data }: { data: VocabularyProgressData
   }, [newStrokeTarget, learningStrokeTarget, doneStrokeTarget]);
 
   return (
-    <div className="lv-pie-chart-container">
-      <svg className="lv-pie-chart" viewBox="0 0 100 100">
-        <circle cx="50" cy="50" r="45" fill="none" stroke="#ef4444" strokeWidth="8"
-          strokeDasharray={`${redStroke} ${circumference}`} strokeDashoffset="0" transform="rotate(-90 50 50)" />
-        <circle cx="50" cy="50" r="45" fill="none" stroke="#3b82f6" strokeWidth="8"
-          strokeDasharray={`${blueStroke} ${circumference}`} strokeDashoffset={`-${newStrokeTarget}`} transform="rotate(-90 50 50)" />
-        <circle cx="50" cy="50" r="45" fill="none" stroke="#22c55e" strokeWidth="8"
-          strokeDasharray={`${greenStroke} ${circumference}`} strokeDashoffset={`-${newStrokeTarget + learningStrokeTarget}`} transform="rotate(-90 50 50)" />
+    <div className={PIE_CHART_CONTAINER}>
+      <svg className="size-full -rotate-90" viewBox="0 0 100 100">
+        <circle
+          cx="50"
+          cy="50"
+          r="45"
+          fill="none"
+          stroke="#ef4444"
+          strokeWidth="8"
+          className="transition-[stroke-dasharray,stroke-dashoffset] duration-1000 ease-in-out"
+          strokeDasharray={`${redStroke} ${circumference}`}
+          strokeDashoffset="0"
+          transform="rotate(-90 50 50)"
+        />
+        <circle
+          cx="50"
+          cy="50"
+          r="45"
+          fill="none"
+          stroke="#3b82f6"
+          strokeWidth="8"
+          className="transition-[stroke-dasharray,stroke-dashoffset] duration-1000 ease-in-out"
+          strokeDasharray={`${blueStroke} ${circumference}`}
+          strokeDashoffset={`-${newStrokeTarget}`}
+          transform="rotate(-90 50 50)"
+        />
+        <circle
+          cx="50"
+          cy="50"
+          r="45"
+          fill="none"
+          stroke="#22c55e"
+          strokeWidth="8"
+          className="transition-[stroke-dasharray,stroke-dashoffset] duration-1000 ease-in-out"
+          strokeDasharray={`${greenStroke} ${circumference}`}
+          strokeDashoffset={`-${newStrokeTarget + learningStrokeTarget}`}
+          transform="rotate(-90 50 50)"
+        />
       </svg>
     </div>
   );

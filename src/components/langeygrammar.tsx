@@ -1,7 +1,7 @@
 // langeygrammar.tsx
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { useLocation, useSearchParams } from 'react-router-dom';
-import './langeygrammar.css';
+import './langeygrammar.animations.css';
 import { UserTracker } from '../utils/userTracking';
 import { useDailyCredits } from '../contexts/DailyCreditsContext';
 import { ExercisesTemplate, ExerciseType } from './ExercisesTemplate';
@@ -20,6 +20,8 @@ import type { ExerciseAnswers, MultipleChoiceQuestion } from '../features/exerci
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore - allow JSON import
 import levelTopicsData from '../../data/all_grammar_topics.json';
+
+const cx = (...classes: Array<string | false | undefined>) => classes.filter(Boolean).join(' ');
 
 type Mode = LearnMode;
 
@@ -131,7 +133,7 @@ export const LangeyGrammar: React.FC<LangeyGrammarProps> = ({
 
     const flushTable = () => {
       if (!inTable || tableHeader.length === 0) return;
-      out += '<table class="gg-lecture-table"><thead><tr>';
+      out += '<table class="my-4 w-full border-collapse overflow-hidden rounded-lg bg-white/60 text-[13px] shadow-[0_2px_8px_rgba(0,0,0,0.06)] max-sm:my-3 max-sm:text-xs [&_tbody_tr:hover]:bg-[rgba(120,119,198,0.05)] [&_tbody_tr:last-child_td]:border-b-0 [&_tbody_tr_th]:border-r [&_tbody_tr_th]:border-black/[0.06] [&_tbody_tr_th]:bg-[rgba(120,119,198,0.08)] [&_tbody_tr_th]:font-semibold [&_tbody_tr_th]:text-[#333] [&_td]:border-b [&_td]:border-black/[0.08] [&_td]:px-3 [&_td]:py-2.5 [&_td]:leading-normal [&_td]:text-[#444] [&_th]:border-b-2 [&_th]:border-[rgba(120,119,198,0.3)] [&_th]:px-3 [&_th]:py-2.5 [&_th]:text-left [&_th]:text-xs [&_th]:font-semibold [&_th]:tracking-wide [&_th]:text-[#333] [&_th]:uppercase [&_thead]:bg-[rgba(120,119,198,0.15)] max-sm:[&_td]:px-2.5 max-sm:[&_td]:py-2 max-sm:[&_th]:text-[11px]"><thead><tr>';
       tableHeader.forEach(cell => {
         out += `<th>${formatInline(cell.trim())}</th>`;
       });
@@ -828,7 +830,11 @@ export const LangeyGrammar: React.FC<LangeyGrammarProps> = ({
     <>
       {/* Fullscreen close button (unchanged) */}
       {isFullscreen && (
-        <button className="gg-fullscreen-close" onClick={toggleFullscreen} title="Exit fullscreen">
+        <button
+          className="fixed top-5 right-5 z-[1002] flex h-11 w-11 cursor-pointer items-center justify-center rounded-full border border-black/20 bg-white/90 text-[#333] backdrop-blur-sm transition-all duration-200 hover:scale-105 hover:bg-white/95 hover:shadow-[0_4px_12px_rgba(0,0,0,0.15)] max-sm:top-[15px] max-sm:right-[15px] max-sm:h-10 max-sm:w-10"
+          onClick={toggleFullscreen}
+          title="Exit fullscreen"
+        >
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
             <path d="M18 6L6 18M6 6l12 12" />
           </svg>
@@ -836,14 +842,14 @@ export const LangeyGrammar: React.FC<LangeyGrammarProps> = ({
       )}
 
       {mode === 'LEARN' ? (
-        <div className="gg-practice gg-grammar-practice">
-          <div className="gg-practice-header">
-            <div className="gg-field-left">
-              <h1 className="gg-label">Grammar</h1>
-              <div className="gg-custom-selector" ref={selectorRef}>
+        <div className="flex min-h-[calc(100vh-150px)] min-h-[calc(100dvh-150px)] flex-col items-center justify-center p-5 pb-[calc(20px+env(safe-area-inset-bottom,0px))] max-lg:h-[calc(100dvh-54px)] max-lg:min-h-[calc(100dvh-54px)] max-lg:w-full max-lg:max-w-none max-lg:items-stretch max-lg:justify-start max-lg:gap-0 max-lg:overflow-hidden max-lg:p-0">
+          <div className={cx('flex w-full max-w-[800px] items-end justify-between gap-5 mb-6 max-sm:flex-col max-sm:items-stretch max-sm:gap-4 max-lg:mb-0 max-lg:block max-lg:w-full max-lg:max-w-none max-lg:flex-[0_0_auto] max-lg:bg-transparent max-lg:px-5 max-lg:pt-4 max-lg:pb-1', isFullscreen && 'hidden')}>
+            <div className="max-w-[50%] flex-1 text-left max-sm:max-w-full max-lg:w-full max-lg:max-w-none">
+              <h1 className="mb-1.5 block text-xs text-[#444] max-lg:hidden">Grammar</h1>
+              <div className="relative max-lg:mb-3 max-lg:w-full" ref={selectorRef}>
                 <button
                   type="button"
-                  className="gg-selector-trigger"
+                  className="flex w-full cursor-pointer items-center justify-between rounded-[10px] border border-black/15 bg-white px-3.5 py-2.5 text-[#222] max-lg:min-h-[46px] max-lg:rounded-xl max-lg:border-[#ccc] max-lg:px-4 max-lg:py-3 max-lg:text-base max-lg:font-normal max-lg:shadow-none [&_svg]:opacity-60"
                   onClick={() => setIsSelectorOpen((v) => !v)}
                 >
                   {topic === 'None' ? 'Select topic' : (topic.length > 40 ? topic.substring(0, 44) + '...' : topic)}
@@ -853,10 +859,13 @@ export const LangeyGrammar: React.FC<LangeyGrammarProps> = ({
                 </button>
 
                 {isSelectorOpen && !isMobileView && (
-                  <div className="gg-dropdown-panel">
-                    <ul className="gg-topic-list" role="listbox" aria-label="Grammar topics">
+                  <div className="absolute top-[calc(100%+8px)] right-0 left-0 z-30 max-h-[260px] overflow-y-auto rounded-xl border border-black/12 bg-white p-2 shadow-[0_10px_25px_-5px_rgba(0,0,0,0.1),0_10px_10px_-5px_rgba(0,0,0,0.04)] max-sm:hidden">
+                    <ul className="m-0 grid list-none gap-1.5 p-0 max-lg:max-h-none max-lg:pb-[30px]" role="listbox" aria-label="Grammar topics">
                       <li
-                        className={`gg-topic-item ${topic === 'None' ? 'selected' : ''}`}
+                        className={cx(
+                          'flex cursor-pointer items-center gap-2.5 rounded-[10px] px-2.5 py-2 hover:bg-[rgba(120,119,198,0.08)] max-lg:min-h-0 max-lg:rounded-none max-lg:border-b max-lg:border-[#f5f5f5] max-lg:bg-transparent max-lg:px-0 max-lg:py-3.5',
+                          topic === 'None' && 'bg-[rgba(120,119,198,0.12)] max-lg:bg-transparent',
+                        )}
                         role="option"
                         aria-selected={topic === 'None'}
                         onClick={() => {
@@ -864,14 +873,14 @@ export const LangeyGrammar: React.FC<LangeyGrammarProps> = ({
                           setIsSelectorOpen(false);
                         }}
                       >
-                        <div className="gg-topic-ring">
+                        <div className="relative flex h-8 w-8 items-center justify-center">
                           <svg width="32" height="32">
-                            <circle cx="16" cy="16" r="12" className="gg-ring-track" />
-                            <circle cx="16" cy="16" r="12" className="gg-ring-progress" style={{ strokeDasharray: `${2 * Math.PI * 12}`, strokeDashoffset: `${(1 - 0 / 100) * 2 * Math.PI * 12}` }} />
+                            <circle cx="16" cy="16" r="12" className="fill-none stroke-black/10 stroke-[3]" />
+                            <circle cx="16" cy="16" r="12" className="origin-[16px_16px] -rotate-90 fill-none stroke-black/80 stroke-[3] [stroke-linecap:round]" style={{ strokeDasharray: `${2 * Math.PI * 12}`, strokeDashoffset: `${(1 - 0 / 100) * 2 * Math.PI * 12}` }} />
                           </svg>
-                          <span className="gg-step">0</span>
+                          <span className="absolute text-xs font-semibold text-black">0</span>
                         </div>
-                        <span className="gg-topic-title">None</span>
+                        <span className={cx('flex-1 text-sm text-[#222] max-lg:text-[15px]', topic === 'None' && 'max-lg:font-semibold max-lg:text-indigo-500')}>None</span>
                       </li>
                       {getTopicsForLevel(level).map((t, idx) => {
                         const title = t.Title;
@@ -882,7 +891,10 @@ export const LangeyGrammar: React.FC<LangeyGrammarProps> = ({
                         return (
                           <li
                             key={title}
-                            className={`gg-topic-item ${topic === title ? 'selected' : ''}`}
+                            className={cx(
+                              'flex cursor-pointer items-center gap-2.5 rounded-[10px] px-2.5 py-2 hover:bg-[rgba(120,119,198,0.08)] max-lg:min-h-0 max-lg:rounded-none max-lg:border-b max-lg:border-[#f5f5f5] max-lg:bg-transparent max-lg:px-0 max-lg:py-3.5',
+                              topic === title && 'bg-[rgba(120,119,198,0.12)] max-lg:bg-transparent',
+                            )}
                             role="option"
                             aria-selected={topic === title}
                             onClick={() => {
@@ -890,14 +902,14 @@ export const LangeyGrammar: React.FC<LangeyGrammarProps> = ({
                               setIsSelectorOpen(false);
                             }}
                           >
-                            <div className="gg-topic-ring">
+                            <div className="relative flex h-8 w-8 items-center justify-center">
                               <svg width="32" height="32">
-                                <circle cx="16" cy="16" r="12" className="gg-ring-track" />
-                                <circle cx="16" cy="16" r="12" className="gg-ring-progress" style={{ strokeDasharray: `${circumference}`, strokeDashoffset: `${offset}` }} />
+                                <circle cx="16" cy="16" r="12" className="fill-none stroke-black/10 stroke-[3]" />
+                                <circle cx="16" cy="16" r="12" className="origin-[16px_16px] -rotate-90 fill-none stroke-black/80 stroke-[3] [stroke-linecap:round]" style={{ strokeDasharray: `${circumference}`, strokeDashoffset: `${offset}` }} />
                               </svg>
-                              <span className="gg-step">{idx + 1}</span>
+                              <span className="absolute text-xs font-semibold text-black">{idx + 1}</span>
                             </div>
-                            <span className="gg-topic-title">{title.length > 40 ? title.substring(0, 44) + '...' : title}</span>
+                            <span className={cx('flex-1 text-sm text-[#222] max-lg:text-[15px]', topic === title && 'max-lg:font-semibold max-lg:text-indigo-500')}>{title.length > 40 ? title.substring(0, 44) + '...' : title}</span>
                           </li>
                         );
                       })}
@@ -907,19 +919,22 @@ export const LangeyGrammar: React.FC<LangeyGrammarProps> = ({
 
                 {isSelectorOpen && isMobileView && (
                   <>
-                    <div className="gg-sheet-overlay" onClick={() => setIsSelectorOpen(false)} />
-                    <div className="gg-bottom-sheet" role="dialog" aria-label="Select grammar topic">
-                      <div className="gg-sheet-header">
-                        <div className="gg-sheet-title">Select topic</div>
-                        <button className="gg-sheet-close" onClick={() => setIsSelectorOpen(false)} aria-label="Close">
+                    <div className="fixed inset-0 z-30 bg-black/30 max-lg:z-[700] max-lg:bg-transparent" onClick={() => setIsSelectorOpen(false)} />
+                    <div className="fixed right-0 bottom-0 left-0 z-[31] max-h-[65vh] overflow-y-auto overflow-x-hidden rounded-t-[14px] bg-white p-3 shadow-[0_-10px_20px_-5px_rgba(0,0,0,0.15)] max-lg:z-[701] max-lg:box-border max-lg:min-h-[70dvh] max-lg:max-h-[70dvh] max-lg:w-auto max-lg:max-w-[100vw] max-lg:rounded-t-[24px] max-lg:border-0 max-lg:px-4 max-lg:py-4 max-lg:pb-[calc(16px+env(safe-area-inset-bottom,0px))] max-lg:shadow-[0_-8px_20px_rgba(0,0,0,0.1)]" role="dialog" aria-label="Select grammar topic">
+                      <div className="flex items-center justify-between px-1 py-2 pb-3 max-lg:mb-5 max-lg:px-2.5">
+                        <div className="text-sm font-semibold text-[#222] max-lg:text-xl max-lg:font-bold max-lg:text-[#1a1a1a]">Select topic</div>
+                        <button className="flex h-[34px] w-[34px] items-center justify-center rounded-lg border border-black/20 bg-transparent text-black/60 hover:border-black/40 hover:text-black/80" onClick={() => setIsSelectorOpen(false)} aria-label="Close">
                           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                             <path d="M18 6L6 18M6 6l12 12" />
                           </svg>
                         </button>
                       </div>
-                      <ul className="gg-topic-list" role="listbox" aria-label="Grammar topics">
+                      <ul className="m-0 grid w-full max-w-full list-none gap-0 overflow-x-hidden p-0 px-1 pb-[30px] max-lg:gap-0" role="listbox" aria-label="Grammar topics">
                         <li
-                          className={`gg-topic-item ${topic === 'None' ? 'selected' : ''}`}
+                          className={cx(
+                            'flex cursor-pointer items-center gap-2.5 rounded-[10px] px-2.5 py-2 hover:bg-[rgba(120,119,198,0.08)] max-lg:min-h-12 max-lg:rounded-none max-lg:border-b max-lg:border-[#f5f5f5] max-lg:bg-transparent max-lg:px-0 max-lg:py-3.5',
+                            topic === 'None' && 'bg-[rgba(120,119,198,0.12)] max-lg:bg-transparent',
+                          )}
                           role="option"
                           aria-selected={topic === 'None'}
                           onClick={() => {
@@ -927,14 +942,14 @@ export const LangeyGrammar: React.FC<LangeyGrammarProps> = ({
                             setIsSelectorOpen(false);
                           }}
                         >
-                          <div className="gg-topic-ring">
+                          <div className="relative flex h-8 w-8 items-center justify-center [&_*]:rounded-[14px]">
                             <svg width="32" height="32">
-                              <circle cx="16" cy="16" r="12" className="gg-ring-track" />
-                              <circle cx="16" cy="16" r="12" className="gg-ring-progress" style={{ strokeDasharray: `${2 * Math.PI * 12}`, strokeDashoffset: `${(1 - 0 / 100) * 2 * Math.PI * 12}` }} />
+                              <circle cx="16" cy="16" r="12" className="fill-none stroke-black/10 stroke-[3]" />
+                              <circle cx="16" cy="16" r="12" className="origin-[16px_16px] -rotate-90 fill-none stroke-black/80 stroke-[3] [stroke-linecap:round]" style={{ strokeDasharray: `${2 * Math.PI * 12}`, strokeDashoffset: `${(1 - 0 / 100) * 2 * Math.PI * 12}` }} />
                             </svg>
-                            <span className="gg-step">0</span>
+                            <span className="absolute text-xs font-semibold text-black">0</span>
                           </div>
-                          <span className="gg-topic-title">None</span>
+                          <span className={cx('flex-1 text-sm text-[#222] max-lg:text-[15px]', topic === 'None' && 'max-lg:font-semibold max-lg:text-indigo-500')}>None</span>
                         </li>
                         {getTopicsForLevel(level).map((t, idx) => {
                           const title = t.Title;
@@ -945,7 +960,10 @@ export const LangeyGrammar: React.FC<LangeyGrammarProps> = ({
                           return (
                             <li
                               key={title}
-                              className={`gg-topic-item ${topic === title ? 'selected' : ''}`}
+                              className={cx(
+                                'flex cursor-pointer items-center gap-2.5 rounded-[10px] px-2.5 py-2 hover:bg-[rgba(120,119,198,0.08)] max-lg:min-h-12 max-lg:rounded-none max-lg:border-b max-lg:border-[#f5f5f5] max-lg:bg-transparent max-lg:px-0 max-lg:py-3.5',
+                                topic === title && 'bg-[rgba(120,119,198,0.12)] max-lg:bg-transparent',
+                              )}
                               role="option"
                               aria-selected={topic === title}
                               onClick={() => {
@@ -953,14 +971,14 @@ export const LangeyGrammar: React.FC<LangeyGrammarProps> = ({
                                 setIsSelectorOpen(false);
                               }}
                             >
-                              <div className="gg-topic-ring">
+                              <div className="relative flex h-8 w-8 items-center justify-center [&_*]:rounded-[14px]">
                                 <svg width="32" height="32">
-                                  <circle cx="16" cy="16" r="12" className="gg-ring-track" />
-                                  <circle cx="16" cy="16" r="12" className="gg-ring-progress" style={{ strokeDasharray: `${circumference}`, strokeDashoffset: `${offset}` }} />
+                                  <circle cx="16" cy="16" r="12" className="fill-none stroke-black/10 stroke-[3]" />
+                                  <circle cx="16" cy="16" r="12" className="origin-[16px_16px] -rotate-90 fill-none stroke-black/80 stroke-[3] [stroke-linecap:round]" style={{ strokeDasharray: `${circumference}`, strokeDashoffset: `${offset}` }} />
                                 </svg>
-                                <span className="gg-step">{idx + 1}</span>
+                                <span className="absolute text-xs font-semibold text-black">{idx + 1}</span>
                               </div>
-                              <span className="gg-topic-title">{title.length > 40 ? title.substring(0, 44) + '...' : title}</span>
+                              <span className={cx('flex-1 text-sm text-[#222] max-lg:text-[15px]', topic === title && 'max-lg:font-semibold max-lg:text-indigo-500')}>{title.length > 40 ? title.substring(0, 44) + '...' : title}</span>
                             </li>
                           );
                         })}
@@ -971,30 +989,30 @@ export const LangeyGrammar: React.FC<LangeyGrammarProps> = ({
               </div>
             </div>
 
-            <div className="gg-action-buttons">
+            <div className="flex max-w-[50%] flex-1 flex-wrap items-end justify-end gap-3 max-sm:mt-2 max-sm:w-full max-sm:max-w-none max-sm:gap-2 max-lg:mb-2.5 max-lg:w-full max-lg:max-w-none max-lg:flex-[0_0_auto] max-lg:justify-stretch max-lg:gap-2">
               <button
-                className="gg-action-btn"
+                className="min-w-[90px] flex-1 cursor-pointer rounded-[10px] border border-black/20 bg-gradient-to-br from-black to-[#333] px-[18px] py-2.5 text-sm font-medium text-white shadow-[0_4px_6px_-1px_rgba(0,0,0,0.1),0_2px_4px_-1px_rgba(0,0,0,0.06)] backdrop-blur-sm transition-all duration-300 hover:-translate-y-px hover:from-[#333] hover:to-[#555] disabled:cursor-not-allowed disabled:border-black/10 disabled:bg-black/15 disabled:text-black/40 max-sm:min-w-[80px] max-sm:px-3.5 max-sm:py-2 max-sm:text-[13px] max-lg:min-h-[46px] max-lg:w-0 max-lg:min-w-0 max-lg:flex-[1_1_0] max-lg:rounded-xl max-lg:border-[#eee] max-lg:bg-white max-lg:px-2.5 max-lg:py-3 max-lg:text-sm max-lg:text-[#333] max-lg:shadow-none max-lg:hover:translate-y-0"
                 onClick={handleButton1}
                 disabled={topic === 'None' || isBlocked}
               >
                 {getButton1Label()}
               </button>
               <button
-                className="gg-action-btn"
+                className="min-w-[90px] flex-1 cursor-pointer rounded-[10px] border border-black/20 bg-gradient-to-br from-black to-[#333] px-[18px] py-2.5 text-sm font-medium text-white shadow-[0_4px_6px_-1px_rgba(0,0,0,0.1),0_2px_4px_-1px_rgba(0,0,0,0.06)] backdrop-blur-sm transition-all duration-300 hover:-translate-y-px hover:from-[#333] hover:to-[#555] disabled:cursor-not-allowed disabled:border-black/10 disabled:bg-black/15 disabled:text-black/40 max-sm:min-w-[80px] max-sm:px-3.5 max-sm:py-2 max-sm:text-[13px] max-lg:min-h-[46px] max-lg:w-0 max-lg:min-w-0 max-lg:flex-[1_1_0] max-lg:rounded-xl max-lg:border-[#eee] max-lg:bg-white max-lg:px-2.5 max-lg:py-3 max-lg:text-sm max-lg:text-[#333] max-lg:shadow-none max-lg:hover:translate-y-0"
                 onClick={handleLearn}
                 disabled={topic === 'None' || isBlocked}
               >
                 Learn
               </button>
               <button
-                className="gg-action-btn gg-help-btn"
+                className="gg-help-btn-glow relative flex min-w-[90px] flex-1 cursor-pointer items-center justify-center gap-1.5 rounded-[10px] border border-black/15 bg-[rgba(248,248,248,0.9)] px-[18px] py-2.5 text-sm font-medium text-black/80 backdrop-blur-xl transition-all duration-300 hover:-translate-y-px hover:bg-[rgba(248,248,248,0.95)] disabled:cursor-not-allowed disabled:border-black/10 disabled:bg-black/15 disabled:text-black/40 max-sm:min-w-[80px] max-sm:px-3.5 max-sm:py-2 max-sm:text-[13px] max-lg:min-h-[46px] max-lg:w-0 max-lg:min-w-0 max-lg:flex-[1_1_0] max-lg:rounded-xl max-lg:border-transparent max-lg:bg-gradient-to-r max-lg:from-[#e2bea9] max-lg:to-[#b8b0d3] max-lg:px-2.5 max-lg:py-3 max-lg:text-sm max-lg:text-black max-lg:shadow-none max-lg:hover:translate-y-0 max-lg:hover:from-[#e2bea9] max-lg:hover:to-[#b8b0d3] max-lg:disabled:bg-black/15 max-lg:disabled:text-black/40 max-lg:[&::before]:hidden"
                 onClick={getHelp}
                 disabled={!hasExercises() || isBlocked}
               >
                 Help
               </button>
               <button
-                className="gg-action-btn gg-fullscreen-btn"
+                className="flex !min-w-10 !w-10 !flex-none cursor-pointer items-center justify-center rounded-lg border border-black/30 bg-transparent p-2.5 text-black/30 transition-all duration-300 hover:-translate-y-px hover:border-black/50 hover:text-black/50 disabled:cursor-not-allowed disabled:border-black/15 disabled:text-black/15 max-sm:!min-w-[35px] max-sm:!w-[35px] max-sm:p-2 max-lg:hidden"
                 onClick={toggleFullscreen}
                 disabled={topic === 'None' || (!hasExercises() && !isLectureVisible) || isBlocked}
                 title="Enter fullscreen"
@@ -1006,30 +1024,37 @@ export const LangeyGrammar: React.FC<LangeyGrammarProps> = ({
             </div>
           </div>
 
-          <div className={`gg-exercise-box ${isFullscreen ? 'gg-exercise-box-fullscreen' : ''} ${isLectureVisible && !isShowingExercise ? (isLectureExpanded ? 'gg-lecture-expanded' : '') : ''}`}>
+          <div className={cx(
+            'relative mb-5 flex h-[400px] w-full max-w-[800px] flex-col overflow-y-auto rounded-2xl border border-black/10 bg-white/80 p-6 shadow-[0_10px_25px_-5px_rgba(0,0,0,0.1),0_10px_10px_-5px_rgba(0,0,0,0.04)] backdrop-blur-xl max-sm:mb-4 max-sm:h-[350px] max-sm:p-4 max-lg:mb-0 max-lg:h-auto max-lg:min-h-0 max-lg:max-w-none max-lg:flex-[1_1_auto] max-lg:rounded-none max-lg:border-0 max-lg:bg-white max-lg:p-[10px_0_20px] max-lg:shadow-none max-lg:backdrop-blur-none max-lg:transition-none [&>.gg-credit-limit-block]:min-h-full',
+            isFullscreen && 'fixed! top-0! left-0! z-[1000]! m-0! h-screen! max-w-none! rounded-none! border-0! bg-white/95! p-10! pt-20! backdrop-blur-[20px]! max-sm:h-dvh! max-sm:p-5! max-sm:pt-[60px]! max-sm:pb-[calc(20px+env(safe-area-inset-bottom,0px))]!',
+            isLectureVisible && !isShowingExercise && isLectureExpanded && 'h-auto',
+          )}>
             {isBlocked ? (
               <CreditLimitBlock message={limitMessage} />
             ) : isLoading ? (
-              <div className="gg-loading"><div className="gg-spinner" /></div>
+              <div className="flex h-full min-h-full items-center justify-center max-lg:min-h-full"><div className="gg-spinner-animate h-6 w-6 rounded-full border-2 border-[#f3f3f3] border-t-black" /></div>
             ) : (hasExercises() && isShowingExercise) ? (
               <ExercisesTemplate {...getExerciseTemplateProps()} title={currentExerciseTitle} onTranslate={handleTranslate} />
             ) : isLectureVisible && topic !== 'None' ? (
-              <div className="gg-lecture-content" dangerouslySetInnerHTML={{ __html: mdToHtml(lectureMarkdown) }} />
+              <div
+                className="mx-auto max-w-[680px] py-1 text-left text-sm leading-[1.7] text-[#222] max-lg:box-border max-lg:w-full max-lg:px-3 [&_h1]:my-2.5 [&_h1]:text-left [&_h2]:my-2.5 [&_h2]:text-left [&_h3]:my-2.5 [&_h3]:text-left [&_hr]:my-4 [&_hr]:border-0 [&_hr]:border-t [&_hr]:border-black/15 [&_li]:my-1 [&_ol]:my-2.5 [&_ol]:mb-3.5 [&_ol]:pl-[1.1rem] [&_ol]:list-outside [&_p]:my-2 [&_p]:text-left [&_ul]:my-2.5 [&_ul]:mb-3.5 [&_ul]:pl-[1.1rem] [&_ul]:list-outside"
+                dangerouslySetInnerHTML={{ __html: mdToHtml(lectureMarkdown) }}
+              />
             ) : topic === 'None' ? (
-              <div className="gg-empty-state">
+              <div className="flex h-full min-h-full items-center justify-center text-sm text-[#666] max-lg:min-h-full max-lg:p-6 max-lg:text-base max-lg:opacity-60">
                 <p>{defaultLearnMsg}</p>
               </div>
             ) : (
-              <div className="gg-empty-state">
+              <div className="flex h-full min-h-full items-center justify-center text-sm text-[#666] max-lg:min-h-full max-lg:p-6 max-lg:text-base max-lg:opacity-60">
                 <p>{selectedTopicMsg}</p>
               </div>
             )}
           </div>
 
-          <div className="gg-hint-bar">
-            <div className="gg-hint-content">
+          <div className={cx('gg-glow-border relative flex min-h-[80px] w-full max-w-[800px] items-center justify-center rounded-2xl border border-black/15 bg-[rgba(248,248,248,0.9)] p-4 px-5 shadow-[0_8px_20px_-5px_rgba(0,0,0,0.1),0_6px_8px_-5px_rgba(0,0,0,0.04)] backdrop-blur-xl max-lg:relative max-lg:bottom-auto max-lg:left-auto max-lg:right-auto max-lg:z-auto max-lg:m-0 max-lg:flex-[0_0_auto] max-lg:max-w-none max-lg:min-h-[calc(100px+env(safe-area-inset-bottom,0px))] max-lg:overflow-hidden max-lg:rounded-none max-lg:border-0 max-lg:bg-white max-lg:p-6 max-lg:px-8 max-lg:pb-[calc(24px+env(safe-area-inset-bottom,0px))] max-lg:shadow-none max-lg:backdrop-blur-none max-lg:transition-none max-lg:[&::before]:inset-0 max-lg:[&::before]:rounded-none max-lg:[&::before]:bg-gradient-to-r max-lg:[&::before]:from-[#e2bea9] max-lg:[&::before]:to-[#b8b0d3] max-lg:[&::before]:opacity-80 max-lg:[&::before]:animate-none', isFullscreen && 'hidden')}>
+            <div className="relative z-[1] max-w-full text-center text-sm leading-normal font-bold break-words text-[#333] max-lg:w-full max-lg:max-w-none max-lg:text-base max-lg:leading-6 max-lg:font-normal max-lg:text-[#1a1a1a]">
               {isBlocked ? (
-                <span className="gg-limit-hint">Tap Upgrade to Pro above to continue</span>
+                <span className="text-center text-sm text-[#333] opacity-60">Tap Upgrade to Pro above to continue</span>
               ) : (
                 <>
               {/* Animate incorrect answers line */}
@@ -1074,7 +1099,7 @@ export const LangeyGrammar: React.FC<LangeyGrammarProps> = ({
           </div>
         </div>
       ) : (
-        <div className="gg-stats">
+        <div className="relative flex min-h-[calc(100vh-100px)] min-h-[calc(100dvh-100px)] flex-col items-center justify-center gap-5 p-5 max-sm:gap-0 max-sm:px-[15px] max-sm:pt-[60px] max-sm:pb-[70px] max-lg:h-[calc(100dvh-54px)] max-lg:min-h-0 max-lg:w-full max-lg:max-w-none max-lg:flex-[1_1_auto] max-lg:items-center max-lg:justify-center max-lg:bg-white max-lg:px-[15px] max-lg:pt-0 max-lg:pb-[calc(120px+env(safe-area-inset-bottom,0px))]">
           {(() => {
             const allTopics = getTopicsForLevel(level).map(t => t.Title);
             const CHART_MAX = Math.ceil(allTopics.length / 3);
@@ -1087,10 +1112,10 @@ export const LangeyGrammar: React.FC<LangeyGrammarProps> = ({
             const { axisPoints, dataPoints, polygon } = buildSpiderData(currentGroup, currentValues);
             return (
               <>
-                <div className="gg-spider-wrapper">
-                  <svg key={`${level}-${chartPage}`} className="gg-spider-chart" viewBox="0 0 400 400">
+                <div className="relative flex w-full max-w-[520px] items-center justify-center max-sm:static max-sm:max-w-full max-lg:static max-lg:mx-auto max-lg:w-[clamp(280px,80vw,400px)] max-lg:max-w-[clamp(280px,80vw,400px)]">
+                  <svg key={`${level}-${chartPage}`} className="block h-auto w-full max-w-[500px] overflow-visible max-sm:max-w-[380px] max-lg:w-[clamp(280px,80vw,400px)] max-lg:max-w-[clamp(280px,80vw,400px)]" viewBox="0 0 400 400">
                     {/* Grid rings */}
-                    <g className="gg-spider-grid">
+                    <g>
                       {[1, 2, 3, 4, 5].map((ring) => {
                         const AXIS_COUNT = axisPoints.length;
                         const RADIUS = 140 * (ring / 5);
@@ -1102,28 +1127,28 @@ export const LangeyGrammar: React.FC<LangeyGrammarProps> = ({
                           const y = 200 + Math.sin(rad) * RADIUS;
                           pts.push(`${x},${y}`);
                         }
-                        return <polygon key={ring} className="gg-grid-line" points={pts.join(' ')} />;
+                        return <polygon key={ring} className="fill-none stroke-black/10 stroke-1" points={pts.join(' ')} />;
                       })}
 
                       {/* Axes + labels */}
                       {axisPoints.map((axis, index) => (
                         <g key={index}>
                           <line
-                            className="gg-axis-line"
+                            className="fill-none stroke-black/20 stroke-1"
                             x1="200" y1="200" x2={axis.x} y2={axis.y}
                             style={{
                               strokeDasharray: `${Math.hypot(axis.x - 200, axis.y - 200)}`,
                               strokeDashoffset: `${Math.hypot(axis.x - 200, axis.y - 200)}`,
-                              animation: `growLine 1s ease-out ${index * 0.1}s forwards`
+                              animation: `gg-grow-line 1s ease-out ${index * 0.1}s forwards`
                             }}
                           />
                           <text
-                            className="gg-axis-label"
+                            className="fill-[#333] text-[10px] font-medium max-lg:text-[9px]"
                             x={axis.x + (axis.x - 200) * 0.15}
                             y={axis.y + (axis.y - 200) * 0.35}
                             textAnchor="middle"
                             dominantBaseline="middle"
-                            style={{ opacity: 0, animation: `fadeIn 0.5s ease-out ${0.8 + index * 0.1}s forwards` }}
+                            style={{ opacity: 0, animation: `gg-fade-in 0.5s ease-out ${0.8 + index * 0.1}s forwards` }}
                           >
                             {(() => {
                               const MAX = 16;
@@ -1155,26 +1180,26 @@ export const LangeyGrammar: React.FC<LangeyGrammarProps> = ({
                     {dataPoints.map((point, index) => (
                       <g key={index}>
                         <line
-                          className="gg-data-line"
+                          className="fill-none stroke-[rgba(120,119,198,0.8)] stroke-[3]"
                           x1="200" y1="200" x2={point.x} y2={point.y}
                           style={{
                             strokeDasharray: `${Math.hypot(point.x - 200, point.y - 200)}`,
                             strokeDashoffset: `${Math.hypot(point.x - 200, point.y - 200)}`,
-                            animation: `growDataLine 0.8s ease-out ${1 + index * 0.15}s forwards`
+                            animation: `gg-grow-data-line 0.8s ease-out ${1 + index * 0.15}s forwards`
                           }}
                         />
                         {point.value >= 10 && (
                           <circle
-                            className="gg-data-point"
+                            className="origin-center fill-[rgba(120,119,198,1)] stroke-white stroke-2"
                             cx={point.x} cy={point.y} r="6"
-                            style={{ opacity: 0, transform: 'scale(0)', animation: `drawPoint 0.4s ease-out ${1.5 + index * 0.15}s forwards` }}
+                            style={{ opacity: 0, transform: 'scale(0)', animation: `gg-draw-point 0.4s ease-out ${1.5 + index * 0.15}s forwards` }}
                           />
                         )}
                         {point.value >= 10 && (
                           <text
-                            className="gg-data-value"
+                            className="fill-black text-[10px] font-semibold max-sm:text-[9px]"
                             x={point.x} y={point.y - 15} textAnchor="middle"
-                            style={{ opacity: 0, animation: `fadeIn 0.3s ease-out ${1.7 + index * 0.15}s forwards` }}
+                            style={{ opacity: 0, animation: `gg-fade-in 0.3s ease-out ${1.7 + index * 0.15}s forwards` }}
                           >
                             {point.value}%
                           </text>
@@ -1183,9 +1208,9 @@ export const LangeyGrammar: React.FC<LangeyGrammarProps> = ({
                     ))}
 
                     <polygon
-                      className="gg-data-polygon"
+                      className="fill-[rgba(120,119,198,0.2)] stroke-[rgba(120,119,198,0.6)] stroke-1"
                       points={polygon}
-                      style={{ opacity: 0, animation: 'fadeInPolygon 0.8s ease-out 2.5s forwards' }}
+                      style={{ opacity: 0, animation: 'gg-fade-in-polygon 0.8s ease-out 2.5s forwards' }}
                     />
                   </svg>
                 </div>
@@ -1203,10 +1228,13 @@ export const LangeyGrammar: React.FC<LangeyGrammarProps> = ({
               : 0;
 
             return (
-              <div className={`gg-stats-hint-bar${showNav ? ' gg-stats-hint-bar--with-nav' : ''}`}>
+              <div className={cx(
+                'gg-glow-border-muted relative mx-auto flex w-full max-w-[600px] items-center justify-center overflow-hidden rounded-[14px] border border-black/15 bg-[rgba(248,248,248,0.85)] p-4 px-5 shadow-[0_6px_16px_-4px_rgba(0,0,0,0.08),0_4px_6px_-2px_rgba(0,0,0,0.04)] backdrop-blur-[10px] max-sm:mt-11 max-sm:mb-[calc(20px+env(safe-area-inset-bottom,10px))] max-sm:min-h-[75px] max-sm:px-4 max-sm:py-3',
+                showNav && 'justify-between px-3.5 py-[13px]',
+              )}>
                 {showNav && (
                   <button
-                    className="gg-spider-nav-btn"
+                    className="relative z-[2] flex h-11 w-11 shrink-0 cursor-pointer items-center justify-center rounded-full border border-black/15 bg-transparent text-black shadow-[0_1px_4px_rgba(0,0,0,0.08)] transition-[border-color,color,box-shadow] duration-200 hover:border-black/35 hover:shadow-[0_2px_8px_rgba(0,0,0,0.12)] disabled:cursor-not-allowed disabled:opacity-30 touch-manipulation [-webkit-tap-highlight-color:transparent]"
                     onClick={() => setChartPage(p => Math.max(0, p - 1))}
                     disabled={chartPage === 0}
                     aria-label="Previous chart"
@@ -1216,14 +1244,14 @@ export const LangeyGrammar: React.FC<LangeyGrammarProps> = ({
                     </svg>
                   </button>
                 )}
-                <div className="gg-hint-content">
+                <div className={cx('relative z-[1] max-w-full text-center text-sm leading-normal font-bold break-words text-[#333]', showNav && 'min-w-0 flex-1 text-center')}>
                   {topics.length > 0 && (
                     <TotalProgressText key={`${level}-${pct}`} percent={pct} />
                   )}
                 </div>
                 {showNav && (
                   <button
-                    className="gg-spider-nav-btn"
+                    className="relative z-[2] flex h-11 w-11 shrink-0 cursor-pointer items-center justify-center rounded-full border border-black/15 bg-transparent text-black shadow-[0_1px_4px_rgba(0,0,0,0.08)] transition-[border-color,color,box-shadow] duration-200 hover:border-black/35 hover:shadow-[0_2px_8px_rgba(0,0,0,0.12)] disabled:cursor-not-allowed disabled:opacity-30 touch-manipulation [-webkit-tap-highlight-color:transparent]"
                     onClick={() => setChartPage(p => Math.min(totalPages - 1, p + 1))}
                     disabled={chartPage === totalPages - 1}
                     aria-label="Next chart"

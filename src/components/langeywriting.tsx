@@ -1,5 +1,4 @@
 import React, { useEffect, useState, useRef } from 'react';
-import './langeywriting.css';
 import { UserTracker } from '../utils/userTracking';
 import { useDailyCredits } from '../contexts/DailyCreditsContext';
 import { CreditLimitBlock } from './CreditLimitBlock';
@@ -11,6 +10,210 @@ import { checkWritingGrammar, checkWritingVocabulary, deleteWritingPassage, getW
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore - allow JSON import
 import levelTopicsData from '../../data/all_grammar_topics.json';
+
+const cx = (...classes: Array<string | false | undefined | null>) => classes.filter(Boolean).join(' ');
+
+const GLOW_BORDER =
+  'before:pointer-events-none before:absolute before:inset-[-1px] before:-z-10 before:bg-[linear-gradient(45deg,rgba(120,119,198,0.5),rgba(255,206,84,0.5),rgba(120,119,198,0.5),rgba(255,206,84,0.5))] before:bg-size-[400%_400%] before:animate-settings-glow';
+
+const PRACTICE_ROOT = cx(
+  'flex min-h-[calc(100vh-150px)] min-h-[calc(100dvh-150px)] flex-col items-center justify-center p-5 pb-[calc(20px+env(safe-area-inset-bottom,0px))]',
+  'max-lg:h-[calc(100dvh-54px)] max-lg:min-h-[calc(100dvh-54px)] max-lg:w-full max-lg:max-w-none max-lg:items-stretch max-lg:justify-start max-lg:gap-0 max-lg:overflow-hidden max-lg:p-0',
+);
+
+const PRACTICE_STATS_ROOT = cx(
+  PRACTICE_ROOT,
+  'gap-6',
+  'max-lg:box-border max-lg:!h-[calc(100dvh-54px)] max-lg:!min-h-[calc(100dvh-54px)] max-lg:!items-center max-lg:!justify-center max-lg:!gap-0 max-lg:!pb-[calc(100px+env(safe-area-inset-bottom,0px))]',
+);
+
+const PRACTICE_HEADER = cx(
+  'mb-6 flex w-full max-w-[800px] items-end justify-between gap-5',
+  'max-lg:mb-0 max-lg:block max-lg:max-w-none max-lg:flex-none max-lg:bg-transparent max-lg:p-4 max-lg:px-5 max-lg:pt-4 max-lg:pb-1',
+  'max-sm:flex-col max-sm:items-stretch max-sm:gap-4',
+);
+
+const FIELD_LEFT = cx('max-w-[50%] flex-1 text-left', 'max-lg:w-full max-lg:max-w-none', 'max-sm:max-w-full');
+
+const LABEL = 'mb-1.5 block text-xs text-[#444] max-lg:hidden';
+
+const ACTION_BTN = cx(
+  'flex h-[38px] min-w-[90px] flex-[1_1_0px] cursor-pointer items-center justify-center rounded-[10px] border border-black/20',
+  'bg-gradient-to-br from-black to-[#333] px-[18px] text-sm font-medium text-white',
+  'shadow-[0_4px_6px_-1px_rgba(0,0,0,0.1),0_2px_4px_-1px_rgba(0,0,0,0.06)] backdrop-blur-[4px] transition-all duration-300',
+  'enabled:hover:-translate-y-px enabled:hover:from-[#333] enabled:hover:to-[#555]',
+  'enabled:hover:shadow-[0_6px_10px_-1px_rgba(0,0,0,0.15),0_4px_6px_-1px_rgba(0,0,0,0.1)]',
+  'enabled:active:translate-y-0 enabled:active:shadow-[0_2px_4px_-1px_rgba(0,0,0,0.1),0_1px_2px_-1px_rgba(0,0,0,0.06)]',
+  'disabled:cursor-not-allowed disabled:border-black/10 disabled:bg-black/15 disabled:text-black/40 disabled:shadow-[0_2px_4px_-1px_rgba(0,0,0,0.06)]',
+  'max-lg:!h-auto max-lg:!min-h-[46px] max-lg:!w-0 max-lg:!min-w-0 max-lg:flex-[1_1_0%] max-lg:!rounded-xl max-lg:!border-[#eee] max-lg:!bg-white max-lg:!px-2.5 max-lg:!py-3 max-lg:!text-sm max-lg:!font-medium max-lg:!text-[#333] max-lg:!shadow-none max-lg:enabled:hover:!translate-y-0',
+  'max-lg:disabled:!border-black/10 max-lg:disabled:!bg-black/15 max-lg:disabled:!text-black/40',
+  'max-sm:min-w-[80px] max-sm:flex-1 max-sm:px-3.5 max-sm:text-[13px]',
+);
+
+const VOCAB_BTN = cx(
+  ACTION_BTN,
+  'max-lg:!border-black max-lg:!bg-black max-lg:!text-white',
+  'max-lg:disabled:!border-black/10 max-lg:disabled:!bg-black/15 max-lg:disabled:!text-black/40',
+);
+
+const GRAMMAR_BTN = cx(
+  ACTION_BTN,
+  'relative !border-black/15 !bg-[rgba(248,248,248,0.9)] !text-black/80 backdrop-blur-xl',
+  'before:content-[""] before:rounded-[10px] before:opacity-80 disabled:before:opacity-20',
+  GLOW_BORDER,
+  'enabled:hover:!bg-[rgba(248,248,248,0.95)] enabled:hover:-translate-y-px',
+  'max-lg:!border-transparent max-lg:!bg-gradient-to-r max-lg:!from-[#e2bea9] max-lg:!to-[#b8b0d3] max-lg:!text-black max-lg:before:!hidden',
+  'max-lg:enabled:hover:!bg-gradient-to-r max-lg:enabled:hover:!from-[#e2bea9] max-lg:enabled:hover:!to-[#b8b0d3] max-lg:enabled:hover:translate-y-0',
+);
+
+const ACTION_BUTTONS = cx(
+  'flex max-w-[50%] flex-1 flex-wrap items-end justify-end gap-3',
+  'max-lg:mb-2.5 max-lg:flex max-lg:w-full max-lg:max-w-none max-lg:shrink-0 max-lg:justify-stretch max-lg:gap-2',
+  'max-sm:mt-2 max-sm:w-full max-sm:max-w-none max-sm:flex-none max-sm:gap-2',
+);
+
+const WRITING_BOX = cx(
+  'relative mb-5 flex h-[400px] w-full max-w-[800px] flex-col rounded-2xl border border-black/10 bg-white/80 p-6',
+  'shadow-[0_10px_25px_-5px_rgba(0,0,0,0.1),0_10px_10px_-5px_rgba(0,0,0,0.04)] backdrop-blur-xl transition-all duration-300',
+  '[&>.gg-credit-limit-block]:min-h-0 [&>.gg-credit-limit-block]:flex-1 [&>.gg-credit-limit-block]:p-0',
+  'max-lg:mb-0 max-lg:h-auto max-lg:min-h-0 max-lg:max-w-none max-lg:flex-[1_1_auto] max-lg:overflow-y-auto max-lg:rounded-none max-lg:border-0 max-lg:bg-white max-lg:p-0 max-lg:pb-5 max-lg:shadow-none max-lg:backdrop-blur-none',
+  'max-lg:[&>.gg-credit-limit-block]:min-h-full max-lg:[&>.gg-credit-limit-block]:p-6',
+  'max-sm:mb-4 max-sm:h-[350px] max-sm:p-4',
+);
+
+const TEXTAREA = cx(
+  'm-0 h-full w-full resize-none border-0 bg-transparent p-0 pb-10 font-inherit text-lg leading-[1.6] text-black outline-none',
+  'max-sm:text-base',
+  'max-lg:text-lg max-lg:leading-7 max-lg:p-6',
+);
+
+const TEXTAREA_CORRECTIONS = cx(
+  'text-transparent caret-black',
+  'max-lg:block max-lg:overflow-y-auto max-lg:pb-[calc(120px+env(safe-area-inset-bottom,0px))] max-lg:[-webkit-overflow-scrolling:touch]',
+);
+
+const OVERLAY = cx(
+  'pointer-events-none absolute inset-6 z-[1] bg-transparent',
+  'max-sm:inset-4',
+  'max-lg:inset-6 max-lg:bottom-[calc(120px+env(safe-area-inset-bottom,0px))]',
+);
+
+const OVERLAY_CORRECTIONS = cx(
+  'max-lg:bottom-6 max-lg:overflow-hidden max-lg:p-0',
+);
+
+const DISPLAY = cx(
+  'm-0 h-full w-full overflow-y-auto p-0 pb-10 text-left font-inherit text-lg leading-[1.6] whitespace-pre-wrap text-black',
+  'max-sm:text-base',
+  'max-lg:text-lg max-lg:leading-7',
+);
+
+const DISPLAY_CORRECTIONS = cx(
+  'max-lg:h-full max-lg:min-h-0 max-lg:overflow-y-hidden max-lg:pb-[calc(120px+env(safe-area-inset-bottom,0px))]',
+);
+
+const ERROR_HIGHLIGHT =
+  'relative cursor-pointer border-b-2 border-[#ff4d4f] bg-red-500/10 transition-all duration-200 hover:bg-red-500/20 pointer-events-auto';
+
+const ERROR_POPUP = cx(
+  'z-[2000] w-[min(320px,calc(100vw-24px))] min-w-0 max-w-[calc(100vw-24px)] rounded-xl border border-black/10 bg-white p-4 text-left',
+  'shadow-[0_10px_30px_rgba(0,0,0,0.15)]',
+);
+
+const POPUP_BTN =
+  'mt-1.5 ml-2 cursor-pointer rounded-md border border-[#ccc] bg-white px-3 py-1.5 text-xs font-medium text-black hover:bg-[#e0e0e0]';
+
+const POPUP_REPLACE_BTN =
+  'mt-1.5 ml-2 cursor-pointer rounded-md border-0 bg-black px-3 py-1.5 text-xs font-medium text-white hover:bg-[#333]';
+
+const HINT_BAR = cx(
+  'relative flex w-full max-w-[800px] min-h-[80px] items-center justify-center overflow-hidden rounded-2xl border border-black/15',
+  'bg-[rgba(248,248,248,0.9)] px-5 py-4',
+  'shadow-[0_8px_20px_-5px_rgba(0,0,0,0.1),0_6px_8px_-5px_rgba(0,0,0,0.04)] backdrop-blur-xl',
+  'before:content-[""] before:rounded-2xl before:opacity-80',
+  GLOW_BORDER,
+  'max-lg:relative max-lg:inset-auto max-lg:bottom-auto max-lg:shrink-0 max-lg:overflow-hidden max-lg:rounded-none max-lg:border-0 max-lg:bg-white max-lg:px-8 max-lg:py-6 max-lg:pb-[calc(24px+env(safe-area-inset-bottom,0px))] max-lg:shadow-none max-lg:backdrop-blur-none',
+  'max-lg:before:inset-0 max-lg:before:rounded-none max-lg:before:bg-gradient-to-r max-lg:before:from-[#e2bea9] max-lg:before:to-[#b8b0d3] max-lg:before:opacity-80 max-lg:before:z-0',
+);
+
+const HINT_BAR_STATS = cx(HINT_BAR, 'min-h-16 max-w-[600px] justify-between gap-3');
+
+const HINT_CONTENT = cx(
+  'relative z-[1] max-w-full text-center text-sm leading-normal font-bold break-words whitespace-pre-line text-[#333]',
+  'max-lg:w-full max-lg:max-w-none max-lg:text-base max-lg:font-normal max-lg:leading-6 max-lg:text-[#1a1a1a]',
+);
+
+const CUSTOM_SELECTOR = 'relative max-lg:mb-3 max-lg:w-full';
+
+const SELECTOR_TRIGGER = cx(
+  'flex w-full min-h-[42px] cursor-pointer items-center justify-between rounded-[10px] border border-black/15 bg-white px-3.5 py-2.5 text-[#222]',
+  '[&_svg]:opacity-60',
+  'max-lg:min-h-[46px] max-lg:rounded-xl max-lg:border-[#ccc] max-lg:px-4 max-lg:py-3 max-lg:text-base max-lg:font-normal max-lg:shadow-none',
+);
+
+const SELECTOR_TRIGGER_STATIC = cx(
+  SELECTOR_TRIGGER,
+  'box-border cursor-default justify-start overflow-hidden text-ellipsis whitespace-nowrap text-[0.8em] leading-[1.2]',
+  'max-lg:text-[calc(16px*0.8)]',
+);
+
+const DROPDOWN_PANEL = cx(
+  'absolute inset-x-0 top-[calc(100%+8px)] z-30 max-h-[260px] overflow-y-auto rounded-xl border border-black/12 bg-white p-2',
+  'shadow-[0_10px_25px_-5px_rgba(0,0,0,0.1),0_10px_10px_-5px_rgba(0,0,0,0.04)] max-lg:hidden',
+);
+
+const TOPIC_LIST = 'm-0 grid list-none gap-1.5 p-0 max-lg:max-h-none max-lg:pb-[30px]';
+
+const topicItemClass = (selected: boolean) =>
+  cx(
+    'flex cursor-pointer items-center justify-between gap-2.5 rounded-[10px] px-2.5 py-2 hover:bg-indigo-500/8',
+    'max-lg:min-h-12 max-lg:rounded-none max-lg:border-b max-lg:border-[#f5f5f5] max-lg:bg-transparent max-lg:px-0 max-lg:py-3.5',
+    selected && 'bg-indigo-500/12 max-lg:bg-transparent',
+  );
+
+const topicTitleClass = (selected: boolean) =>
+  cx(
+    'flex-1 overflow-hidden text-sm text-ellipsis whitespace-nowrap text-[#222]',
+    'max-lg:text-[15px] max-lg:text-[#333]',
+    selected && 'max-lg:font-semibold max-lg:text-indigo-500',
+  );
+
+const DELETE_PASSAGE_BTN =
+  'flex cursor-pointer items-center justify-center rounded-full border-0 bg-transparent p-1 text-[#999] hover:text-[#ff4d4f]';
+
+const SHEET_OVERLAY = 'fixed inset-0 z-[700] bg-transparent';
+
+const BOTTOM_SHEET = cx(
+  'fixed inset-x-0 bottom-0 z-[701] box-border min-h-[60dvh] max-h-[60dvh] overflow-x-hidden rounded-t-3xl border-0 bg-white p-4',
+  'pb-[calc(16px+env(safe-area-inset-bottom,0px))] shadow-[0_-8px_20px_rgba(0,0,0,0.1)]',
+);
+
+const SHEET_HEADER = 'mb-5 flex items-center justify-between px-2.5 py-0';
+
+const SHEET_TITLE = 'text-xl font-bold text-[#1a1a1a]';
+
+const SHEET_CLOSE = cx(
+  'flex size-[34px] cursor-pointer items-center justify-center rounded-lg border border-black/20 bg-transparent text-black/60',
+  'hover:border-black/40 hover:text-black/80',
+);
+
+const DELETE_OVERLAY = cx(
+  'fixed inset-0 z-[1000] flex items-center justify-center bg-black/45 px-5',
+  'max-lg:box-border',
+);
+
+const DELETE_DIALOG_BTN = cx(
+  ACTION_BTN,
+  'max-lg:min-w-0 max-lg:flex-1 max-lg:px-3 max-lg:py-2.5',
+);
+
+const DELETE_DIALOG = cx(
+  WRITING_BOX,
+  'h-auto max-h-none max-w-[400px] cursor-default p-6',
+  'max-lg:mx-0 max-lg:max-w-[300px] max-lg:flex-none max-lg:rounded-[14px] max-lg:border-[1.5px] max-lg:border-black max-lg:p-[18px_16px] max-lg:shadow-[0_12px_40px_rgba(0,0,0,0.22)]',
+);
+
+const SPINNER = 'mx-auto size-6 animate-spin rounded-full border-2 border-black/10 border-t-black';
 
 interface Correction {
   original: string;
@@ -46,6 +249,12 @@ interface EvaluationRow {
   status: 'STRONG' | 'NEEDS PRACTICE' | 'NOT USED';
   statusRank: number;
 }
+
+const EVAL_TAG: Record<EvaluationRow['status'], string> = {
+  STRONG: 'bg-[rgba(17,124,77,0.12)] text-[#117c4d]',
+  'NEEDS PRACTICE': 'bg-[rgba(196,93,28,0.14)] text-[#a54f18]',
+  'NOT USED': 'bg-black/8 text-black/56',
+};
 
 export interface LangeyWritingProps extends RoadmapModuleProps {
   mode?: PracticeMode;
@@ -370,7 +579,7 @@ export const LangeyWriting: React.FC<LangeyWritingProps> = ({
         return (
           <span
             key={i}
-            className="gg-error-highlight"
+            className={ERROR_HIGHLIGHT}
             onClick={(e) => {
               e.stopPropagation();
               const rect = e.currentTarget.getBoundingClientRect();
@@ -409,37 +618,23 @@ export const LangeyWriting: React.FC<LangeyWritingProps> = ({
   const renderPassageList = () => (
     <>
       <div
-        className="gg-topic-item"
+        className={cx(topicItemClass(false), 'mb-1 border-b border-[#eee]')}
         onClick={handleNewPassage}
-        style={{ borderBottom: '1px solid #eee', marginBottom: 4 }}
       >
-        <span className="gg-topic-title" style={{ fontWeight: 600, color: '#1890ff' }}>+ New Passage</span>
+        <span className="flex-1 text-sm font-semibold text-[#1890ff]">+ New Passage</span>
       </div>
-      <ul className="gg-topic-list">
+      <ul className={TOPIC_LIST}>
         {passages.map((p) => (
           <li
             key={p.id}
-            className={`gg-topic-item ${selectedPassageId === p.id ? 'selected' : ''}`}
+            className={topicItemClass(selectedPassageId === p.id)}
             onClick={() => handlePassageSelect(p)}
           >
-            <span className="gg-topic-title">{p.passage.substring(0, 30) || "Untitled"}...</span>
+            <span className={topicTitleClass(selectedPassageId === p.id)}>{p.passage.substring(0, 30) || 'Untitled'}...</span>
             <button
-              className="gg-delete-passage-btn"
+              className={DELETE_PASSAGE_BTN}
               onClick={(e) => handleDeletePassage(e, p)}
               title="Delete passage"
-              style={{
-                background: 'transparent',
-                border: 'none',
-                color: '#999',
-                cursor: 'pointer',
-                padding: 4,
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                borderRadius: '50%'
-              }}
-              onMouseEnter={(e) => e.currentTarget.style.color = '#ff4d4f'}
-              onMouseLeave={(e) => e.currentTarget.style.color = '#999'}
             >
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                 <line x1="18" y1="6" x2="6" y2="18"></line>
@@ -449,7 +644,7 @@ export const LangeyWriting: React.FC<LangeyWritingProps> = ({
           </li>
         ))}
         {passages.length === 0 && (
-          <div style={{ padding: 10, color: '#999', fontSize: 13, fontStyle: 'italic' }}>No saved passages</div>
+          <div className="p-2.5 text-[13px] text-[#999] italic">No saved passages</div>
         )}
       </ul>
     </>
@@ -535,26 +730,26 @@ export const LangeyWriting: React.FC<LangeyWritingProps> = ({
   };
 
   const renderEvaluationTable = () => (
-    <div className="gg-evaluation-scroll-container">
-      <div className="gg-evaluation-scroll-arrow gg-evaluation-scroll-arrow-up">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+    <div className="relative flex w-full max-w-[600px] flex-col items-center max-lg:max-h-full max-lg:justify-center">
+      <div className="pointer-events-none flex w-full items-center justify-center py-1 opacity-[0.28] max-lg:mb-2.5">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#1a1a1a" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
           <polyline points="18 15 12 9 6 15"></polyline>
         </svg>
       </div>
-      <div className="gg-writing-evaluation-wrap">
-        <div className="gg-writing-evaluation-list">
+      <div className="h-[400px] w-full max-w-[600px] overflow-y-auto bg-transparent max-sm:h-[360px]">
+        <div className="flex w-full flex-col">
           {levelEvaluationRows.map((row: EvaluationRow) => (
-            <div className="gg-writing-evaluation-row" key={row.slug}>
-              <span className="gg-writing-evaluation-label">{row.label}</span>
-              <span className={`gg-writing-evaluation-tag gg-writing-evaluation-tag-${row.status.toLowerCase().replace(' ', '-')}`}>
+            <div className="flex items-center justify-between gap-3.5 border-b border-black/10 px-3 py-3.5" key={row.slug}>
+              <span className="flex-[1_1_auto] text-left text-sm leading-[1.35] font-bold text-black/78">{row.label}</span>
+              <span className={cx('shrink-0 rounded-full px-2.5 py-1.5 text-[11px] font-black whitespace-nowrap', EVAL_TAG[row.status])}>
                 {row.status}
               </span>
             </div>
           ))}
         </div>
       </div>
-      <div className="gg-evaluation-scroll-arrow gg-evaluation-scroll-arrow-down">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+      <div className="pointer-events-none flex w-full items-center justify-center py-1 opacity-[0.28] max-lg:mt-2.5">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#1a1a1a" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
           <polyline points="6 9 12 15 18 9"></polyline>
         </svg>
       </div>
@@ -564,21 +759,19 @@ export const LangeyWriting: React.FC<LangeyWritingProps> = ({
   if (mode === 'STATS') {
     const isProgressView = statsViewIndex === 0;
     return (
-      <div className="gg-writing gg-writing-stats-mode">
-        <div className="gg-writing-stats-panel">
-          <>
-            <div className={`gg-writing-stats-view ${isProgressView ? 'active' : ''}`}>
-              {renderProgressRing()}
-            </div>
-            <div className={`gg-writing-stats-view ${!isProgressView ? 'active' : ''}`}>
-              {renderEvaluationTable()}
-            </div>
-          </>
+      <div className={PRACTICE_STATS_ROOT}>
+        <div className="flex min-h-[420px] w-full max-w-[800px] items-center justify-center p-0 max-lg:min-h-0 max-lg:flex-[1_1_auto] max-lg:items-center max-lg:justify-center max-sm:min-h-[320px]">
+          <div className={cx('w-full items-center justify-center', isProgressView ? 'flex' : 'hidden', 'max-lg:h-full max-lg:items-center max-lg:justify-center')}>
+            {renderProgressRing()}
+          </div>
+          <div className={cx('w-full items-center justify-center', !isProgressView ? 'flex' : 'hidden', 'max-lg:h-full max-lg:items-center max-lg:justify-center')}>
+            {renderEvaluationTable()}
+          </div>
         </div>
 
-        <div className="gg-writing-hint-bar gg-writing-stats-hint gg-writing-stats-hint--with-nav">
+        <div className={HINT_BAR_STATS}>
           <button
-            className="gg-writing-stats-nav"
+            className="relative z-[1] flex h-10 w-10 shrink-0 cursor-pointer items-center justify-center rounded-full border border-black/12 bg-white/72 text-[#111] disabled:cursor-not-allowed disabled:opacity-35"
             onClick={() => setStatsViewIndex(0)}
             disabled={isProgressView}
             aria-label="Show writing progress"
@@ -588,13 +781,13 @@ export const LangeyWriting: React.FC<LangeyWritingProps> = ({
               <path d="M15 18l-6-6 6-6" />
             </svg>
           </button>
-          <div className="gg-writing-hint-content">
+          <div className={HINT_CONTENT}>
             {!isStatsLoading && (
               <TypeWriter key={`${level}-${progressPercent}`} text={`Total Progress: ${progressPercent}%`} delay={50} shouldAnimate={true} />
             )}
           </div>
           <button
-            className="gg-writing-stats-nav"
+            className="relative z-[1] flex h-10 w-10 shrink-0 cursor-pointer items-center justify-center rounded-full border border-black/12 bg-white/72 text-[#111] disabled:cursor-not-allowed disabled:opacity-35"
             onClick={() => setStatsViewIndex(1)}
             disabled={!isProgressView}
             aria-label="Show writing evaluation"
@@ -609,22 +802,27 @@ export const LangeyWriting: React.FC<LangeyWritingProps> = ({
     );
   }
 
+  const grammarBtnClass = cx(
+    GRAMMAR_BTN,
+    !isRoadmapMode && getWordCount(text) < 10 && '!text-black/40 before:opacity-30',
+  );
+
   return (
-    <div className="gg-writing" data-roadmap-mode={isRoadmapMode ? 'true' : 'false'}>
-      <div className="gg-writing-header">
-        <div className="gg-field-left">
-          <h1 className="gg-label">{isRoadmapMode ? 'Writing Topic' : 'Your Passages'}</h1>
+    <div className={PRACTICE_ROOT} data-roadmap-mode={isRoadmapMode ? 'true' : 'false'}>
+      <div className={PRACTICE_HEADER}>
+        <div className={FIELD_LEFT}>
+          <h1 className={LABEL}>{isRoadmapMode ? 'Writing Topic' : 'Your Passages'}</h1>
           {isRoadmapMode ? (
-            <div className="gg-custom-selector">
-              <div className="gg-selector-trigger gg-selector-trigger-static">
+            <div className={CUSTOM_SELECTOR}>
+              <div className={SELECTOR_TRIGGER_STATIC}>
               {displayRoadmapTopic}
               </div>
             </div>
           ) : (
-          <div className="gg-custom-selector" ref={selectorRef}>
+          <div className={CUSTOM_SELECTOR} ref={selectorRef}>
             <button
               type="button"
-              className="gg-selector-trigger"
+              className={SELECTOR_TRIGGER}
               onClick={() => setIsSelectorOpen((v) => !v)}
             >
               {getSelectorLabel()}
@@ -634,18 +832,18 @@ export const LangeyWriting: React.FC<LangeyWritingProps> = ({
             </button>
 
             {isSelectorOpen && !isMobileView && (
-              <div className="gg-dropdown-panel">
+              <div className={DROPDOWN_PANEL}>
                 {renderPassageList()}
               </div>
             )}
 
             {isSelectorOpen && isMobileView && (
               <>
-                <div className="gg-sheet-overlay" onClick={() => setIsSelectorOpen(false)} style={{ zIndex: 30 }} />
-                <div className="gg-bottom-sheet" style={{ zIndex: 31 }}>
-                  <div className="gg-sheet-header">
-                    <div className="gg-sheet-title">Your Passages</div>
-                    <button className="gg-sheet-close" onClick={() => setIsSelectorOpen(false)}>
+                <div className={SHEET_OVERLAY} onClick={() => setIsSelectorOpen(false)} style={{ zIndex: 30 }} />
+                <div className={BOTTOM_SHEET} style={{ zIndex: 31 }}>
+                  <div className={SHEET_HEADER}>
+                    <div className={SHEET_TITLE}>Your Passages</div>
+                    <button type="button" className={SHEET_CLOSE} onClick={() => setIsSelectorOpen(false)}>
                       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                         <path d="M18 6L6 18M6 6l12 12" />
                       </svg>
@@ -659,26 +857,26 @@ export const LangeyWriting: React.FC<LangeyWritingProps> = ({
           )}
         </div>
 
-        <div className="gg-writing-actions">
+        <div className={ACTION_BUTTONS}>
           <button
-            className="gg-writing-btn"
+            className={VOCAB_BTN}
             onClick={handleCorrect}
             disabled={isLoading || hasVisibleCorrections || !text.trim() || text === defaultMsg || isBlocked}
           >
             {isLoading ? 'Checking...' : 'Check Vocabulary'}
           </button>
           <button
-            className={`gg-writing-btn gg-weak-points-btn ${!isRoadmapMode && getWordCount(text) < 10 ? 'gg-weak-points-disabled' : ''}`}
+            className={grammarBtnClass}
             onClick={handleEvaluate}
             disabled={isAnalyzing || hasVisibleCorrections || !text.trim() || text === defaultMsg || isBlocked}
-            title={!isRoadmapMode && getWordCount(text) < 10 ? "Write at least 10 words" : ""}
+            title={!isRoadmapMode && getWordCount(text) < 10 ? 'Write at least 10 words' : ''}
           >
             {isAnalyzing ? 'Checking...' : 'Check Grammar'}
           </button>
         </div>
       </div>
 
-      <div className={`gg-writing-box ${hasVisibleCorrections ? 'gg-writing-box-with-corrections' : ''}`} onClick={() => setPopup(null)}>
+      <div className={WRITING_BOX} onClick={() => setPopup(null)}>
         {isBlocked ? (
           <CreditLimitBlock message={limitMessage} />
         ) : (
@@ -686,13 +884,12 @@ export const LangeyWriting: React.FC<LangeyWritingProps> = ({
             <textarea
               ref={textareaRef}
               onScroll={handleScroll}
-              className="gg-writing-textarea"
+              className={cx(TEXTAREA, hasVisibleCorrections && TEXTAREA_CORRECTIONS)}
               spellCheck={false}
               autoCorrect="off"
               placeholder={defaultMsg}
               value={text}
               onChange={(e) => {
-                // Clear all corrections when user starts typing
                 if (corrections.length > 0) {
                   setCorrections([]);
                   setAnalysis('');
@@ -701,8 +898,8 @@ export const LangeyWriting: React.FC<LangeyWritingProps> = ({
               }}
             />
             {hasVisibleCorrections && (
-              <div className="gg-writing-overlay">
-                <div className="gg-writing-display" ref={displayRef}>
+              <div className={cx(OVERLAY, OVERLAY_CORRECTIONS)}>
+                <div className={cx(DISPLAY, DISPLAY_CORRECTIONS, 'pointer-events-none')} ref={displayRef}>
                   {renderHighlightedText()}
                   <br />
                 </div>
@@ -714,35 +911,34 @@ export const LangeyWriting: React.FC<LangeyWritingProps> = ({
 
       {popup && (
         <div
-          className="gg-error-popup"
+          className={ERROR_POPUP}
           style={{
             position: 'fixed',
             top: popup.position.top,
             left: popup.position.left,
             transform: 'translate(-50%, -100%)',
             marginTop: '-8px',
-            zIndex: 1000
           }}
           onClick={(e) => e.stopPropagation()}
         >
-          <div style={{ fontWeight: 'bold', marginBottom: 4 }}>{popup.correction.type || 'Writing'} Error</div>
-          <div style={{ marginBottom: 4 }}>Suggestion: <strong>{popup.correction.correction}</strong></div>
+          <div className="mb-1 font-bold">{popup.correction.type || 'Writing'} Error</div>
+          <div className="mb-1">Suggestion: <strong>{popup.correction.correction}</strong></div>
           {popup.correction.type !== 'Vocabulary' && (
-            <div style={{ fontSize: '0.9em', color: '#666', marginBottom: 8 }}>Mistake: {popup.correction.explanation || popup.correction.type || 'Writing'}</div>
+            <div className="mb-2 text-[0.9em] text-[#666]">Mistake: {popup.correction.explanation || popup.correction.type || 'Writing'}</div>
           )}
-          <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
-            <button onClick={() => ignoreCorrection(popup.correction)}>Ignore</button>
-            <button className="replace-btn" onClick={() => applyCorrection(popup.correction)}>Replace</button>
+          <div className="flex justify-end">
+            <button type="button" className={POPUP_BTN} onClick={() => ignoreCorrection(popup.correction)}>Ignore</button>
+            <button type="button" className={POPUP_REPLACE_BTN} onClick={() => applyCorrection(popup.correction)}>Replace</button>
           </div>
         </div>
       )}
 
-      <div className="gg-writing-hint-bar">
-        <div className="gg-writing-hint-content">
+      <div className={HINT_BAR}>
+        <div className={HINT_CONTENT}>
           {isBlocked ? (
-            <span className="gg-limit-hint">Tap Upgrade to Pro above to continue</span>
+            <span className="text-center text-sm text-[#333] opacity-60">Tap Upgrade to Pro above to continue</span>
           ) : isAnalyzing ? (
-            <div className="gg-spinner" style={{ width: 24, height: 24, borderWidth: 2 }} />
+            <div className={SPINNER} />
           ) : analysis ? (
             <TypeWriter text={analysis} delay={20} shouldAnimate={true} />
           ) : (
@@ -752,21 +948,21 @@ export const LangeyWriting: React.FC<LangeyWritingProps> = ({
       </div>
 
       {deleteConfirmation && (
-        <div className="gg-sheet-overlay gg-delete-passage-overlay" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1000 }} onClick={() => setDeleteConfirmation(null)}>
-          <div className="gg-writing-box gg-delete-passage-dialog" style={{ height: 'auto', maxHeight: 'none', maxWidth: 400, padding: 24, cursor: 'default' }} onClick={(e) => e.stopPropagation()}>
-            <h3 style={{ marginTop: 0, marginBottom: 12 }}>Delete Passage?</h3>
-            <p style={{ marginBottom: 20, color: '#666' }}>Are you sure you want to delete this passage? This action cannot be undone.</p>
-            <div style={{ display: 'flex', gap: 12, justifyContent: 'flex-end' }}>
+        <div className={DELETE_OVERLAY} onClick={() => setDeleteConfirmation(null)}>
+          <div className={DELETE_DIALOG} onClick={(e) => e.stopPropagation()}>
+            <h3 className="m-0 mb-2 text-[17px] font-bold text-[#1a1a1a] max-lg:mb-2">Delete Passage?</h3>
+            <p className="mb-5 text-sm leading-[1.45] text-[#666] max-lg:mb-4">Are you sure you want to delete this passage? This action cannot be undone.</p>
+            <div className="flex justify-end gap-3 max-lg:gap-2.5">
               <button
-                className="gg-writing-btn"
-                style={{ background: '#eee', color: '#333', border: '1px solid #ddd', minWidth: 80 }}
+                type="button"
+                className={cx(DELETE_DIALOG_BTN, 'min-w-[80px] !border-[#ddd] !bg-[#eee] !text-[#333]')}
                 onClick={() => setDeleteConfirmation(null)}
               >
                 Cancel
               </button>
               <button
-                className="gg-writing-btn"
-                style={{ background: '#ff4d4f', color: 'white', border: 'none', minWidth: 80 }}
+                type="button"
+                className={cx(DELETE_DIALOG_BTN, 'min-w-[80px] !border-0 !bg-[#ff4d4f] !text-white')}
                 onClick={confirmDelete}
               >
                 Delete

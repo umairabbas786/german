@@ -1,10 +1,10 @@
 // langeyreading.tsx
 import React, { useEffect, useRef, useState } from 'react';
 import { useLocation, useSearchParams } from 'react-router-dom';
-import './langeyreading.css';
+import './langeyreading.animations.css';
 import { UserTracker } from '../utils/userTracking';
 import { useDailyCredits } from '../contexts/DailyCreditsContext';
-import { ExercisesTemplate } from './ExercisesTemplate';
+import { ExercisesTemplate, exerciseTitleClassName } from './ExercisesTemplate';
 import { CreditLimitBlock } from './CreditLimitBlock';
 import { translateGermanToEnglish } from '../utils/googleTranslate';
 import { TypewriterText as TypeWriter } from './shared/TypewriterText';
@@ -20,6 +20,46 @@ import type { TopicsByLevel } from '../features/learning/moduleTypes';
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore - allow JSON import
 import levelTopicsData from '../../data/all_reading_topics.json';
+
+const cx = (...classes: Array<string | false | undefined | null>) => classes.filter(Boolean).join(' ');
+
+const ACTION_BTN = cx(
+  'min-w-[90px] flex-1 cursor-pointer rounded-[10px] border border-black/20 px-[18px] py-2.5 text-sm font-medium text-white',
+  'bg-[linear-gradient(135deg,#000_0%,#333_100%)] shadow-[0_4px_6px_-1px_rgba(0,0,0,0.1),0_2px_4px_-1px_rgba(0,0,0,0.06)] backdrop-blur-[4px]',
+  'transition-all duration-300 hover:enabled:-translate-y-px hover:enabled:bg-[linear-gradient(135deg,#333_0%,#555_100%)] hover:enabled:shadow-[0_6px_10px_-1px_rgba(0,0,0,0.15),0_4px_6px_-1px_rgba(0,0,0,0.1)]',
+  'active:enabled:translate-y-0 active:enabled:shadow-[0_2px_4px_-1px_rgba(0,0,0,0.1),0_1px_2px_-1px_rgba(0,0,0,0.06)]',
+  'disabled:cursor-not-allowed disabled:border-black/10 disabled:bg-black/15 disabled:text-black/40 disabled:shadow-[0_2px_4px_-1px_rgba(0,0,0,0.06),0_1px_2px_-1px_rgba(0,0,0,0.04)]',
+  'max-lg:min-h-[46px] max-lg:h-auto max-lg:min-w-0 max-lg:w-0 max-lg:flex-[1_1_0] max-lg:rounded-xl max-lg:border-[#eee] max-lg:bg-white max-lg:px-2.5 max-lg:py-3 max-lg:text-sm max-lg:font-medium max-lg:text-[#333] max-lg:shadow-none max-lg:transform-none',
+  'max-lg:disabled:bg-black/15 max-lg:disabled:border-black/10 max-lg:disabled:text-black/40',
+  'max-sm:min-w-[80px] max-sm:px-3.5 max-sm:py-2 max-sm:text-[13px]'
+);
+
+const VOCAB_BTN = cx(
+  ACTION_BTN,
+  'relative flex items-center justify-center gap-1.5 border-black/15! bg-[rgba(248,248,248,0.9)]! text-black/80! backdrop-blur-xl',
+  'before:pointer-events-none before:absolute before:-inset-px before:-z-10 before:animate-settings-glow before:rounded-[10px] before:bg-[linear-gradient(45deg,rgba(120,119,198,0.5),rgba(255,206,84,0.5),rgba(120,119,198,0.5),rgba(255,206,84,0.5))] before:bg-size-[400%_400%] before:opacity-80 before:content-[""]',
+  'disabled:before:opacity-20 hover:enabled:bg-[rgba(248,248,248,0.95)]! max-lg:border-transparent! max-lg:bg-[linear-gradient(90deg,#e2bea9,#b8b0d3)]! max-lg:text-black! max-lg:before:hidden max-lg:hover:enabled:bg-[linear-gradient(90deg,#e2bea9,#b8b0d3)]! max-lg:hover:enabled:transform-none'
+);
+
+const FULLSCREEN_BTN = cx(
+  ACTION_BTN,
+  'flex w-10 min-w-10 flex-none items-center justify-center rounded-lg border-black/30! bg-transparent! p-2.5! text-black/30!',
+  'hover:enabled:border-black/50! hover:enabled:bg-transparent! hover:enabled:text-black/50!',
+  'disabled:border-black/15! disabled:bg-transparent! disabled:text-black/15!',
+  'max-lg:hidden max-sm:min-w-[35px] max-sm:w-[35px] max-sm:p-2 max-sm:text-[13px] max-sm:border-black/40! max-sm:text-black/40!'
+);
+
+const EXERCISE_BOX = cx(
+  'relative mb-5 flex h-[400px] w-full max-w-[800px] flex-col overflow-y-auto rounded-2xl border border-black/10 bg-white/80 p-6 shadow-[0_10px_25px_-5px_rgba(0,0,0,0.1),0_10px_10px_-5px_rgba(0,0,0,0.04)] backdrop-blur-xl transition-all duration-300',
+  '[&>.gg-credit-limit-block]:min-h-full',
+  'max-lg:mb-0 max-lg:h-auto max-lg:min-h-0 max-lg:max-w-none max-lg:flex-1 max-lg:rounded-none max-lg:border-0 max-lg:bg-white max-lg:p-0 max-lg:pt-2.5 max-lg:pb-5 max-lg:shadow-none max-lg:backdrop-blur-none',
+  'max-sm:mb-4 max-sm:h-[350px] max-sm:p-4'
+);
+
+const PASSAGE_BLOCK = cx(
+  'mb-4 rounded-xl border border-black/8 bg-[rgba(248,248,250,0.85)] px-[18px] py-4 text-sm leading-[1.75] whitespace-pre-line text-[#222]',
+  'max-lg:mx-5 max-lg:mb-5 max-lg:w-[calc(100%-40px)] max-lg:rounded-2xl max-lg:border-black/5 max-lg:bg-black/3 max-lg:p-4'
+);
 
 export interface LangeyReadingProps extends FullscreenModuleProps {
   mode: PracticeMode;
@@ -456,20 +496,23 @@ export const LangeyReading: React.FC<LangeyReadingProps> = ({
   // ─── Spider chart ───────────────────────────────────────────────────────────
   // ─── Selector list shared between desktop dropdown and mobile bottom sheet ──
   const renderTopicList = (close: () => void) => (
-    <ul className="lr-topic-list" role="listbox">
+    <ul className="m-0 grid list-none gap-1.5 p-0 max-lg:max-h-none max-lg:pb-[30px]" role="listbox">
       <li
-        className={`lr-topic-item ${topic === 'None' ? 'selected' : ''}`}
+        className={cx(
+          'flex cursor-pointer items-center gap-2.5 rounded-[10px] px-2.5 py-2 hover:bg-[rgba(120,119,198,0.08)] max-lg:min-h-0 max-lg:border-b max-lg:border-[#f5f5f5] max-lg:rounded-none max-lg:bg-transparent max-lg:px-0 max-lg:py-3.5',
+          topic === 'None' && 'bg-[rgba(120,119,198,0.12)] max-lg:bg-[#f9f9ff]'
+        )}
         onClick={() => { handleTopicChange('None'); close(); }}
       >
-        <div className="lr-topic-ring">
+        <div className="relative flex h-8 w-8 items-center justify-center [&>*]:rounded-[14px]">
           <svg width="32" height="32">
-            <circle cx="16" cy="16" r="12" className="lr-ring-track" />
-            <circle cx="16" cy="16" r="12" className="lr-ring-progress"
+            <circle cx="16" cy="16" r="12" className="fill-none stroke-black/10 stroke-[3]" />
+            <circle cx="16" cy="16" r="12" className="origin-[16px_16px] -rotate-90 fill-none stroke-black/80 stroke-[3] [stroke-linecap:round]"
               style={{ strokeDasharray: `${2 * Math.PI * 12}`, strokeDashoffset: `${2 * Math.PI * 12}` }} />
           </svg>
-          <span className="lr-step">0</span>
+          <span className="absolute text-xs font-semibold text-black">0</span>
         </div>
-        <span className="lr-topic-title">None</span>
+        <span className={cx('flex-1 text-sm text-[#222] max-lg:text-[15px]', topic === 'None' && 'max-lg:font-semibold max-lg:text-[#6366f1]')}>None</span>
       </li>
       {getTopicsForLevel(level).map((t, idx) => {
         const title = t.Title;
@@ -477,21 +520,27 @@ export const LangeyReading: React.FC<LangeyReadingProps> = ({
         const visibleProgress = progress >= 10 ? progress : 0;
         const circ = 2 * Math.PI * 12;
         const offset = (1 - visibleProgress / 100) * circ;
+        const isSelected = topic === title;
         return (
           <li
             key={title}
-            className={`lr-topic-item ${topic === title ? 'selected' : ''}`}
+            className={cx(
+              'flex cursor-pointer items-center gap-2.5 rounded-[10px] px-2.5 py-2 hover:bg-[rgba(120,119,198,0.08)] max-lg:min-h-0 max-lg:border-b max-lg:border-[#f5f5f5] max-lg:rounded-none max-lg:bg-transparent max-lg:px-0 max-lg:py-3.5',
+              isSelected && 'bg-[rgba(120,119,198,0.12)] max-lg:bg-[#f9f9ff]'
+            )}
             onClick={() => { handleTopicChange(title); close(); }}
           >
-            <div className="lr-topic-ring">
+            <div className="relative flex h-8 w-8 items-center justify-center [&>*]:rounded-[14px]">
               <svg width="32" height="32">
-                <circle cx="16" cy="16" r="12" className="lr-ring-track" />
-                <circle cx="16" cy="16" r="12" className="lr-ring-progress"
+                <circle cx="16" cy="16" r="12" className="fill-none stroke-black/10 stroke-[3]" />
+                <circle cx="16" cy="16" r="12" className="origin-[16px_16px] -rotate-90 fill-none stroke-black/80 stroke-[3] [stroke-linecap:round]"
                   style={{ strokeDasharray: `${circ}`, strokeDashoffset: `${offset}` }} />
               </svg>
-              <span className="lr-step">{idx + 1}</span>
+              <span className="absolute text-xs font-semibold text-black">{idx + 1}</span>
             </div>
-            <span className="lr-topic-title">{title.length > 40 ? title.substring(0, 44) + '...' : title}</span>
+            <span className={cx('flex-1 text-sm text-[#222] max-lg:text-[15px]', isSelected && 'max-lg:font-semibold max-lg:text-[#6366f1]')}>
+              {title.length > 40 ? title.substring(0, 44) + '...' : title}
+            </span>
           </li>
         );
       })}
@@ -510,23 +559,35 @@ export const LangeyReading: React.FC<LangeyReadingProps> = ({
     return (
       <>
         {isFullscreen && (
-          <button className="lr-fullscreen-close" onClick={() => setIsFullscreen(false)} title="Exit fullscreen">
+          <button
+            className="fixed top-5 right-5 z-[1002] flex h-11 w-11 cursor-pointer items-center justify-center rounded-full border border-black/20 bg-white/90 text-[#333] backdrop-blur-lg transition-all duration-200 hover:scale-105 hover:bg-white/95 hover:shadow-[0_4px_12px_rgba(0,0,0,0.15)] max-sm:top-[15px] max-sm:right-[15px] max-sm:h-10 max-sm:w-10"
+            onClick={() => setIsFullscreen(false)}
+            title="Exit fullscreen"
+          >
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
               <path d="M18 6L6 18M6 6l12 12" />
             </svg>
           </button>
         )}
 
-        <div className={`german-reading-container ${isFullscreen ? 'fullscreen-mode' : ''}`}>
-          <div className="lr-practice">
+        <div className="german-reading-container">
+          <div className={cx(
+            'flex min-h-[calc(100vh-150px)] min-h-[calc(100dvh-150px)] flex-col items-center justify-center p-5 pb-[calc(20px+env(safe-area-inset-bottom,0px))]',
+            'max-lg:h-[calc(100dvh-54px)] max-lg:min-h-[calc(100dvh-54px)] max-lg:w-full max-lg:max-w-none max-lg:items-stretch max-lg:justify-start max-lg:gap-0 max-lg:overflow-hidden max-lg:p-0'
+          )}>
             {/* Header */}
-            <div className="lr-practice-header">
-              <div className="lr-field-left">
-                <h1 className="lr-label">Reading</h1>
-                <div className="lr-custom-selector" ref={selectorRef}>
+            <div className={cx(
+              'mb-6 flex w-full max-w-[800px] items-end justify-between gap-5',
+              'max-lg:mb-0 max-lg:block max-lg:max-w-none max-lg:p-[16px_20px_4px]',
+              'max-sm:flex-col max-sm:items-stretch max-sm:gap-4',
+              isFullscreen && 'hidden'
+            )}>
+              <div className="max-w-[50%] flex-1 text-left max-lg:max-w-none max-lg:w-full max-sm:max-w-full">
+                <h1 className="mb-1.5 block text-xs text-[#444] max-lg:hidden">Reading</h1>
+                <div className="relative max-lg:mb-3 max-lg:w-full" ref={selectorRef}>
                   <button
                     type="button"
-                    className="lr-selector-trigger"
+                    className="flex w-full cursor-pointer items-center justify-between rounded-[10px] border border-black/15 bg-white px-3.5 py-2.5 text-[#222] max-lg:min-h-[46px] max-lg:rounded-xl max-lg:border-[#ccc] max-lg:px-4 max-lg:py-3 max-lg:text-base max-lg:font-normal max-lg:text-[#333] max-lg:shadow-none [&_svg]:opacity-60"
                     onClick={() => setIsSelectorOpen(v => !v)}
                   >
                     {topic === 'None' ? 'Select topic' : (topic.length > 40 ? topic.substring(0, 44) + '...' : topic)}
@@ -536,18 +597,18 @@ export const LangeyReading: React.FC<LangeyReadingProps> = ({
                   </button>
 
                   {isSelectorOpen && !isMobileView && (
-                    <div className="lr-dropdown-panel">
+                    <div className="absolute top-[calc(100%+8px)] right-0 left-0 z-30 max-h-[260px] overflow-y-auto rounded-xl border border-black/12 bg-white p-2 shadow-[0_10px_25px_-5px_rgba(0,0,0,0.1),0_10px_10px_-5px_rgba(0,0,0,0.04)] max-lg:hidden">
                       {renderTopicList(() => setIsSelectorOpen(false))}
                     </div>
                   )}
 
                   {isSelectorOpen && isMobileView && (
                     <>
-                      <div className="lr-sheet-overlay" onClick={() => setIsSelectorOpen(false)} />
-                      <div className="lr-bottom-sheet">
-                        <div className="lr-sheet-header">
-                          <span className="lr-sheet-title">Select topic</span>
-                          <button className="lr-sheet-close" onClick={() => setIsSelectorOpen(false)}>
+                      <div className="fixed inset-0 z-[700] bg-transparent max-lg:block" onClick={() => setIsSelectorOpen(false)} />
+                      <div className="fixed right-0 bottom-0 left-0 z-[701] box-border max-h-[70dvh] min-h-[70dvh] w-auto max-w-screen overflow-x-hidden rounded-t-3xl border-0 bg-white p-4 pb-[calc(16px+env(safe-area-inset-bottom,0px))] shadow-[0_-8px_20px_rgba(0,0,0,0.1)]">
+                        <div className="mb-5 flex items-center justify-between px-2.5 py-0">
+                          <span className="text-xl font-bold text-[#1a1a1a]">Select topic</span>
+                          <button className="flex h-[34px] w-[34px] items-center justify-center rounded-lg border border-black/20 bg-transparent text-black/60 hover:border-black/40 hover:text-black/80" onClick={() => setIsSelectorOpen(false)}>
                             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                               <path d="M18 6L6 18M6 6l12 12" />
                             </svg>
@@ -560,23 +621,23 @@ export const LangeyReading: React.FC<LangeyReadingProps> = ({
                 </div>
               </div>
 
-              <div className="lr-action-buttons">
+              <div className="flex max-w-[50%] flex-1 flex-wrap items-end justify-end gap-3 max-lg:mb-2.5 max-lg:w-full max-lg:max-w-none max-lg:flex-none max-lg:justify-stretch max-lg:gap-2 max-sm:mt-2 max-sm:w-full max-sm:gap-2">
                 <button
-                  className="lr-action-btn"
+                  className={ACTION_BTN}
                   onClick={handleButton1}
                   disabled={topic === 'None' || isBlocked}
                 >
                   {getButton1Label()}
                 </button>
                 <button
-                  className="lr-action-btn lr-vocab-btn"
+                  className={VOCAB_BTN}
                   onClick={handleVocabulary}
                   disabled={!ex || !isShowingExercise || isBlocked}
                 >
                   Vocabulary
                 </button>
                 <button
-                  className="lr-action-btn lr-fullscreen-btn"
+                  className={FULLSCREEN_BTN}
                   onClick={() => setIsFullscreen(v => !v)}
                   disabled={topic === 'None' || !isShowingExercise || isBlocked}
                   title="Enter fullscreen"
@@ -589,39 +650,45 @@ export const LangeyReading: React.FC<LangeyReadingProps> = ({
             </div>
 
             {/* Exercise box */}
-            <div className={`lr-exercise-box ${isFullscreen ? 'lr-exercise-box-fullscreen' : ''}`}>
+            <div className={cx(
+              EXERCISE_BOX,
+              isFullscreen && 'fixed! inset-0 z-[1000] m-0! h-screen! max-w-none! rounded-none! border-0! bg-white/95! p-10! pt-20! backdrop-blur-[20px]! max-sm:h-dvh! max-sm:p-5! max-sm:pt-[60px]! max-sm:pb-[calc(20px+env(safe-area-inset-bottom,0px))]!'
+            )}>
               {isBlocked ? (
                 <CreditLimitBlock message={limitMessage} />
               ) : isLoading ? (
-                <div className="lr-loading"><div className="lr-spinner" /></div>
+                <div className="flex h-full min-h-full items-center justify-center max-lg:min-h-full"><div className="size-6 animate-spin rounded-full border-2 border-[#f3f3f3] border-t-black" /></div>
               ) : isShowingExercise && ex ? (
                 <>
-                  {/* Instruction (purple box) */}
                   {currentInstruction && (
-                    <div className="et-exercise-title">
+                    <div className={exerciseTitleClassName}>
                       {currentInstruction}
                     </div>
                   )}
-                  {/* Passage */}
                   {passage && (
-                    <div className="lr-passage-block">
-                      <div className="lr-passage-label">{formatLabel}</div>
+                    <div className={PASSAGE_BLOCK}>
+                      <div className="mb-2 text-[11px] font-bold tracking-[0.8px] text-black/40 uppercase">{formatLabel}</div>
                       {passage}
                     </div>
                   )}
-                  {/* Exercise questions */}
                   <ExercisesTemplate {...getExerciseTemplateProps()} title="" />
                 </>
               ) : (
-                <div className="lr-empty-state"><p>{defaultMsg}</p></div>
+                <div className="flex h-full min-h-full items-center justify-center text-sm text-[#666] max-lg:min-h-full max-lg:p-6 max-lg:text-base max-lg:opacity-60"><p>{defaultMsg}</p></div>
               )}
             </div>
 
-            {/* Hint bar — shows LLM text or instruction */}
-            <div className="lr-hint-bar">
-              <div className="lr-hint-content">
+            {/* Hint bar */}
+            <div className={cx(
+              'relative m-0 flex w-full max-w-[800px] min-h-20 items-center justify-center rounded-2xl border border-black/15 bg-[rgba(248,248,248,0.9)] px-5 py-4 shadow-[0_8px_20px_-5px_rgba(0,0,0,0.1),0_6px_8px_-5px_rgba(0,0,0,0.04)] backdrop-blur-xl',
+              'before:pointer-events-none before:absolute before:-inset-px before:-z-10 before:animate-settings-glow before:rounded-2xl before:bg-[linear-gradient(45deg,rgba(120,119,198,0.5),rgba(255,206,84,0.5),rgba(120,119,198,0.5),rgba(255,206,84,0.5))] before:bg-size-[400%_400%] before:opacity-80 before:content-[""]',
+              'max-lg:relative max-lg:max-w-none max-lg:flex-none max-lg:overflow-hidden max-lg:rounded-none max-lg:border-0 max-lg:bg-white max-lg:px-8 max-lg:py-6 max-lg:pb-[calc(24px+env(safe-area-inset-bottom,0px))] max-lg:shadow-none max-lg:backdrop-blur-none',
+              'max-lg:before:inset-0 max-lg:before:rounded-none max-lg:before:bg-[linear-gradient(90deg,#e2bea9,#b8b0d3)] max-lg:before:opacity-80',
+              isFullscreen && 'hidden'
+            )}>
+              <div className="relative z-1 max-w-full text-center text-sm leading-normal font-bold break-words text-[#333] max-lg:w-full max-lg:max-w-none max-lg:text-base max-lg:font-normal max-lg:text-[#1a1a1a] max-lg:leading-6">
                 {isBlocked ? (
-                  <span className="gg-limit-hint">Tap Upgrade to Pro above to continue</span>
+                  <span className="text-center text-sm text-[#333] opacity-60">Tap Upgrade to Pro above to continue</span>
                 ) : (
                 <TypeWriter
                   key={`llm-${llmBoxText}`}
@@ -653,9 +720,13 @@ export const LangeyReading: React.FC<LangeyReadingProps> = ({
     : 0;
 
   return (
-    <div className="lr-stats">
-      <div className="lr-spider-wrapper">
-        <svg key={level} className="lr-spider-chart" viewBox="0 0 400 400">
+    <div className={cx(
+      'relative flex min-h-[calc(100vh-100px)] min-h-[calc(100dvh-100px)] flex-col items-center justify-center gap-5 p-5',
+      'max-lg:h-[calc(100dvh-54px)] max-lg:min-h-0 max-lg:max-w-none max-lg:flex-1 max-lg:justify-center max-lg:gap-0 max-lg:bg-white max-lg:px-[15px] max-lg:pt-0 max-lg:pb-[calc(120px+env(safe-area-inset-bottom,0px))]',
+      'max-sm:gap-0 max-sm:px-[15px] max-sm:pt-[60px] max-sm:pb-[70px]'
+    )}>
+      <div className="relative flex w-full max-w-[520px] items-center justify-center max-lg:static max-lg:mx-auto max-lg:w-[clamp(280px,80vw,400px)] max-lg:max-w-[clamp(280px,80vw,400px)] max-sm:max-w-full">
+        <svg key={level} className="block h-auto w-full max-w-[500px] overflow-visible max-lg:w-[clamp(280px,80vw,400px)] max-lg:max-w-[clamp(280px,80vw,400px)] max-sm:max-w-[380px]" viewBox="0 0 400 400">
           <g>
             {[1, 2, 3, 4, 5].map(ring => {
               const R = 140 * (ring / 5);
@@ -665,13 +736,13 @@ export const LangeyReading: React.FC<LangeyReadingProps> = ({
                 const rad = (angle * Math.PI) / 180;
                 pts.push(`${200 + Math.cos(rad) * R},${200 + Math.sin(rad) * R}`);
               }
-              return <polygon key={ring} className="lr-grid-line" points={pts.join(' ')} />;
+              return <polygon key={ring} className="fill-none stroke-black/10 stroke-1" points={pts.join(' ')} />;
             })}
 
             {axisPoints.map((axis, i) => (
               <g key={i}>
                 <line
-                  className="lr-axis-line"
+                  className="fill-none stroke-black/20 stroke-1"
                   x1="200" y1="200" x2={axis.x} y2={axis.y}
                   style={{
                     strokeDasharray: `${Math.hypot(axis.x - 200, axis.y - 200)}`,
@@ -680,7 +751,7 @@ export const LangeyReading: React.FC<LangeyReadingProps> = ({
                   }}
                 />
                 <text
-                  className="lr-axis-label"
+                  className="fill-[#333] text-[10px] font-medium max-lg:text-[9px] max-sm:text-[10px]"
                   x={axis.x + (axis.x - 200) * 0.15}
                   y={axis.y + (axis.y - 200) * 0.35}
                   textAnchor="middle"
@@ -713,7 +784,7 @@ export const LangeyReading: React.FC<LangeyReadingProps> = ({
           {dataPoints.map((point, i) => (
             <g key={i}>
               <line
-                className="lr-data-line"
+                className="fill-none stroke-[rgba(120,119,198,0.8)] stroke-[3]"
                 x1="200" y1="200" x2={point.x} y2={point.y}
                 style={{
                   strokeDasharray: `${Math.hypot(point.x - 200, point.y - 200)}`,
@@ -723,14 +794,14 @@ export const LangeyReading: React.FC<LangeyReadingProps> = ({
               />
               {point.value >= 10 && (
                 <circle
-                  className="lr-data-point"
+                  className="origin-center fill-[rgba(120,119,198,1)] stroke-2 stroke-white"
                   cx={point.x} cy={point.y} r="5"
                   style={{ opacity: 0, transform: 'scale(0)', animation: `lr-drawPoint 0.4s ease-out ${1.2 + i * 0.1}s forwards` }}
                 />
               )}
               {point.value >= 10 && (
                 <text
-                  className="lr-data-value"
+                  className="fill-black text-[10px] font-semibold max-sm:text-[9px]"
                   x={point.x} y={point.y - 12} textAnchor="middle"
                   style={{ opacity: 0, animation: `lr-fadeIn 0.3s ease-out ${1.5 + i * 0.1}s forwards` }}
                 >
@@ -741,15 +812,21 @@ export const LangeyReading: React.FC<LangeyReadingProps> = ({
           ))}
 
           <polygon
-            className="lr-data-polygon"
+            className="fill-[rgba(120,119,198,0.2)] stroke-[rgba(120,119,198,0.6)] stroke-1"
             points={polygon}
             style={{ opacity: 0, animation: 'lr-fadeInPolygon 0.8s ease-out 2s forwards' }}
           />
         </svg>
       </div>
 
-      <div className="lr-stats-hint-bar">
-        <div className="lr-hint-content">
+      <div className={cx(
+        'relative mx-auto flex w-full max-w-[600px] min-h-[70px] items-center justify-center overflow-hidden rounded-[14px] border border-black/15 bg-[rgba(248,248,248,0.85)] px-5 py-4 shadow-[0_6px_16px_-4px_rgba(0,0,0,0.08),0_4px_6px_-2px_rgba(0,0,0,0.04)] backdrop-blur-[10px]',
+        'before:pointer-events-none before:absolute before:-inset-px before:-z-10 before:animate-settings-glow before:rounded-[14px] before:bg-[linear-gradient(45deg,rgba(120,119,198,0.3),rgba(255,206,84,0.3),rgba(120,119,198,0.3),rgba(255,206,84,0.3))] before:bg-size-[400%_400%] before:opacity-60 before:content-[""]',
+        'max-lg:fixed max-lg:right-0 max-lg:bottom-0 max-lg:left-0 max-lg:z-[420] max-lg:mx-0 max-lg:max-w-none max-lg:min-h-[calc(100px+env(safe-area-inset-bottom,0px))] max-lg:rounded-none max-lg:border-0 max-lg:bg-white max-lg:px-8 max-lg:py-6 max-lg:pb-[calc(24px+env(safe-area-inset-bottom,0px))] max-lg:shadow-none max-lg:backdrop-blur-none',
+        'max-lg:before:inset-0 max-lg:before:rounded-none max-lg:before:bg-[linear-gradient(90deg,#e2bea9,#b8b0d3)] max-lg:before:opacity-80',
+        'max-sm:mt-11 max-sm:mb-[calc(20px+env(safe-area-inset-bottom,10px))] max-sm:min-h-[75px] max-sm:px-4 max-sm:py-3'
+      )}>
+        <div className="relative z-1 max-w-full text-center text-sm leading-normal font-bold break-words text-[#333] max-lg:w-full max-lg:max-w-none max-lg:text-base max-lg:font-normal max-lg:text-[#1a1a1a] max-lg:leading-6">
           {chartTopics.length > 0 && <TotalProgressText key={`${level}-${avgScore}`} percent={avgScore} />}
         </div>
       </div>

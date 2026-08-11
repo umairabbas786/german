@@ -372,7 +372,7 @@ export const ModulesGuideTour: React.FC<ModulesGuideTourProps> = ({ active, onCl
     >
       {step === 'prompt' ? (
         <div
-          className={`langey-guide-prompt-banner fixed bottom-6 left-1/2 flex w-[calc(100%-32px)] max-w-[380px] -translate-x-1/2 flex-col gap-3.5 overflow-hidden rounded-[18px] border border-gray-900/[0.18] bg-gradient-to-b from-white to-slate-50 px-[18px] pt-[18px] pb-[30px] shadow-[0_12px_40px_rgba(15,23,42,0.14),0_2px_8px_rgba(15,23,42,0.06)] max-sm:right-6 max-sm:bottom-[max(24px,env(safe-area-inset-bottom,0px))] max-sm:left-6 max-sm:w-auto max-sm:max-w-none max-sm:translate-x-0 sm:right-6 sm:left-auto sm:translate-x-0${promptLeaving ? ' langey-guide-prompt-banner--out' : ''}`}
+          className={`langey-guide-prompt-banner fixed inset-x-4 bottom-6 z-[9999] mx-auto flex w-auto max-w-[380px] flex-col gap-3.5 overflow-hidden rounded-[18px] border border-gray-900/[0.18] bg-gradient-to-b from-white to-slate-50 px-[18px] pt-[18px] pb-[30px] shadow-[0_12px_40px_rgba(15,23,42,0.14),0_2px_8px_rgba(15,23,42,0.06)] max-sm:bottom-[max(24px,env(safe-area-inset-bottom,0px))] sm:right-6 sm:left-auto sm:mx-0${promptLeaving ? ' langey-guide-prompt-banner--out' : ''}`}
           role="dialog"
           aria-label="Welcome to Langey"
         >

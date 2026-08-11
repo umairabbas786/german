@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { createPortal } from 'react-dom';
 import './FeedbackPopup.animations.css';
 
 interface FeedbackPopupProps {
@@ -46,7 +47,7 @@ const FeedbackPopup: React.FC<FeedbackPopupProps> = ({ isVisible, onClose, onSub
 
   const canSubmit = selectedStars > 0 && !isSubmitting;
 
-  return (
+  return createPortal(
     <div className="fixed inset-0 z-[10000] box-border flex items-center justify-center bg-gradient-to-br from-black/40 to-black/30 p-5 backdrop-blur-[8px] max-[480px]:p-3">
       <div className="feedback-popup-animate relative max-h-[90vh] w-full max-w-[420px] overflow-hidden rounded-3xl border border-white/20 bg-white/85 shadow-[0_32px_64px_rgba(0,0,0,0.15),0_0_0_1px_rgba(255,255,255,0.1)] backdrop-blur-[20px] max-[480px]:max-h-[95vh] max-[480px]:max-w-none max-[480px]:rounded-[20px]">
         <button
@@ -143,7 +144,8 @@ const FeedbackPopup: React.FC<FeedbackPopupProps> = ({ isVisible, onClose, onSub
           </button>
         </div>
       </div>
-    </div>
+    </div>,
+    document.body,
   );
 };
 

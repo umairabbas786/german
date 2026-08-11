@@ -241,7 +241,7 @@ export const CreditLimitBlockPopup: React.FC<CreditLimitBlockPopupProps> = ({
         style={{ pointerEvents: 'auto' }}
       />
 
-      <div className="gg-credit-block-sheet-animate fixed bottom-0 left-1/2 z-[1501] box-border flex max-h-[min(85vh,680px)] w-[min(560px,calc(100vw-24px))] -translate-x-1/2 flex-col rounded-t-[22px] bg-white px-10 pt-[34px] pb-[calc(28px+env(safe-area-inset-bottom,0px))] text-langey-ink shadow-[0_-18px_60px_rgba(0,0,0,0.18)] max-md:left-0 max-md:right-0 max-md:w-full max-md:max-h-[86vh] max-md:translate-x-0 max-md:rounded-t-[20px] max-md:px-5 max-md:pt-7 max-md:pb-[calc(20px+env(safe-area-inset-bottom,0px))]">
+      <div className="gg-credit-block-sheet-animate fixed inset-x-0 bottom-0 z-[1501] mx-auto box-border flex max-h-[min(85vh,680px)] w-[min(560px,calc(100vw-24px))] flex-col rounded-t-[22px] bg-white px-10 pt-[34px] pb-[calc(28px+env(safe-area-inset-bottom,0px))] text-langey-ink shadow-[0_-18px_60px_rgba(0,0,0,0.18)] max-md:w-full max-md:max-h-[86vh] max-md:rounded-t-[20px] max-md:px-5 max-md:pt-7 max-md:pb-[calc(20px+env(safe-area-inset-bottom,0px))]">
         <button
           type="button"
           className="absolute top-4 right-4 flex h-8 w-8 cursor-pointer items-center justify-center rounded-full border-none bg-black/[0.06] text-langey-ink transition-[background,transform] duration-200 hover:scale-105 hover:bg-black/12"

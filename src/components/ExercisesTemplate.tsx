@@ -1,5 +1,4 @@
 import React from 'react';
-import './ExercisesTemplate.css';
 import {
   fillBlanksForTranslate,
   firstCanonicalSolution,
@@ -18,6 +17,51 @@ import type {
 
 export type { ExerciseType } from '../features/exercises/types';
 
+const cx = (...classes: Array<string | false | undefined>) => classes.filter(Boolean).join(' ');
+
+const CORRECT_INPUT =
+  'border-emerald-500/70 shadow-[0_0_0_2px_rgba(16,185,129,0.15)]';
+const INCORRECT_INPUT =
+  'border-red-500/70 shadow-[0_0_0_2px_rgba(239,68,68,0.12)]';
+
+const CORRECT_ROW =
+  'max-lg:border-emerald-500/70 max-lg:shadow-[0_0_0_2px_rgba(16,185,129,0.15)]';
+const INCORRECT_ROW =
+  'max-lg:border-red-500/70 max-lg:shadow-[0_0_0_2px_rgba(239,68,68,0.12)]';
+
+const EXERCISES_ROOT =
+  'flex h-full w-full flex-col pb-6 max-lg:h-auto max-lg:bg-transparent max-lg:p-[10px_20px_20px]';
+
+const INSTRUCTION_BOX =
+  'mb-5 rounded-xl border border-black/5 bg-black/[0.03] p-3 px-4 max-lg:m-0 max-lg:mb-5 max-lg:rounded-2xl max-lg:border-black/5 max-lg:bg-black/[0.03] max-lg:p-4 max-sm:mb-4 max-sm:p-[10px_12px]';
+
+const INSTRUCTION_LABEL =
+  'mb-2 block text-[10px] font-extrabold uppercase text-[#666] max-sm:mb-1.5 max-sm:text-[9px]';
+
+const INSTRUCTION_TEXT =
+  'm-0 text-sm leading-normal text-[#333] max-sm:text-[13px]';
+
+/** Shared exercise instruction banner for reading/listening modules. */
+export const exerciseTitleClassName = cx(
+  'mb-4 rounded-xl border border-[rgba(120,119,198,0.2)] bg-[rgba(120,119,198,0.1)] px-4 py-3 text-center text-sm leading-snug font-semibold text-[rgba(120,119,198,0.9)]',
+  'max-lg:mx-5 max-lg:mb-4 max-lg:w-[calc(100%-40px)] max-sm:px-3 max-sm:py-2.5 max-sm:text-[13px]',
+);
+
+const EXERCISE_TABLE =
+  'mb-[30px] w-full border-collapse max-lg:mb-0 max-lg:block max-lg:w-full [&_tbody]:max-lg:block [&_tbody]:max-lg:w-full [&_tbody::after]:block [&_tbody::after]:h-6 [&_tbody::after]:content-[""]';
+
+const EXERCISE_ROW =
+  'border-b border-black/[0.08] max-lg:mb-5 max-lg:block max-lg:w-full max-lg:rounded-3xl max-lg:border max-lg:border-black/5 max-lg:bg-white/80 max-lg:p-3 max-lg:shadow-[0_4px_12px_rgba(0,0,0,0.03)]';
+
+const QUESTION_CELL =
+  'border border-black/10 p-3 text-left align-middle text-sm max-lg:m-0 max-lg:mb-3.5 max-lg:block max-lg:w-full max-lg:border-0 max-lg:p-0 max-lg:text-[17px] max-lg:leading-8 max-lg:text-black max-sm:p-2 max-sm:text-[13px]';
+
+const ANSWER_CELL =
+  'w-[200px] border border-black/10 p-3 text-center max-lg:block max-lg:w-full max-lg:border-0 max-lg:p-0 max-lg:text-left max-sm:w-[150px] max-sm:p-2';
+
+const EXERCISE_INPUT =
+  'w-full rounded-md border border-black/20 bg-white/90 px-3 py-2 text-sm text-[#333] transition-[border-color] duration-300 focus:border-[rgba(120,119,198,0.5)] focus:shadow-[0_0_0_2px_rgba(120,119,198,0.1)] focus:outline-none max-lg:min-h-[52px] max-lg:rounded-2xl max-lg:border-black/10 max-lg:bg-white max-lg:px-4 max-lg:text-base max-lg:shadow-none max-sm:px-2 max-sm:py-1.5 max-sm:text-[13px]';
+
 const TranslateIcon: React.FC<{
   text: string;
   onTranslate?: (text: string, opts?: { wholeSentence?: boolean }) => void;
@@ -26,7 +70,7 @@ const TranslateIcon: React.FC<{
   if (!onTranslate) return null;
   return (
     <button
-      className="et-translate-btn"
+      className="flex h-full w-full cursor-pointer items-center justify-center border-none bg-transparent p-1.5 opacity-[0.35] transition-opacity duration-200 hover:opacity-80"
       onClick={(e) => {
         e.stopPropagation();
         onTranslate(text, wholeSentence ? { wholeSentence: true } : undefined);
@@ -83,21 +127,24 @@ const WordOrderRow: React.FC<{
 
   return (
     <div
-      className={`et-word-order-question ${
-        submitted ? (isCorrect ? 'et-correct' : 'et-incorrect') : ''
-      }`}
+      className={cx(
+        'flex flex-col gap-2 rounded-xl border border-black/[0.08] bg-white/[0.72] p-3',
+        'max-lg:mb-5 max-lg:rounded-3xl max-lg:border-black/5 max-lg:bg-white/80 max-lg:p-3 max-lg:shadow-[0_4px_12px_rgba(0,0,0,0.03)]',
+        submitted && isCorrect && 'border-emerald-500/55 shadow-[0_0_0_1px_rgba(16,185,129,0.12)] max-lg:border-emerald-500/70 max-lg:shadow-[0_0_0_2px_rgba(16,185,129,0.15)]',
+        submitted && isIncorrect && 'border-red-500/55 shadow-[0_0_0_1px_rgba(239,68,68,0.1)] max-lg:border-red-500/70 max-lg:shadow-[0_0_0_2px_rgba(239,68,68,0.12)]',
+      )}
     >
-      <div className="et-word-order-bank-panel">
-        <span className="et-word-order-badge">{index + 1}.</span>
-        <div className="et-word-bank">
+      <div className="box-border flex h-[50px] min-h-[50px] max-h-[50px] items-center gap-2 rounded-[10px] border border-black/[0.06] bg-black/[0.035] py-0 pr-2 pl-1.5 max-lg:h-auto max-lg:max-h-none max-lg:min-h-[50px]">
+        <span className="min-w-4 shrink-0 text-[13px] font-semibold leading-none text-[#555]">{index + 1}.</span>
+        <div className="flex h-full min-w-0 flex-1 flex-wrap content-center items-center gap-1.5 overflow-hidden max-lg:h-auto max-lg:overflow-visible">
           {availableIndices.length === 0 ? (
-            <span className="et-word-order-hint">No words left</span>
+            <span className="text-xs italic leading-snug text-black/38">No words left</span>
           ) : (
             availableIndices.map((wordIndex) => (
               <button
                 key={wordIndex}
                 type="button"
-                className="et-word-chip"
+                className="cursor-pointer rounded-lg border border-black/10 bg-white px-[13px] py-[7px] text-[13px] font-medium leading-tight text-[#2d2d2d] shadow-[0_1px_2px_rgba(0,0,0,0.05)] transition-[border-color,background,transform] duration-150 hover:border-[rgba(120,119,198,0.45)] hover:bg-[rgba(120,119,198,0.06)] active:scale-[0.97] disabled:cursor-default max-sm:px-3.5 max-sm:py-2 max-sm:text-sm"
                 onClick={() => handleBankTap(wordIndex)}
                 disabled={submitted}
               >
@@ -107,7 +154,7 @@ const WordOrderRow: React.FC<{
           )}
         </div>
         {onTranslate && (
-          <div className="et-word-order-translate">
+          <div className="flex h-[34px] w-[34px] shrink-0 items-center justify-center rounded-lg border border-black/10 bg-white [&_button]:opacity-50 [&_button:hover]:opacity-85">
             <TranslateIcon
               text={firstCanonicalSolution(solution)}
               onTranslate={onTranslate}
@@ -117,18 +164,21 @@ const WordOrderRow: React.FC<{
         )}
       </div>
       <div
-        className={`et-word-order-solution-panel ${
-          isCorrect ? 'et-solution-correct' : isIncorrect ? 'et-solution-incorrect' : ''
-        }`}
+        className={cx(
+          'box-border flex h-[76px] min-h-[76px] max-h-[76px] flex-wrap content-center items-center gap-1.5 overflow-x-hidden overflow-y-auto rounded-[10px] border-[1.5px] border-dashed border-black/[0.14] bg-white p-[10px_12px] transition-[border-color,background] duration-200',
+          'max-lg:h-auto max-lg:max-h-none max-lg:min-h-[76px]',
+          isCorrect && 'border-solid border-emerald-500/50 bg-emerald-500/[0.06]',
+          isIncorrect && 'border-solid border-red-500/50 bg-red-500/[0.04]',
+        )}
       >
         {placedIndices.length === 0 ? (
-          <span className="et-word-order-hint">Tap words above to build your sentence</span>
+          <span className="text-xs italic leading-snug text-black/38">Tap words above to build your sentence</span>
         ) : (
           placedIndices.map((wordIndex, pos) => (
             <button
               key={`${wordIndex}-${pos}`}
               type="button"
-              className="et-word-chip et-word-chip-placed"
+              className="cursor-pointer rounded-lg border border-[rgba(120,119,198,0.32)] bg-[rgba(120,119,198,0.1)] px-[13px] py-[7px] text-[13px] font-medium leading-tight text-[#454380] shadow-[0_1px_2px_rgba(0,0,0,0.05)] transition-[border-color,background,transform] duration-150 hover:border-[rgba(120,119,198,0.45)] hover:bg-[rgba(120,119,198,0.06)] active:scale-[0.97] disabled:cursor-default max-sm:px-3.5 max-sm:py-2 max-sm:text-sm"
               onClick={() => handleSolutionTap(pos)}
               disabled={submitted}
             >
@@ -148,10 +198,10 @@ export const ExercisesTemplate: React.FC<ExercisesTemplateProps> = (props) => {
     translateText: string,
     wholeSentence?: boolean
   ) => (
-    <div className="et-question-with-translate">
-      <div className="et-question-text">{content}</div>
+    <div className="flex w-full items-stretch gap-2">
+      <div className="min-w-0 flex-1 text-left">{content}</div>
       {props.onTranslate && (
-        <div className="et-translate-box">
+        <div className="flex min-w-[34px] shrink-0 items-center justify-center rounded-md border border-black/[0.12] bg-[rgba(248,249,250,0.8)]">
           <TranslateIcon
             text={translateText}
             onTranslate={props.onTranslate}
@@ -165,9 +215,9 @@ export const ExercisesTemplate: React.FC<ExercisesTemplateProps> = (props) => {
   const renderInstructionBox = () => {
     if (!title) return null;
     return (
-      <div className="et-instruction-box">
-        <label className="et-instruction-label">Instruction</label>
-        <p className="et-instruction-text">{title}</p>
+      <div className={INSTRUCTION_BOX}>
+        <label className={INSTRUCTION_LABEL}>Instruction</label>
+        <p className={INSTRUCTION_TEXT}>{title}</p>
       </div>
     );
   };
@@ -175,7 +225,7 @@ export const ExercisesTemplate: React.FC<ExercisesTemplateProps> = (props) => {
   const renderFillInBlank = (exercise: FillInBlankExercise) => (
     <div>
       {renderInstructionBox()}
-      <table className="et-exercise-table">
+      <table className={EXERCISE_TABLE}>
       <tbody>
         {exercise.exercises.map((ex, index) => {
           const sol = exercise.solutions[index];
@@ -183,19 +233,26 @@ export const ExercisesTemplate: React.FC<ExercisesTemplateProps> = (props) => {
           const translateSource = props.rawTranslate
             ? ex.replace(/\s*\([^)]*\)/g, ' ').replace(/\s+/g, ' ').trim()
             : fillBlanksForTranslate(ex, answerStr ?? '');
+          const inputCorrect = props.submitted && textAnswerMatches(exercise.answers[index], exercise.solutions[index]);
+          const inputIncorrect = props.submitted && !inputCorrect;
           return (
-          <tr key={index} className="et-exercise-row">
-            <td className="et-question-cell">{renderQuestionWithTranslate(ex, translateSource, true)}</td>
-            <td className="et-answer-cell">
+          <tr
+            key={index}
+            className={cx(
+              EXERCISE_ROW,
+              inputCorrect && CORRECT_ROW,
+              inputIncorrect && INCORRECT_ROW,
+            )}
+          >
+            <td className={QUESTION_CELL}>{renderQuestionWithTranslate(ex, translateSource, true)}</td>
+            <td className={ANSWER_CELL}>
               <input
                 type="text"
-                className={`et-exercise-input ${
-                  props.submitted 
-                    ? (textAnswerMatches(exercise.answers[index], exercise.solutions[index]) 
-                        ? 'et-correct' 
-                        : 'et-incorrect') 
-                    : ''
-                }`}
+                className={cx(
+                  EXERCISE_INPUT,
+                  inputCorrect && CORRECT_INPUT,
+                  inputIncorrect && INCORRECT_INPUT,
+                )}
                 value={exercise.answers[index]}
                 onChange={(e) => exercise.onAnswerChange(index, e.target.value)}
                 placeholder="Your answer..."
@@ -210,46 +267,77 @@ export const ExercisesTemplate: React.FC<ExercisesTemplateProps> = (props) => {
   );
 
   const renderTrueFalse = (exercise: TrueFalseExercise) => (
-    <div className="et-true-false-container">
+    <div className="flex flex-col gap-5 after:block after:h-6 after:content-['']">
       {renderInstructionBox()}
       {exercise.text && exercise.text.trim() && (
-        <div className="et-reading-text">
-          <h4>Text:</h4>
-          <div className="et-reading-text-content">
+        <div className="rounded-lg border border-black/10 bg-[rgba(248,249,250,0.8)] p-4 max-lg:m-0 max-lg:mb-5 max-lg:rounded-2xl max-lg:border-black/5 max-lg:bg-black/[0.03] max-lg:p-4">
+          <h4 className="m-0 mb-2 text-sm font-semibold text-[#333]">Text:</h4>
+          <div className="m-0 text-sm leading-normal text-[#555]">
             {renderQuestionWithTranslate(exercise.text, exercise.text)}
           </div>
         </div>
       )}
-      <div className="et-statements-container">
-        {exercise.statements.map((statement, index) => (
-          <div key={index} className={`et-statement-row ${props.submitted ? ((exercise.answers[index] === exercise.solutions[index]) ? 'et-correct' : 'et-incorrect') : ''}`}>
-            <div className="et-statement-text">{renderQuestionWithTranslate(`${index + 1}. ${statement}`, statement, props.rawTranslate)}</div>
-            <div className="et-true-false-buttons">
+      <div className="flex flex-col gap-3">
+        {exercise.statements.map((statement, index) => {
+          const rowCorrect = props.submitted && exercise.answers[index] === exercise.solutions[index];
+          const rowIncorrect = props.submitted && !rowCorrect;
+          return (
+          <div
+            key={index}
+            className={cx(
+              'flex items-center justify-between rounded-md border border-black/10 bg-white/50 p-3',
+              'max-lg:mb-5 max-lg:flex-col max-lg:items-stretch max-lg:gap-3.5 max-lg:rounded-3xl max-lg:border-black/5 max-lg:bg-white/80 max-lg:p-3 max-lg:shadow-[0_4px_12px_rgba(0,0,0,0.03)]',
+              rowCorrect && 'border-emerald-500/70 max-lg:border-emerald-500/70 max-lg:shadow-[0_0_0_2px_rgba(16,185,129,0.15)]',
+              rowIncorrect && 'border-red-500/70 max-lg:border-red-500/70 max-lg:shadow-[0_0_0_2px_rgba(239,68,68,0.12)]',
+            )}
+          >
+            <div className="flex-1 pr-3 text-left text-sm text-[#333] max-lg:w-full max-lg:pr-0 max-sm:pr-0">{renderQuestionWithTranslate(`${index + 1}. ${statement}`, statement, props.rawTranslate)}</div>
+            <div className="flex gap-2 max-lg:w-full max-lg:justify-stretch max-sm:flex-col max-sm:items-stretch max-sm:justify-center">
               <button
-                className={`et-tf-btn ${exercise.answers[index] === true ? 'et-tf-selected' : ''}`}
+                className={cx(
+                  'min-w-[60px] cursor-pointer rounded-md border border-black/20 bg-white/90 px-4 py-1.5 text-[13px] text-[#333] transition-all duration-200 hover:border-[rgba(120,119,198,0.5)] hover:bg-[rgba(120,119,198,0.1)]',
+                  'max-lg:h-12 max-lg:flex-1 max-lg:rounded-3xl max-lg:border-black max-lg:bg-transparent max-lg:text-[15px]',
+                  exercise.answers[index] === true && 'border-[rgba(120,119,198,0.6)] bg-[rgba(120,119,198,0.2)] max-lg:border-black max-lg:bg-black max-lg:text-white',
+                )}
                 onClick={() => exercise.onAnswerChange(index, true)}
               >
                 True
               </button>
               <button
-                className={`et-tf-btn ${exercise.answers[index] === false ? 'et-tf-selected' : ''}`}
+                className={cx(
+                  'min-w-[60px] cursor-pointer rounded-md border border-black/20 bg-white/90 px-4 py-1.5 text-[13px] text-[#333] transition-all duration-200 hover:border-[rgba(120,119,198,0.5)] hover:bg-[rgba(120,119,198,0.1)]',
+                  'max-lg:h-12 max-lg:flex-1 max-lg:rounded-3xl max-lg:border-black max-lg:bg-transparent max-lg:text-[15px]',
+                  exercise.answers[index] === false && 'border-[rgba(120,119,198,0.6)] bg-[rgba(120,119,198,0.2)] max-lg:border-black max-lg:bg-black max-lg:text-white',
+                )}
                 onClick={() => exercise.onAnswerChange(index, false)}
               >
                 False
               </button>
             </div>
           </div>
-        ))}
+          );
+        })}
       </div>
     </div>
   );
 
   const renderMultipleChoice = (exercise: MultipleChoiceExercise) => (
-    <div className="et-multiple-choice-container">
+    <div className="flex flex-col gap-5 after:block after:h-6 after:content-['']">
       {renderInstructionBox()}
-      {exercise.exercises.map((ex, index) => (
-        <div key={index} className={`et-mc-question ${props.submitted ? ((exercise.answers[index] === exercise.solutions[index]) ? 'et-correct' : 'et-incorrect') : ''}`}>
-          <div className="et-mc-question-text">
+      {exercise.exercises.map((ex, index) => {
+        const mcCorrect = props.submitted && exercise.answers[index] === exercise.solutions[index];
+        const mcIncorrect = props.submitted && !mcCorrect;
+        return (
+        <div
+          key={index}
+          className={cx(
+            'rounded-lg border border-black/10 bg-white/50 p-4',
+            'max-lg:mb-5 max-lg:rounded-3xl max-lg:border-black/5 max-lg:bg-white/80 max-lg:p-3 max-lg:shadow-[0_4px_12px_rgba(0,0,0,0.03)]',
+            mcCorrect && 'border-emerald-500/70 max-lg:border-emerald-500/70 max-lg:shadow-[0_0_0_2px_rgba(16,185,129,0.15)]',
+            mcIncorrect && 'border-red-500/70 max-lg:border-red-500/70 max-lg:shadow-[0_0_0_2px_rgba(239,68,68,0.12)]',
+          )}
+        >
+          <div className="mb-3 text-sm font-medium text-[#333]">
             {renderQuestionWithTranslate(
               `${index + 1}. ${ex.question}`,
               fillBlanksForTranslate(
@@ -259,11 +347,15 @@ export const ExercisesTemplate: React.FC<ExercisesTemplateProps> = (props) => {
               true
             )}
           </div>
-          <div className="et-mc-options">
+          <div className="flex flex-col gap-2">
             {ex.options.map((option, optionIndex) => (
               <button
                 key={optionIndex}
-                className={`et-mc-option ${exercise.answers[index] === optionIndex ? 'et-mc-selected' : ''}`}
+                className={cx(
+                  'cursor-pointer rounded-md border border-black/20 bg-white/90 px-4 py-2.5 text-left text-[13px] text-[#333] transition-all duration-200 hover:border-[rgba(120,119,198,0.5)] hover:bg-[rgba(120,119,198,0.1)]',
+                  'max-lg:flex max-lg:items-center max-lg:rounded-2xl max-lg:border-black/10 max-lg:bg-white/50 max-lg:p-3.5 max-lg:text-[15px]',
+                  exercise.answers[index] === optionIndex && 'border-[rgba(120,119,198,0.6)] bg-[rgba(120,119,198,0.2)] max-lg:border-black max-lg:bg-white max-lg:font-semibold max-lg:text-black',
+                )}
                 onClick={() => exercise.onAnswerChange(index, optionIndex)}
               >
                 {String.fromCharCode(97 + optionIndex)}) {option}
@@ -271,7 +363,8 @@ export const ExercisesTemplate: React.FC<ExercisesTemplateProps> = (props) => {
             ))}
           </div>
         </div>
-      ))}
+        );
+      })}
     </div>
   );
 
@@ -279,12 +372,22 @@ export const ExercisesTemplate: React.FC<ExercisesTemplateProps> = (props) => {
     return (
       <div>
         {renderInstructionBox()}
-        <table className="et-exercise-table">
+        <table className={EXERCISE_TABLE}>
           <tbody>
-            {exercise.prompts.map((prompt, index) => (
-              <tr key={index} className="et-exercise-row">
-                <td className="et-question-cell">
-                  <div className="et-word-prompts">
+            {exercise.prompts.map((prompt, index) => {
+              const inputCorrect = props.submitted && textAnswerMatches(exercise.answers[index], exercise.solutions[index]);
+              const inputIncorrect = props.submitted && !inputCorrect;
+              return (
+              <tr
+                key={index}
+                className={cx(
+                  EXERCISE_ROW,
+                  inputCorrect && CORRECT_ROW,
+                  inputIncorrect && INCORRECT_ROW,
+                )}
+              >
+                <td className={QUESTION_CELL}>
+                  <div className="rounded-md border border-black/10 bg-[rgba(248,249,250,0.8)] p-2 px-3 font-mono text-[13px] text-[#555]">
                     {renderQuestionWithTranslate(
                       prompt,
                       firstCanonicalSolution(exercise.solutions[index]),
@@ -292,23 +395,22 @@ export const ExercisesTemplate: React.FC<ExercisesTemplateProps> = (props) => {
                     )}
                   </div>
                 </td>
-                <td className="et-answer-cell">
+                <td className={ANSWER_CELL}>
                   <input
                     type="text"
-                    className={`et-exercise-input ${
-                      props.submitted 
-                        ? (textAnswerMatches(exercise.answers[index], exercise.solutions[index]) 
-                            ? 'et-correct' 
-                            : 'et-incorrect') 
-                        : ''
-                    }`}
+                    className={cx(
+                      EXERCISE_INPUT,
+                      inputCorrect && CORRECT_INPUT,
+                      inputIncorrect && INCORRECT_INPUT,
+                    )}
                     value={exercise.answers[index]}
                     onChange={(e) => exercise.onAnswerChange(index, e.target.value)}
                     placeholder="Build your sentence..."
                   />
                 </td>
               </tr>
-            ))}
+              );
+            })}
           </tbody>
         </table>
       </div>
@@ -316,7 +418,7 @@ export const ExercisesTemplate: React.FC<ExercisesTemplateProps> = (props) => {
   };
 
   const renderWordOrder = (exercise: WordOrderExercise) => (
-    <div className="et-word-order-container">
+    <div className="flex flex-col gap-3 after:block after:h-6 after:content-['']">
       {renderInstructionBox()}
       {exercise.jumbledWords.map((words, index) => (
         <WordOrderRow
@@ -351,7 +453,7 @@ export const ExercisesTemplate: React.FC<ExercisesTemplateProps> = (props) => {
   };
 
   return (
-    <div className="et-exercises">
+    <div className={EXERCISES_ROOT}>
       {renderExerciseContent()}
     </div>
   );

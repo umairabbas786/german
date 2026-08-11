@@ -1,9 +1,8 @@
 @import "tailwindcss";
 
 /*
-  Tailwind v4 coexistence: existing component CSS stays until migrated.
-  Next targets: Settings.css → App.css → skill modules (vocab → … → roadmap).
-  Done: CreditLimitBlock, Legal/Privacy, FeedbackPopup, CreditLimitBlockPopup, ModulesGuideTour (animations leftover).
+  Tailwind v4: feature styles migrated to utilities.
+  Leftover *.animations.css files hold keyframes / complex effects only.
 */
 
 @theme {
@@ -20,6 +19,19 @@
   --shadow-langey-sm: 0 2px 8px rgba(0, 0, 0, 0.04);
   --shadow-langey-md: 0 8px 32px rgba(0, 0, 0, 0.08);
   --shadow-langey-lg: 0 24px 64px rgba(0, 0, 0, 0.12);
+  --animate-settings-glow: settings-glow 4s ease-in-out infinite;
+
+  @keyframes settings-glow {
+    0%,
+    100% {
+      background-position: 0% 50%;
+      opacity: 0.6;
+    }
+    50% {
+      background-position: 100% 50%;
+      opacity: 0.9;
+    }
+  }
 }
 
 :root {
@@ -54,6 +66,15 @@ body {
   width: 100%;
   margin: 0;
   padding: 0;
+  text-align: center;
+}
+
+@media (min-width: 769px) {
+  #root {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 2rem;
+  }
 }
 
 /* Hide scrollbar globally */
@@ -67,3 +88,4 @@ html {
   -ms-overflow-style: none;
   /* IE and Edge */
 }
+

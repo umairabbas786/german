@@ -1,8 +1,8 @@
 // langeylandingpage.tsx
 import React, { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
+import { createPortal } from 'react-dom';
 import { useLocation, useNavigate } from 'react-router-dom';
-import './langeylandingpage.css';
-import './langeyvocabulary.css';
+import './langeylandingpage.animations.css';
 import logo from '../assets/images/logo-rounded.png';
 import { UserTracker } from '../utils/userTracking';
 import { LangeyGrammar } from '../components/langeygrammar';
@@ -42,6 +42,8 @@ import {
 
 const ENABLE_MODULES_GUIDE =
   String(import.meta.env.VITE_ENABLE_MODULES_GUIDE || '').toLowerCase() === 'true';
+
+const cx = (...classes: Array<string | false | undefined>) => classes.filter(Boolean).join(' ');
 
 export const LangeyLandingPage: React.FC = () => {
   const location = useLocation();
@@ -102,9 +104,6 @@ export const LangeyLandingPage: React.FC = () => {
 
   const shouldShowRoadmapProgress = fromRoadmap && isTrackableFeature;
   const displayedRoadmapProgress = shouldShowRoadmapProgress ? (roadmapProgressValue ?? 0) : null;
-  const roadmapProgressStyle = displayedRoadmapProgress !== null
-    ? ({ '--roadmap-progress': `${displayedRoadmapProgress}%` } as React.CSSProperties)
-    : undefined;
   const displayedRoadmapProgressLabel = roadmapProgressLabel;
 
   const fetchRoadmapProgress = async (tab: MainTab, lvl: string, cid: string) => {
@@ -431,8 +430,22 @@ export const LangeyLandingPage: React.FC = () => {
     };
   }, [mainTab]);
 
+  const renderRoadmapProgressPill = () => (
+    <div className="relative flex h-9 w-[172px] shrink-0 items-center justify-center overflow-hidden rounded-[18px] border border-black/20 bg-white px-4 text-xs font-semibold tracking-[0.01em] whitespace-nowrap text-black tabular-nums shadow-[0_2px_4px_-1px_rgba(0,0,0,.06)] max-lg:h-[35px] max-lg:w-[118px] max-lg:rounded-[18px] max-lg:px-3 max-lg:text-[10px]">
+      <div
+        className="pointer-events-none absolute inset-y-0 left-0 z-0 bg-[rgba(88,204,2,0.18)] transition-[width] duration-300 ease-out"
+        style={{ width: `${displayedRoadmapProgress ?? 0}%` }}
+      />
+      <span className="relative z-[1]">{displayedRoadmapProgressLabel}</span>
+    </div>
+  );
+
   return (
-    <div className={`german-grammar-container ${isFullscreen ? 'fullscreen-mode' : ''}`} role="main" aria-label="German Grammar Page">
+    <div
+      className="german-grammar-container fixed inset-0 flex h-dvh min-h-[-webkit-fill-available] w-full flex-col overflow-x-hidden overflow-y-auto bg-[linear-gradient(45deg,#f0f1f2_0%,#eceef0_50%,#f0f1f2_100%)] bg-size-[20px_20px] pb-[env(safe-area-inset-bottom)] font-[Inter,ui-sans-serif,system-ui,-apple-system,'Segoe_UI',Roboto,'Helvetica_Neue',Arial,sans-serif] text-black"
+      role="main"
+      aria-label="German Grammar Page"
+    >
       {/* Breadcrumb Structured Data */}
       <script type="application/ld+json">
         {JSON.stringify(breadcrumbSchema)}
@@ -662,12 +675,17 @@ export const LangeyLandingPage: React.FC = () => {
       </script>
 
       {/* Desktop Header */}
-      <header className="gg-header">
-        <div className="gg-header-container">
-          <div className="gg-header-left">
+      <header
+        className={cx(
+          'fixed inset-x-6 top-4 z-[500] mx-auto flex h-14 w-[calc(100%-48px)] max-w-[800px] shrink-0 justify-center overflow-visible rounded-full border-[1.5px] border-black/18 bg-white px-3 max-lg:hidden',
+          isFullscreen && 'hidden',
+        )}
+      >
+        <div className="flex w-full min-w-0 items-center justify-between gap-5">
+          <div className="flex min-w-0 items-center gap-[18px]">
             {showFeatureHeader ? (
               <button
-                className="gg-nav-back-button"
+                className="inline-flex h-9 w-9 shrink-0 cursor-pointer items-center justify-center rounded-[18px] border-[1.5px] border-langey-ink bg-langey-ink p-0 text-white shadow-[0_2px_4px_-1px_rgba(0,0,0,.06)] transition-[background,transform,border-color,box-shadow] duration-150 hover:scale-[1.03] hover:border-black hover:bg-black hover:shadow-none"
                 type="button"
                 onClick={() => handleMainTabChange('modules')}
                 aria-label="Back to Modules"
@@ -679,21 +697,24 @@ export const LangeyLandingPage: React.FC = () => {
             ) : (
               <button
                 type="button"
-                className="gg-brand-button"
+                className="flex shrink-0 cursor-pointer items-center border-0 bg-transparent p-0 font-[inherit] text-langey-ink no-underline transition-opacity duration-200 hover:opacity-70"
                 onClick={() => handleMainTabChange('modules')}
                 aria-label="Langey modules"
               >
-                <img src={logo} alt="" width={36} height={36} className="gg-brand-logo" />
+                <img src={logo} alt="" width={36} height={36} className="block rounded-full" />
               </button>
             )}
 
-            <nav className="gg-nav-links" aria-label="Main menu">
+            <nav className="flex min-w-0 items-center gap-3.5" aria-label="Main menu">
               {showFeatureHeader ? (
-                <span className="gg-nav-current" aria-current="page">{getFeatureLabel(mainTab)}</span>
+                <span className="text-xs leading-none font-bold tracking-[0.08em] whitespace-nowrap text-langey-ink uppercase" aria-current="page">{getFeatureLabel(mainTab)}</span>
               ) : (
                 <button
                   type="button"
-                  className={mainTab === 'modules' ? 'active' : undefined}
+                  className={cx(
+                    'cursor-pointer border-0 bg-transparent p-0 font-[inherit] text-xs leading-none font-bold tracking-[0.08em] whitespace-nowrap text-langey-muted uppercase transition-colors duration-200 hover:text-langey-ink',
+                    mainTab === 'modules' && 'text-langey-ink',
+                  )}
                   onClick={() => handleMainTabChange('modules')}
                   aria-current={mainTab === 'modules' ? 'page' : undefined}
                 >
@@ -703,10 +724,10 @@ export const LangeyLandingPage: React.FC = () => {
             </nav>
           </div>
 
-          <div className="gg-header-right">
+          <div className="flex min-w-0 shrink-0 items-center justify-end gap-2">
             {isFeatureTab && canShowStatsMode && (
               <button
-                className="gg-stats-pill"
+                className="inline-flex h-9 shrink-0 cursor-pointer items-center justify-center rounded-full border-[1.5px] border-black/18 bg-transparent px-[18px] text-[13px] leading-none font-semibold whitespace-nowrap text-langey-ink transition-[transform,border-color,background] duration-200 hover:scale-[1.03] hover:border-black/40 hover:bg-black/4"
                 type="button"
                 onClick={() => handleModeChange(activeMode === 'STATS' ? getDefaultModeForTab(mainTab) : 'STATS')}
               >
@@ -714,10 +735,8 @@ export const LangeyLandingPage: React.FC = () => {
               </button>
             )}
             {displayedRoadmapProgress !== null && (
-              <div className="gg-header-roadmap-progress">
-                <div className="gg-progress-pill" style={roadmapProgressStyle}>
-                  <span>{displayedRoadmapProgressLabel}</span>
-                </div>
+              <div className="flex shrink-0 items-center">
+                {renderRoadmapProgressPill()}
               </div>
             )}
             {mainTab === 'modules' && !fromRoadmap && (
@@ -738,11 +757,16 @@ export const LangeyLandingPage: React.FC = () => {
         </div>
       </header>
 
-      {showLevelSelectionPopup && (
+      {showLevelSelectionPopup && createPortal(
         <>
-          <div className="gg-level-onboarding-overlay" aria-hidden="true" />
-          <div className="gg-level-onboarding" role="dialog" aria-modal="true" aria-label="Select German level">
-            <div className="gg-level-onboarding-icon" aria-hidden="true">
+          <div className="landing-overlay-animate fixed inset-0 z-[1200] bg-black/32" aria-hidden="true" />
+          <div
+            className="landing-sheet-animate fixed inset-x-0 bottom-0 z-[1201] mx-auto flex w-full max-w-[560px] flex-col items-center gap-[22px] rounded-t-[22px] bg-white px-10 pt-[34px] pb-[calc(28px+env(safe-area-inset-bottom,0px))] font-[system-ui,-apple-system,BlinkMacSystemFont,'Segoe_UI',Roboto,Oxygen,Ubuntu,Cantarell,'Open_Sans','Helvetica_Neue',sans-serif] text-langey-ink shadow-[0_-18px_60px_rgba(0,0,0,0.18)] max-sm:px-6 max-sm:pt-[30px] max-sm:pb-[calc(26px+env(safe-area-inset-bottom,0px))]"
+            role="dialog"
+            aria-modal="true"
+            aria-label="Select German level"
+          >
+            <div className="flex h-[54px] w-[54px] items-center justify-center rounded-full bg-black/6" aria-hidden="true">
               <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#1d1d1f" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                 <path d="M3 5h12" />
                 <path d="M9 3v2" />
@@ -752,39 +776,47 @@ export const LangeyLandingPage: React.FC = () => {
                 <path d="M15.5 17h5" />
               </svg>
             </div>
-            <h2 className="gg-level-onboarding-title">Select your German level</h2>
-            <div className="gg-roadmap-toggle gg-level-onboarding-options">
+            <h2 className="m-0 text-center text-[28px] leading-[1.25] font-bold tracking-[-0.3px] max-sm:text-2xl">
+              Select your German level
+            </h2>
+            <div className="gg-roadmap-toggle m-0 w-full max-sm:w-full">
               {GERMAN_LEVELS.map((option) => (
                 <button
                   key={option}
                   type="button"
-                  className={`gg-roadmap-toggle-btn gg-level-onboarding-option ${level === option ? 'active' : ''}`}
+                  className={cx(
+                    'gg-roadmap-toggle-btn min-w-[86px] max-sm:min-w-0 max-sm:flex-1 max-sm:px-0',
+                    level === option && 'active',
+                  )}
                   onClick={() => handleLevelSelect(option)}
                 >
                   {option}
                 </button>
               ))}
             </div>
-            <p className="gg-level-onboarding-note">This can be changed later in Settings.</p>
+            <p className="m-0 text-center text-[13px] leading-[1.45] text-langey-muted">
+              This can be changed later in Settings.
+            </p>
             {consumerId === UserTracker.PENDING_CONSUMER_ID && (
-              <p className="gg-level-onboarding-legal">
+              <p className="-mt-2 mb-0 max-w-[360px] text-center text-[11px] leading-[1.45] text-langey-muted">
                 By continuing you agree to our{' '}
-                <a href="/privacy-policy" target="_blank" rel="noreferrer">Privacy Policy</a>
+                <a href="/privacy-policy" target="_blank" rel="noreferrer" className="text-[#6e6e73] underline">Privacy Policy</a>
                 {' '}and{' '}
-                <a href="/terms-and-conditions" target="_blank" rel="noreferrer">Terms & Conditions</a>
+                <a href="/terms-and-conditions" target="_blank" rel="noreferrer" className="text-[#6e6e73] underline">Terms & Conditions</a>
               </p>
             )}
           </div>
-        </>
+        </>,
+        document.body,
       )}
 
       {/* Mobile Header (fixed at top, hidden on desktop) */}
-      <div className="gg-mobile-header">
-        <div className="gg-mobile-top-bar">
-          <div className="gg-mobile-left">
+      <div className="fixed top-0 right-0 left-0 z-[500] hidden flex-col border-b border-black/8 bg-[rgb(238,239,240)] max-lg:flex">
+        <div className="flex h-[54px] items-center gap-2 px-3.5">
+          <div className="flex min-w-0 flex-1 items-center gap-2.5 overflow-hidden">
             {(fromRoadmap || showFeatureHeader) && (
               <button
-                className="gg-mobile-back-btn"
+                className="flex h-8 w-8 shrink-0 cursor-pointer items-center justify-center border-none bg-transparent p-0 text-[#111] [-webkit-tap-highlight-color:transparent]"
                 onClick={() => { handleMainTabChange('modules'); }}
                 aria-label="Back to Modules"
               >
@@ -793,10 +825,12 @@ export const LangeyLandingPage: React.FC = () => {
                 </svg>
               </button>
             )}
-            <span className="gg-mobile-section-label">{getMobileHeaderLabel()}</span>
+            <span className="overflow-hidden text-sm font-semibold tracking-[-0.01em] text-ellipsis whitespace-nowrap text-[#111]">
+              {getMobileHeaderLabel()}
+            </span>
           </div>
 
-            <div className="gg-mobile-right">
+          <div className="ml-auto flex shrink-0 items-center gap-2">
             {mainTab === 'modules' && !fromRoadmap && (
               <RoadmapControls
                 roadmapEnabled={roadmapEnabled}
@@ -809,14 +843,10 @@ export const LangeyLandingPage: React.FC = () => {
             {mainTab !== 'settings' && (
               <SettingsIconButton onClick={() => handleMainTabChange('settings')} />
             )}
-            {displayedRoadmapProgress !== null && (
-              <div className="gg-progress-pill" style={roadmapProgressStyle}>
-                <span>{displayedRoadmapProgressLabel}</span>
-              </div>
-            )}
+            {displayedRoadmapProgress !== null && renderRoadmapProgressPill()}
             {isFeatureTab && canShowStatsMode && (
               <button
-                className="gg-stats-pill"
+                className="inline-flex h-9 shrink-0 cursor-pointer items-center justify-center rounded-full border-[1.5px] border-black/18 bg-transparent px-[18px] text-[13px] leading-none font-semibold whitespace-nowrap text-langey-ink transition-[transform,border-color,background] duration-200 hover:scale-[1.03] hover:border-black/40 hover:bg-black/4"
                 type="button"
                 onClick={() => handleModeChange(activeMode === 'STATS' ? getDefaultModeForTab(mainTab) : 'STATS')}
               >
@@ -828,7 +858,7 @@ export const LangeyLandingPage: React.FC = () => {
         </div>
       </div>
 
-      <section className="gg-section">
+      <section className="mx-auto mt-[92px] flex min-h-[calc(100dvh-112px)] w-full max-w-[980px] flex-1 flex-col px-5 pb-5 max-lg:mt-0 max-lg:max-w-none max-lg:min-h-dvh max-lg:px-0 max-lg:pt-[54px] max-lg:pb-[calc(60px+env(safe-area-inset-bottom))]">
         <div style={{ display: mainTab === 'modules' ? 'block' : 'none' }}>
           <LangeyRoadmap
             level={level}

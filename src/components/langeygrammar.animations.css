@@ -1,0 +1,121 @@
+@keyframes gg-spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes gg-glow {
+  0%,
+  100% {
+    background-position: 0% 50%;
+    opacity: 0.6;
+  }
+  50% {
+    background-position: 100% 50%;
+    opacity: 0.9;
+  }
+}
+
+@keyframes gg-grow-line {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes gg-grow-data-line {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes gg-draw-point {
+  0% {
+    opacity: 0;
+    transform: scale(0);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.2);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes gg-fade-in {
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes gg-fade-in-polygon {
+  to {
+    opacity: 1;
+  }
+}
+
+.gg-spinner-animate {
+  animation: gg-spin 1s linear infinite;
+}
+
+.gg-glow-border::before {
+  content: '';
+  position: absolute;
+  inset: -1px;
+  background: linear-gradient(
+    45deg,
+    rgba(120, 119, 198, 0.5),
+    rgba(255, 206, 84, 0.5),
+    rgba(120, 119, 198, 0.5),
+    rgba(255, 206, 84, 0.5)
+  );
+  background-size: 400% 400%;
+  border-radius: inherit;
+  z-index: -1;
+  animation: gg-glow 4s ease-in-out infinite;
+  opacity: 0.8;
+}
+
+.gg-glow-border-muted::before {
+  content: '';
+  position: absolute;
+  inset: -1px;
+  background: linear-gradient(
+    45deg,
+    rgba(120, 119, 198, 0.3),
+    rgba(255, 206, 84, 0.3),
+    rgba(120, 119, 198, 0.3),
+    rgba(255, 206, 84, 0.3)
+  );
+  background-size: 400% 400%;
+  border-radius: inherit;
+  z-index: -1;
+  animation: gg-glow 4s ease-in-out infinite;
+  opacity: 0.6;
+}
+
+.gg-help-btn-glow::before {
+  content: '';
+  position: absolute;
+  inset: -1px;
+  background: linear-gradient(
+    45deg,
+    rgba(120, 119, 198, 0.5),
+    rgba(255, 206, 84, 0.5),
+    rgba(120, 119, 198, 0.5),
+    rgba(255, 206, 84, 0.5)
+  );
+  background-size: 400% 400%;
+  border-radius: 10px;
+  z-index: -1;
+  animation: gg-glow 4s ease-in-out infinite;
+  opacity: 0.8;
+}
+
+.gg-help-btn-glow:disabled::before {
+  opacity: 0.2;
+}

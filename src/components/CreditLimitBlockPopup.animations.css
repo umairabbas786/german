@@ -9,10 +9,10 @@
 
 @keyframes sheetSlideUpCentered {
   from {
-    transform: translateX(-50%) translateY(100%);
+    transform: translateY(100%);
   }
   to {
-    transform: translateX(-50%) translateY(0);
+    transform: translateY(0);
   }
 }
 

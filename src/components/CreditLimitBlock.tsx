@@ -8,7 +8,7 @@ interface CreditLimitBlockProps {
 /**
  * Standard daily-limit blocked screen used by all practice features.
  * Fills the main content area with centered message + Upgrade to Pro button.
- * Hook classes (gg-*) remain for App.css / feature-CSS parent overrides during the Tailwind migration.
+ * Hook class `gg-credit-limit-block` kept for parent selectors in migrated modules.
  */
 export const CreditLimitBlock: React.FC<CreditLimitBlockProps> = ({ message }) => (
   <div

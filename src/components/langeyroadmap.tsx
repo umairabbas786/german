@@ -9,10 +9,12 @@ import speakingSvg   from '../assets/svgs/speaking.svg';
 import writingSvg    from '../assets/svgs/writing.svg';
 import readingSvg    from '../assets/svgs/reading.svg';
 import listeningSvg  from '../assets/svgs/listening.svg';
-import './langeyroadmap.css';
+import './langeyroadmap.animations.css';
 import { UserTracker } from '../utils/userTracking';
 import { useIsMobileLayout } from '../hooks/useMediaQuery';
 import { createRoadmap, getModulesProgress, getRoadmap, updateRoadmapProgress } from '../services/roadmapApi';
+
+const cx = (...classes: Array<string | false | undefined | null>) => classes.filter(Boolean).join(' ');
 
 // ─── Feature tile metadata ────────────────────────────────────────────────────
 const FEATURE_TILES: Array<{
@@ -208,23 +210,27 @@ const FeatureCircle: React.FC<FeatureCircleProps> = ({
 
     return (
         <button
-            className={`feat-circle-btn${isActive ? ' feat-circle-btn--active' : ''}${unavailable ? ' feat-circle-btn--unavailable' : ''}`}
+            type="button"
+            className={cx(
+                'feat-circle-btn flex flex-col items-center gap-2.5 border-none bg-transparent p-0 font-inherit cursor-pointer',
+                'transition-transform duration-[180ms] ease-[cubic-bezier(0.34,1.56,0.64,1)] [-webkit-tap-highlight-color:transparent]',
+                'hover:-translate-y-[3px] hover:scale-[1.03] active:scale-[0.93] active:duration-[80ms]',
+                isActive && 'feat-circle-btn--active',
+                unavailable && 'feat-circle-btn--unavailable opacity-[0.55] hover:transform-none',
+            )}
             onClick={onClick}
             style={{ '--feat-bg': bgColor } as React.CSSProperties}
             aria-label={tile.title}
         >
-            <div className={`feat-circle-wrap${noRing ? ' feat-circle-wrap--no-ring' : ''}`}>
-                {/* Progress ring — only for ringed skills */}
+            <div className={cx('feat-circle-wrap relative size-[148px] shrink-0 transition-[filter] duration-[250ms]', noRing && 'feat-circle-wrap--no-ring flex items-center justify-center')}>
                 {!noRing && (
                     <svg
-                        className="feat-circle-ring"
+                        className="feat-circle-ring pointer-events-none absolute inset-0 size-full overflow-visible"
                         viewBox={`0 0 ${RING_SIZE} ${RING_SIZE}`}
                         xmlns="http://www.w3.org/2000/svg"
                     >
-                        {/* Track */}
                         <circle cx={RING_CENTER} cy={RING_CENTER} r={RING_RADIUS}
                             fill="none" stroke="rgba(0,0,0,0.08)" strokeWidth={RING_STROKE} />
-                        {/* Fill — always green, always in DOM for smooth CSS transition */}
                         <circle cx={RING_CENTER} cy={RING_CENTER} r={RING_RADIUS}
                             fill="none"
                             stroke="#22c55e"
@@ -241,9 +247,11 @@ const FeatureCircle: React.FC<FeatureCircleProps> = ({
                     </svg>
                 )}
 
-                {/* Inner white circle with floating SVG illustration */}
-                <div className={`feat-circle-inner${noRing ? ' feat-circle-inner--no-ring' : ''}`}>
-                    <div className={`feat-circle-icon${unavailable ? ' feat-circle-icon--unavailable' : ''}`}>
+                <div className={cx(
+                    'feat-circle-inner absolute top-1/2 left-1/2 flex size-[124px] -translate-x-1/2 -translate-y-1/2 items-center justify-center overflow-hidden rounded-full shadow-[0_2px_8px_rgba(0,0,0,0.06)]',
+                    noRing && 'feat-circle-inner--no-ring relative top-auto left-auto size-[138px] translate-none',
+                )} style={{ background: bgColor }}>
+                    <div className={cx('feat-circle-icon relative z-[1] flex items-center justify-center drop-shadow-[0_2px_4px_rgba(0,0,0,0.12)]', unavailable && 'feat-circle-icon--unavailable grayscale opacity-30')}>
                         <img
                             src={SKILL_SVGS[tile.type]}
                             alt={tile.title}
@@ -255,7 +263,7 @@ const FeatureCircle: React.FC<FeatureCircleProps> = ({
                 </div>
             </div>
 
-            <span className="feat-circle-label">{tile.title}</span>
+            <span className={cx('feat-circle-label text-center text-[13px] leading-[1.2] font-semibold tracking-[-0.1px] text-langey-ink', unavailable && 'text-gray-400')}>{tile.title}</span>
         </button>
     );
 };
@@ -282,48 +290,50 @@ const RoadmapPopup: React.FC<RoadmapPopupProps> = ({
 
     return (
         <div
-            className={`feat-popup feat-popup--col${colIndex}${unavailable ? ' feat-popup--unavailable' : ''}`}
+            className={cx(
+                'feat-popup absolute top-[calc(100%+14px)] left-1/2 z-[140] flex w-[226px] -translate-x-1/2 flex-col gap-2.5 rounded-[18px] border-[1.5px] border-black/[0.07] bg-white p-[14px_14px_13px] shadow-[0_10px_36px_rgba(0,0,0,0.13),0_3px_10px_rgba(0,0,0,0.06)]',
+                `feat-popup--col${colIndex}`,
+                unavailable && 'feat-popup--unavailable border-black/[0.05] bg-[#fafafa]',
+            )}
             onClick={(e) => e.stopPropagation()}
         >
-            <div className="feat-popup-arrow" />
+            <div className="feat-popup-arrow pointer-events-none absolute top-[-8px] left-1/2 h-2 w-4 -translate-x-1/2 overflow-visible" />
 
-            {/* Header — SVG illustration + title + badge */}
-            <div className="feat-popup-header">
-                <div className="feat-popup-icon-wrap">
+            <div className="feat-popup-header flex items-center gap-2">
+                <div className="feat-popup-icon-wrap flex size-[30px] shrink-0 items-center justify-center overflow-hidden rounded-lg bg-black/[0.04]">
                     <img src={SKILL_SVGS[tile.type]} alt={tile.title} width={18} height={18} draggable={false} />
                 </div>
-                <span className="feat-popup-title">{tile.title}</span>
+                <span className="feat-popup-title min-w-0 flex-1 overflow-hidden text-[15px] font-bold text-ellipsis whitespace-nowrap text-langey-ink">{tile.title}</span>
                 {unavailable && startsOnDay != null ? (
-                    <span className="feat-popup-badge feat-popup-badge--day">Day {startsOnDay}</span>
+                    <span className="feat-popup-badge feat-popup-badge--day shrink-0 rounded-full bg-black/[0.06] px-[7px] py-0.5 text-[11px] font-bold whitespace-nowrap text-[#8e8e93]">Day {startsOnDay}</span>
                 ) : isAuto ? (
-                    <span className="feat-popup-badge feat-popup-badge--auto">AUTO</span>
+                    <span className="feat-popup-badge feat-popup-badge--auto shrink-0 rounded-full bg-black/[0.06] px-[7px] py-0.5 text-[11px] font-bold tracking-[0.4px] whitespace-nowrap text-gray-500">AUTO</span>
                 ) : (
-                    <span className="feat-popup-badge">
+                    <span className="feat-popup-badge shrink-0 rounded-full bg-black/[0.07] px-[7px] py-0.5 text-[11px] font-bold whitespace-nowrap text-[#3c3c3e]">
                         {isComplete ? '✓' : `${progress}%`}
                     </span>
                 )}
             </div>
 
-            {/* Body */}
             {unavailable ? (
-                <p className="feat-popup-topic feat-popup-topic--unavailable">
+                <p className="feat-popup-topic feat-popup-topic--unavailable m-0 text-[12.5px] leading-[1.4] font-medium text-langey-muted italic">
                     {startsOnDay != null
                         ? `Available from Day ${startsOnDay}. Keep going!`
                         : 'No session scheduled for today.'}
                 </p>
             ) : (
-                subtitle && <p className="feat-popup-topic">{subtitle}</p>
+                subtitle && <p className="feat-popup-topic m-0 text-[13px] leading-[1.4] font-medium text-[#3c3c3e]">{subtitle}</p>
             )}
             {!unavailable && requirement && (
-                <div className="feat-popup-req">
-                    <span className="feat-popup-req-label">TARGET</span>
-                    <p className="feat-popup-req-text">{requirement}</p>
+                <div className="feat-popup-req flex flex-col gap-[3px] rounded-[10px] bg-black/[0.035] px-2.5 py-2">
+                    <span className="feat-popup-req-label text-[9px] font-bold tracking-[0.8px] text-langey-muted uppercase">TARGET</span>
+                    <p className="feat-popup-req-text m-0 text-[12.5px] leading-[1.35] text-[#3c3c3e]">{requirement}</p>
                 </div>
             )}
 
-            {/* Single unified action button — same "Got it" style for all */}
             <button
-                className="feat-popup-close-btn"
+                type="button"
+                className="feat-popup-close-btn w-full cursor-pointer rounded-[10px] border-[1.5px] border-black/10 bg-transparent px-3.5 py-[9px] text-[13px] font-semibold text-[#636366] transition-colors duration-150 hover:bg-black/[0.04]"
                 onClick={(e) => {
                     e.stopPropagation();
                     if (unavailable) onClose();
@@ -749,16 +759,19 @@ export const LangeyRoadmap: React.FC<LangeyRoadmapProps> = ({
 
     // ── Setup UI ──────────────────────────────────────────────────────────────
     const renderTopicItems = () => (
-        <ul className="gg-roadmap-topic-list">
+        <ul className="gg-roadmap-topic-list m-0 max-h-[168px] list-none overflow-y-auto overscroll-contain p-1.5">
             {topics.map((t) => (
                 <li
                     key={t}
-                    className={`gg-roadmap-topic-item ${selectedTopic === t ? 'selected' : ''}`}
+                    className={cx(
+                        'gg-roadmap-topic-item flex cursor-pointer items-center justify-center gap-2.5 rounded-xl px-[18px] py-3.5 text-[15px] font-[450] text-langey-ink transition-all duration-200 hover:bg-black/[0.04]',
+                        selectedTopic === t && 'selected bg-black/[0.06]',
+                    )}
                     onClick={() => handleTopicSelect(t)}
                 >
                     <span className="gg-roadmap-topic-item-text">{t}</span>
                     {selectedTopic === t && (
-                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                        <svg className="text-langey-success" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
                             <polyline points="20 6 9 17 4 12" />
                         </svg>
                     )}
@@ -768,44 +781,44 @@ export const LangeyRoadmap: React.FC<LangeyRoadmapProps> = ({
     );
 
     const renderSetupContent = () => (
-        <div className="gg-roadmap-setup-content">
-            <div className="gg-roadmap-setup-icon" aria-hidden="true">
+        <div className="gg-roadmap-setup-content flex flex-col items-center gap-[22px] p-0">
+            <div className="gg-roadmap-setup-icon flex size-[54px] items-center justify-center rounded-full bg-black/[0.06] text-langey-ink" aria-hidden="true">
                 <Languages size={24} strokeWidth={2} />
             </div>
-            <h2 className="gg-roadmap-setup-title">Configure {level} Roadmap</h2>
-            <div className="gg-roadmap-section">
-                <label className="gg-roadmap-section-label">LEARNING FOCUS</label>
-                <div className="gg-roadmap-topic-selector" ref={selectorRef}>
-                    <button type="button" className="gg-roadmap-topic-trigger" onClick={() => setIsTopicSelectorOpen(v => !v)}>
-                        <span className={selectedTopic ? '' : 'placeholder'}>{selectedTopic || 'Select a topic'}</span>
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M6 9l6 6 6-6" /></svg>
+            <h2 className="gg-roadmap-setup-title m-0 text-center text-[28px] font-bold tracking-[-0.3px] text-langey-ink">Configure {level} Roadmap</h2>
+            <div className="gg-roadmap-section w-full">
+                <label className="gg-roadmap-section-label mb-3 block text-center text-[11px] font-semibold tracking-[1.2px] text-langey-muted uppercase">LEARNING FOCUS</label>
+                <div className="gg-roadmap-topic-selector relative flex justify-center" ref={selectorRef}>
+                    <button type="button" className="gg-roadmap-topic-trigger flex w-full cursor-pointer items-center justify-between gap-3 rounded-[14px] border-[1.5px] border-black/[0.08] bg-white/80 px-5 py-4 text-left text-[15px] font-medium text-langey-ink shadow-langey-sm transition-all duration-300 hover:border-black/15 hover:bg-white/95" onClick={() => setIsTopicSelectorOpen(v => !v)}>
+                        <span className={selectedTopic ? '' : 'placeholder font-normal text-[#bbb]'}>{selectedTopic || 'Select a topic'}</span>
+                        <svg className="ml-auto shrink-0 opacity-40" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M6 9l6 6 6-6" /></svg>
                     </button>
                     {isTopicSelectorOpen && (
-                        <div className="gg-roadmap-topic-dropdown">{renderTopicItems()}</div>
+                        <div className="gg-roadmap-topic-dropdown absolute top-[calc(100%+8px)] right-0 left-0 z-[100] overflow-hidden rounded-2xl border border-black/[0.08] bg-white shadow-[0_12px_40px_rgba(0,0,0,0.12),0_4px_12px_rgba(0,0,0,0.06)]">{renderTopicItems()}</div>
                     )}
                 </div>
             </div>
-            <div className="gg-roadmap-section">
-                <label className="gg-roadmap-section-label">DURATION</label>
-                <div className="gg-roadmap-toggle">
+            <div className="gg-roadmap-section w-full">
+                <label className="gg-roadmap-section-label mb-3 block text-center text-[11px] font-semibold tracking-[1.2px] text-langey-muted uppercase">DURATION</label>
+                <div className="gg-roadmap-toggle mx-auto flex w-fit justify-center gap-2 rounded-[14px] bg-black/[0.03] p-1.5">
                     {daysOptions.map((days) => (
-                        <button key={days} className={`gg-roadmap-toggle-btn ${selectedDays === days ? 'active' : ''}`} onClick={() => setSelectedDays(days)}>
+                        <button key={days} type="button" className={cx('gg-roadmap-toggle-btn relative cursor-pointer rounded-[10px] border-none bg-transparent px-7 py-3 text-sm font-medium text-langey-muted transition-all duration-300', selectedDays === days && 'active bg-white font-semibold text-langey-ink shadow-[0_2px_8px_rgba(0,0,0,0.06),0_1px_2px_rgba(0,0,0,0.04)]')} onClick={() => setSelectedDays(days)}>
                             {days} Days
                         </button>
                     ))}
                 </div>
             </div>
-            <button className={`gg-roadmap-generate-btn-full ${isLoading ? 'loading' : ''}`} onClick={handleGenerate} disabled={isLoading || !selectedTopic}>
-                {isLoading ? <span className="gg-roadmap-btn-spinner" /> : <>Start Journey</>}
+            <button type="button" className={cx('gg-roadmap-generate-btn-full relative z-[1] mt-0.5 flex h-[54px] w-full cursor-pointer items-center justify-center rounded-[14px] border border-black/12 bg-[rgba(248,248,248,0.85)] px-8 text-base font-medium text-langey-ink shadow-[0_6px_16px_-4px_rgba(0,0,0,0.08),0_4px_6px_-2px_rgba(0,0,0,0.04)] backdrop-blur-[10px] transition-all duration-300 hover:-translate-y-0.5 hover:bg-white/95 disabled:cursor-not-allowed disabled:opacity-80 max-lg:mt-0 max-lg:rounded-none max-lg:font-bold max-lg:text-base', isLoading && 'loading pointer-events-none')} onClick={handleGenerate} disabled={isLoading || !selectedTopic}>
+                {isLoading ? <span className="gg-roadmap-btn-spinner inline-block size-5 rounded-full border-[2.5px] border-black/15 border-t-langey-ink" /> : <>Start Journey</>}
             </button>
         </div>
     );
 
     const renderSetupSheet = () => ReactDOM.createPortal(
         <>
-            <div className="gg-roadmap-config-overlay" onClick={() => setIsSetupSheetOpen(false)} />
-            <div className="gg-roadmap-config-sheet">
-                <button className="gg-roadmap-sheet-close gg-roadmap-sheet-close-floating" onClick={() => setIsSetupSheetOpen(false)} aria-label="Close">
+            <div className="gg-roadmap-config-overlay fixed inset-0 z-[1200] bg-black/[0.32]" onClick={() => setIsSetupSheetOpen(false)} />
+            <div className="gg-roadmap-config-sheet fixed inset-x-0 bottom-0 z-[1201] mx-auto max-h-[min(82vh,680px)] w-[min(560px,calc(100vw-24px))] overflow-y-auto rounded-t-[22px] bg-white px-10 pt-[34px] pb-[calc(28px+env(safe-area-inset-bottom,0px))] text-langey-ink shadow-[0_-18px_60px_rgba(0,0,0,0.18)] max-lg:max-h-[82dvh] max-lg:w-auto max-lg:px-[22px] max-lg:pt-[30px]">
+                <button type="button" className="gg-roadmap-sheet-close gg-roadmap-sheet-close-floating absolute top-3.5 right-3.5 z-[1] flex size-[30px] cursor-pointer items-center justify-center rounded-full border-none bg-black/[0.06] text-langey-ink transition-colors hover:bg-black/[0.12]" onClick={() => setIsSetupSheetOpen(false)} aria-label="Close">
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M18 6L6 18M6 6l12 12" /></svg>
                 </button>
                 {renderSetupContent()}
@@ -820,7 +833,7 @@ export const LangeyRoadmap: React.FC<LangeyRoadmapProps> = ({
         const tileInfo = (roadmapActive && roadmap) ? buildTileInfo(currentDayPlan, roadmap) : null;
 
         return (
-            <div className="feat-circles-grid" ref={circleGridRef} data-tour="langey-guide-modules">
+            <div className="feat-circles-grid mx-auto grid w-full max-w-[640px] grid-cols-3 place-items-center gap-x-5 gap-y-9 max-lg:max-w-[420px] max-lg:grid-cols-2 max-lg:gap-x-0 max-lg:gap-y-8" ref={circleGridRef} data-tour="langey-guide-modules">
                 {FEATURE_TILES.map((tile, index) => {
                     const colIndex   = index % 3;
                     const isActive   = activeCircle === tile.type;
@@ -845,7 +858,7 @@ export const LangeyRoadmap: React.FC<LangeyRoadmapProps> = ({
                     };
 
                     return (
-                        <div key={tile.type} className={`feat-circle-item${isActive ? ' feat-circle-item--active' : ''}`}>
+                        <div key={tile.type} className={cx('feat-circle-item relative flex w-full flex-col items-center', isActive && 'feat-circle-item--active z-[120]')}>
                             <FeatureCircle
                                 tile={tile}
                                 progress={ringProgress}
@@ -928,42 +941,42 @@ export const LangeyRoadmap: React.FC<LangeyRoadmapProps> = ({
         const progressStyle = { '--roadmap-progress': `${moduleProgress}%` } as React.CSSProperties;
 
         return (
-            <div className={`gg-roadmap-view${!roadmapActive ? ' gg-roadmap-view-simple' : ''}`}>
-                <div className="gg-roadmap-scroll-body">
-                    <div className="gg-roadmap-nav-wrap">
+            <div className="gg-roadmap-view w-full max-w-[880px] max-lg:h-full max-lg:max-w-none max-lg:overflow-hidden max-lg:p-0">
+                <div className="gg-roadmap-scroll-body max-lg:flex max-lg:min-h-0 max-lg:flex-1 max-lg:flex-col max-lg:items-center max-lg:justify-center max-lg:overflow-y-auto">
+                    <div className="gg-roadmap-nav-wrap relative z-[80] max-lg:flex max-lg:w-full max-lg:items-start max-lg:justify-center">
                         {renderCircleGrid(roadmapActive, currentDayPlan)}
                     </div>
                 </div>
-                <div className="gg-roadmap-module-progress" data-tour="langey-guide-progress">
-                    <div className={`gg-progress-pill gg-roadmap-module-progress-pill${roadmapActive ? ' gg-roadmap-module-progress-pill--with-nav' : ''}`} style={progressStyle}>
+                <div className="gg-roadmap-module-progress relative z-20 mx-auto mt-[60px] w-full max-w-[600px] max-lg:fixed max-lg:inset-x-0 max-lg:bottom-0 max-lg:z-[150] max-lg:m-0 max-lg:max-w-none max-lg:border-t max-lg:border-black/12 max-lg:pt-0" data-tour="langey-guide-progress">
+                    <div className={cx(
+                        'gg-progress-pill gg-roadmap-module-progress-pill relative box-border flex h-20 min-h-20 max-h-20 w-full items-center justify-center overflow-hidden rounded-full border border-black/20 bg-transparent px-2.5 shadow-[0_2px_4px_-1px_rgba(0,0,0,0.06)] lg:rounded-2xl max-lg:min-h-[calc(100px+env(safe-area-inset-bottom,0px))] max-lg:max-h-none max-lg:rounded-none max-lg:border-0 max-lg:shadow-none',
+                        roadmapActive && 'gg-roadmap-module-progress-pill--with-nav justify-between',
+                    )} style={progressStyle}>
                         {roadmapActive && roadmap ? (
                             <>
-                                {/* Left: nav button + start day */}
-                                <div className="gg-roadmap-pill-side gg-roadmap-pill-side--left">
+                                <div className="gg-roadmap-pill-side gg-roadmap-pill-side--left relative z-[1] flex shrink-0 items-center gap-2.5 pr-[22px] pl-1 lg:pr-2">
                                     <button
                                         type="button"
-                                        className="gg-roadmap-pill-nav-btn"
+                                        className="gg-roadmap-pill-nav-btn relative z-[2] flex size-11 shrink-0 cursor-pointer items-center justify-center rounded-full border border-black/15 bg-white text-green-800 shadow-[0_1px_4px_rgba(0,0,0,0.08)] transition-[border-color,box-shadow] duration-200 [-webkit-tap-highlight-color:transparent] hover:border-green-300 hover:shadow-[0_2px_8px_rgba(0,0,0,0.12)] disabled:cursor-not-allowed disabled:opacity-30 lg:size-12"
                                         onClick={handlePrevDay}
                                         disabled={roadmap.current_day <= 1}
                                         aria-label="Previous day"
                                     >
                                         <ChevronLeft size={20} strokeWidth={2.5} />
                                     </button>
-                                    <span className="gg-roadmap-pill-day"><span className="gg-roadmap-pill-day-word">Day </span>{roadmap.current_day}</span>
+                                    <span className="gg-roadmap-pill-day relative z-[1] text-[15px] font-semibold whitespace-nowrap text-green-800 lg:text-base"><span className="gg-roadmap-pill-day-word hidden lg:inline">Day </span>{roadmap.current_day}</span>
                                 </div>
 
-                                {/* Center: combined Roadmap+% tag + level tag */}
-                                <div className="gg-roadmap-pill-center">
-                                    <span className="gg-roadmap-pill-tag">Roadmap {moduleProgress}%</span>
-                                    <span className="gg-roadmap-pill-tag">{level}</span>
+                                <div className="gg-roadmap-pill-center relative z-[1] flex min-w-0 flex-1 items-center justify-center gap-[7px]">
+                                    <span className="gg-roadmap-pill-tag inline-flex items-center justify-center rounded-lg border border-black/15 bg-white px-[9px] py-[3px] text-[13px] font-semibold whitespace-nowrap text-green-800 shadow-[0_1px_4px_rgba(0,0,0,0.08)] lg:rounded-[10px] lg:px-4 lg:py-1.5 lg:text-base">Roadmap {moduleProgress}%</span>
+                                    <span className="gg-roadmap-pill-tag inline-flex items-center justify-center rounded-lg border border-black/15 bg-white px-[9px] py-[3px] text-[13px] font-semibold whitespace-nowrap text-green-800 shadow-[0_1px_4px_rgba(0,0,0,0.08)] lg:rounded-[10px] lg:px-4 lg:py-1.5 lg:text-base">{level}</span>
                                 </div>
 
-                                {/* Right: end day + nav button */}
-                                <div className="gg-roadmap-pill-side gg-roadmap-pill-side--right">
-                                    <span className="gg-roadmap-pill-day"><span className="gg-roadmap-pill-day-word">Day </span>{roadmap.days}</span>
+                                <div className="gg-roadmap-pill-side gg-roadmap-pill-side--right flex shrink-0 items-center gap-2.5 pr-1 pl-[22px] lg:pl-2">
+                                    <span className="gg-roadmap-pill-day relative z-[1] text-[15px] font-semibold whitespace-nowrap text-green-800 lg:text-base"><span className="gg-roadmap-pill-day-word hidden lg:inline">Day </span>{roadmap.days}</span>
                                     <button
                                         type="button"
-                                        className="gg-roadmap-pill-nav-btn"
+                                        className="gg-roadmap-pill-nav-btn relative z-[2] flex size-11 shrink-0 cursor-pointer items-center justify-center rounded-full border border-black/15 bg-white text-green-800 shadow-[0_1px_4px_rgba(0,0,0,0.08)] transition-[border-color,box-shadow] duration-200 [-webkit-tap-highlight-color:transparent] hover:border-green-300 hover:shadow-[0_2px_8px_rgba(0,0,0,0.12)] disabled:cursor-not-allowed disabled:opacity-30 lg:size-12"
                                         onClick={handleNextDay}
                                         disabled={!allTasksDone || roadmap.current_day >= roadmap.days}
                                         aria-label="Next day"
@@ -973,10 +986,9 @@ export const LangeyRoadmap: React.FC<LangeyRoadmapProps> = ({
                                 </div>
                             </>
                         ) : (
-                            /* No roadmap: center only — combined Progress+% tag + level tag */
-                            <div className="gg-roadmap-pill-center">
-                                <span className="gg-roadmap-pill-tag">Progress {moduleProgress}%</span>
-                                <span className="gg-roadmap-pill-tag">{level}</span>
+                            <div className="gg-roadmap-pill-center relative z-[1] flex min-w-0 flex-1 items-center justify-center gap-[7px]">
+                                <span className="gg-roadmap-pill-tag inline-flex items-center justify-center rounded-lg border border-black/15 bg-white px-[9px] py-[3px] text-[13px] font-semibold whitespace-nowrap text-green-800 shadow-[0_1px_4px_rgba(0,0,0,0.08)] lg:rounded-[10px] lg:px-4 lg:py-1.5 lg:text-base">Progress {moduleProgress}%</span>
+                                <span className="gg-roadmap-pill-tag inline-flex items-center justify-center rounded-lg border border-black/15 bg-white px-[9px] py-[3px] text-[13px] font-semibold whitespace-nowrap text-green-800 shadow-[0_1px_4px_rgba(0,0,0,0.08)] lg:rounded-[10px] lg:px-4 lg:py-1.5 lg:text-base">{level}</span>
                             </div>
                         )}
                     </div>
@@ -986,14 +998,18 @@ export const LangeyRoadmap: React.FC<LangeyRoadmapProps> = ({
     };
 
     if (isInitialLoading) {
-        return <div className="gg-roadmap gg-roadmap-loading"><div className="gg-roadmap-spinner" /></div>;
+        return (
+            <div className="gg-roadmap gg-roadmap-loading relative flex min-h-[calc(100dvh-150px)] flex-col items-center justify-center px-5 pt-10 pb-[calc(40px+env(safe-area-inset-bottom,0px))] max-lg:min-h-[calc(100dvh-54px)] max-lg:p-6 max-lg:pb-[calc(24px+env(safe-area-inset-bottom,0px))]">
+                <div className="gg-roadmap-spinner size-10 rounded-full border-[3px] border-black/10 border-t-langey-ink" />
+            </div>
+        );
     }
 
     const roadmapActive  = roadmapEnabled && !!roadmap;
     const currentDayPlan = roadmapActive ? roadmap!.plan.find(p => p.day === roadmap!.current_day) : undefined;
 
     return (
-        <div className="gg-roadmap">
+        <div className="gg-roadmap relative flex min-h-[calc(100dvh-150px)] flex-col items-center justify-center px-5 pt-10 pb-[calc(40px+env(safe-area-inset-bottom,0px))] max-lg:h-[calc(100dvh-54px)] max-lg:min-h-[calc(100dvh-54px)] max-lg:items-stretch max-lg:justify-start max-lg:overflow-hidden max-lg:p-0 max-lg:pb-0">
             {renderView()}
             {renderMobileCirclePopup(roadmapActive, currentDayPlan)}
             {isSetupSheetOpen && renderSetupSheet()}
