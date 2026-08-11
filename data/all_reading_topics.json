@@ -1,0 +1,38 @@
+{
+  "A1": [
+    { "Title": "Family & Relatives" },
+    { "Title": "Daily Routine" },
+    { "Title": "Food & Drink" },
+    { "Title": "Shopping" },
+    { "Title": "Weather & Seasons" },
+    { "Title": "Home & Living" },
+    { "Title": "School & Education" },
+    { "Title": "Jobs & Professions" },
+    { "Title": "Hobbies & Leisure" },
+    { "Title": "Health & Body" }
+  ],
+  "A2": [
+    { "Title": "Travel & Transportation" },
+    { "Title": "Restaurants & Cafes" },
+    { "Title": "Clothing & Fashion" },
+    { "Title": "Sports & Fitness" },
+    { "Title": "City & Neighbourhood" },
+    { "Title": "Technology & Media" },
+    { "Title": "Environment & Nature" },
+    { "Title": "Festivals & Events" },
+    { "Title": "Work & Colleagues" },
+    { "Title": "Time & Appointments" }
+  ],
+  "B1": [
+    { "Title": "German Society & Culture" },
+    { "Title": "Modern Relationships" },
+    { "Title": "Career & Ambitions" },
+    { "Title": "Politics & News" },
+    { "Title": "Science & Innovation" },
+    { "Title": "Arts & Literature" },
+    { "Title": "Environmental Issues" },
+    { "Title": "Education & University" },
+    { "Title": "Travel Experiences" },
+    { "Title": "Health & Lifestyle" }
+  ]
+}

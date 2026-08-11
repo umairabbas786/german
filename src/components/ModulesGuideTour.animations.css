@@ -1,0 +1,299 @@
+/* Spotlight / prompt motion leftovers for ModulesGuideTour (Tailwind owns static layout). */
+
+.langey-guide-root {
+  position: fixed;
+  inset: 0;
+  z-index: 12000;
+  pointer-events: none;
+}
+
+.langey-guide-root--prompt {
+  z-index: 9999;
+}
+
+.langey-guide-root--prompt .langey-guide-prompt-banner {
+  pointer-events: auto;
+  z-index: 9999;
+}
+
+.langey-guide-prompt-banner {
+  opacity: 0;
+  animation: langey-guide-prompt-in-desktop 0.32s ease-out 0.14s forwards;
+}
+
+@media (max-width: 640px) {
+  .langey-guide-prompt-banner {
+    animation-name: langey-guide-prompt-in-mobile;
+  }
+}
+
+@keyframes langey-guide-prompt-in-desktop {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes langey-guide-prompt-in-mobile {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.langey-guide-prompt-banner--out {
+  animation: langey-guide-prompt-out 0.32s ease-in forwards !important;
+}
+
+@media (max-width: 640px) {
+  .langey-guide-prompt-banner--out {
+    animation-name: langey-guide-prompt-out-mobile !important;
+  }
+}
+
+@media (min-width: 641px) {
+  .langey-guide-prompt-banner--out {
+    animation-name: langey-guide-prompt-out-desktop !important;
+  }
+}
+
+.langey-guide-prompt-timer-bar {
+  transform-origin: left center;
+  animation: langey-guide-timer 5s linear forwards;
+}
+
+.langey-guide-prompt-banner--out .langey-guide-prompt-timer-bar {
+  animation-play-state: paused;
+}
+
+.langey-guide-root--tour > .langey-guide-shield,
+.langey-guide-root--tour > .langey-guide-stage {
+  pointer-events: auto;
+}
+
+.langey-guide-veil {
+  position: fixed;
+  z-index: 12001;
+  pointer-events: none;
+  background: transparent;
+  opacity: 0;
+  animation: langey-guide-dark-in 0.35s ease forwards;
+  box-shadow:
+    0 0 0 9999px rgba(8, 8, 10, 0.82),
+    0 0 0 2px rgba(255, 255, 255, 0.92),
+    0 12px 40px rgba(0, 0, 0, 0.28);
+  transition:
+    top 0.55s cubic-bezier(0.22, 1, 0.36, 1),
+    left 0.55s cubic-bezier(0.22, 1, 0.36, 1),
+    width 0.55s cubic-bezier(0.22, 1, 0.36, 1),
+    height 0.55s cubic-bezier(0.22, 1, 0.36, 1),
+    border-radius 0.55s cubic-bezier(0.22, 1, 0.36, 1),
+    box-shadow 0.35s ease;
+}
+
+.langey-guide-root--leaving .langey-guide-veil {
+  animation: langey-guide-dark-out 0.35s ease forwards;
+}
+
+@keyframes langey-guide-dark-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes langey-guide-dark-out {
+  from { opacity: 1; }
+  to { opacity: 0; }
+}
+
+.langey-guide-veil.is-full-dark {
+  box-shadow: 0 0 0 9999px rgba(8, 8, 10, 0.82);
+}
+
+.langey-guide-next-wrap {
+  opacity: 0;
+  transition: opacity 0.5s ease;
+  pointer-events: none;
+}
+
+.langey-guide-next-wrap.is-visible {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.langey-guide-copy-block {
+  opacity: 0;
+  transition: opacity 0.5s ease;
+}
+
+.langey-guide-copy-block.is-visible {
+  opacity: 1;
+}
+
+.langey-guide-letter {
+  display: inline-block;
+  opacity: 0;
+  transition: opacity 0.38s ease;
+}
+
+.langey-guide-letter.is-in {
+  opacity: 1;
+}
+
+@keyframes langey-guide-timer {
+  from { transform: scaleX(0); }
+  to { transform: scaleX(1); }
+}
+
+@keyframes langey-guide-prompt-out {
+  from {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+  to {
+    opacity: 0;
+    transform: translateX(-50%) translateY(16px);
+  }
+}
+
+@keyframes langey-guide-prompt-out-mobile {
+  from {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  to {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+}
+
+@keyframes langey-guide-prompt-out-desktop {
+  from {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  to {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+}
+
+/* Stage positioning still depends on CSS vars measured from the spotlight. */
+.langey-guide-stage {
+  position: fixed;
+  inset: 0;
+  z-index: 12002;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 28px 24px max(28px, env(safe-area-inset-bottom));
+  text-align: center;
+  pointer-events: none;
+  background: transparent;
+}
+
+.langey-guide-stage > * {
+  pointer-events: auto;
+}
+
+.langey-guide-stage--center {
+  justify-content: center;
+  gap: 28px;
+}
+
+.langey-guide-stage--modules {
+  justify-content: flex-end;
+  gap: 20px;
+  padding-bottom: max(36px, calc(env(safe-area-inset-bottom) + 28px));
+}
+
+@media (max-width: 640px) {
+  .langey-guide-stage--modules {
+    justify-content: space-between;
+    padding-top: max(14px, calc(env(safe-area-inset-top) + 10px));
+    padding-bottom: max(28px, calc(env(safe-area-inset-bottom) + 24px));
+  }
+
+  .langey-guide-stage--modules .langey-guide-copy-block {
+    position: fixed;
+    top: calc(var(--langey-guide-spot-top) / 2);
+    left: 0;
+    width: 100%;
+    padding: 0;
+    margin: 0;
+    transform: translateY(-50%);
+    flex-shrink: 0;
+  }
+
+  .langey-guide-stage--modules .langey-guide-next-wrap {
+    position: fixed;
+    top: calc((var(--langey-guide-spot-bottom) + 100dvh) / 2);
+    left: 0;
+    width: 100%;
+    margin: 0;
+    transform: translateY(-50%);
+  }
+
+  .langey-guide-typewriter {
+    white-space: normal;
+    overflow-wrap: break-word;
+    word-break: normal;
+    font-size: clamp(20px, 6vw, 28px);
+    line-height: 1.2;
+  }
+
+  .langey-guide-letter {
+    display: inline;
+  }
+}
+
+@media (min-width: 641px) {
+  .langey-guide-stage--modules {
+    top: var(--langey-guide-spot-bottom);
+    justify-content: center;
+    padding-top: 28px;
+  }
+
+  .langey-guide-typewriter {
+    white-space: normal;
+    text-align: center;
+  }
+
+  .langey-guide-letter {
+    display: inline;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .langey-guide-veil {
+    transition: none;
+    animation: none;
+    opacity: 1;
+  }
+
+  .langey-guide-root--leaving .langey-guide-veil {
+    opacity: 0;
+  }
+
+  .langey-guide-prompt-timer-bar {
+    animation: none;
+    transform: scaleX(1);
+  }
+
+  .langey-guide-letter {
+    transition: none;
+    opacity: 1;
+  }
+
+  .langey-guide-next-wrap,
+  .langey-guide-copy-block {
+    transition: none;
+  }
+}

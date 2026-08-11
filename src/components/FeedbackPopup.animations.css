@@ -1,0 +1,68 @@
+@keyframes fadeInScale {
+  from {
+    opacity: 0;
+    transform: scale(0.8) translateY(40px);
+    filter: blur(10px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+    filter: blur(0);
+  }
+}
+
+@keyframes feedbackGlow {
+  0%,
+  100% {
+    background-position: 0% 50%;
+    opacity: 0.6;
+  }
+  50% {
+    background-position: 100% 50%;
+    opacity: 0.9;
+  }
+}
+
+@keyframes feedbackSpin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.feedback-popup-animate {
+  animation: fadeInScale 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.feedback-submit-glow::before {
+  content: '';
+  position: absolute;
+  inset: -1px;
+  background: linear-gradient(
+    45deg,
+    rgba(120, 119, 198, 0.5),
+    rgba(255, 206, 84, 0.5),
+    rgba(120, 119, 198, 0.5),
+    rgba(255, 206, 84, 0.5)
+  );
+  background-size: 400% 400%;
+  border-radius: 16px;
+  z-index: -1;
+  animation: feedbackGlow 4s ease-in-out infinite;
+  opacity: 0.8;
+}
+
+.feedback-submit-glow-disabled::before {
+  opacity: 0.2;
+}
+
+.feedback-loading-spinner {
+  width: 20px;
+  height: 20px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-top: 2px solid rgba(255, 255, 255, 0.9);
+  border-radius: 50%;
+  animation: feedbackSpin 1s linear infinite;
+}

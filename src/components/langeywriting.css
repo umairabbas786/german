@@ -1,0 +1,782 @@
+/* langeywriting.css - Based on langeyspeaking.css for consistency */
+
+/* Reuse generic classes where possible, or replicate them */
+
+.gg-writing {
+  padding: 20px;
+  padding-bottom: calc(20px + env(safe-area-inset-bottom, 0px));
+  min-height: calc(100vh - 150px);
+  min-height: calc(100dvh - 150px);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.gg-writing-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  width: 100%;
+  max-width: 800px;
+  margin: 0 0 24px 0;
+  gap: 20px;
+}
+
+.gg-field-left {
+  text-align: left;
+  flex: 1;
+  max-width: 50%;
+}
+
+.gg-label {
+  display: block;
+  font-size: 12px;
+  color: #444;
+  margin-bottom: 6px
+}
+
+.gg-writing-actions {
+  display: flex;
+  gap: 12px;
+  align-items: flex-end;
+  flex-wrap: wrap;
+  flex: 1;
+  max-width: 50%;
+  justify-content: flex-end;
+}
+
+.gg-writing-btn {
+  background: linear-gradient(135deg, #000 0%, #333 100%);
+  color: #fff;
+  border: 1px solid rgba(0, 0, 0, 0.2);
+  border-radius: 10px;
+  height: 38px;
+  padding: 0 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, .1), 0 2px 4px -1px rgba(0, 0, 0, .06);
+  backdrop-filter: blur(4px);
+  min-width: 90px;
+  flex: 1 1 0px;
+}
+
+.gg-writing-btn:hover:not(:disabled) {
+  background: linear-gradient(135deg, #333 0%, #555 100%);
+  transform: translateY(-1px);
+  box-shadow: 0 6px 10px -1px rgba(0, 0, 0, .15), 0 4px 6px -1px rgba(0, 0, 0, .1)
+}
+
+.gg-writing-btn:disabled {
+  background: rgba(0, 0, 0, .15);
+  color: rgba(0, 0, 0, .4);
+  cursor: not-allowed;
+  box-shadow: 0 2px 4px -1px rgba(0, 0, 0, .06);
+  border: 1px solid rgba(0, 0, 0, .1)
+}
+
+/* Evaluate Button (Similar to Help/Suggest) */
+.gg-weak-points-btn {
+  background: rgba(248, 248, 248, .9) !important;
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(0, 0, 0, .15) !important;
+  color: rgba(0, 0, 0, .8) !important;
+  position: relative;
+}
+
+.gg-weak-points-btn::before {
+  content: '';
+  position: absolute;
+  inset: -1px;
+  background: linear-gradient(45deg, rgba(120, 119, 198, .5), rgba(255, 206, 84, .5), rgba(120, 119, 198, .5), rgba(255, 206, 84, .5));
+  background-size: 400% 400%;
+  border-radius: 10px;
+  z-index: -1;
+  animation: glow 4s ease-in-out infinite;
+  opacity: .8
+}
+
+.gg-weak-points-btn:hover:not(:disabled) {
+  background: rgba(248, 248, 248, .95) !important;
+  transform: translateY(-1px)
+}
+
+.gg-weak-points-btn.gg-weak-points-disabled {
+  color: rgba(0, 0, 0, .4) !important;
+}
+
+.gg-weak-points-btn.gg-weak-points-disabled::before {
+  opacity: 0.3;
+}
+
+/* Main Box */
+.gg-writing-box {
+  width: 100%;
+  max-width: 800px;
+  height: 400px;
+  margin: 0 0 20px 0;
+  border: 1px solid rgba(0, 0, 0, .1);
+  border-radius: 16px;
+  background: rgba(255, 255, 255, .8);
+  backdrop-filter: blur(12px);
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, .1), 0 10px 10px -5px rgba(0, 0, 0, .04);
+  position: relative;
+  transition: all .3s ease;
+}
+
+.gg-writing-textarea {
+  width: 100%;
+  height: 100%;
+  border: none;
+  resize: none;
+  background: transparent;
+  font-size: 18px;
+  /* Slightly larger for better readability */
+  line-height: 1.6;
+  color: #000;
+  outline: none;
+  font-family: inherit;
+  padding: 0;
+  margin: 0;
+  padding-bottom: 40px;
+}
+
+/* Hide textarea text when corrections overlay is shown to prevent double rendering */
+.gg-writing-box-with-corrections .gg-writing-textarea {
+  color: transparent;
+  caret-color: #000;
+  /* Keep caret visible */
+}
+
+.gg-writing-display {
+  width: 100%;
+  height: 100%;
+  overflow-y: auto;
+  font-size: 18px;
+  line-height: 1.6;
+  color: #000;
+  white-space: pre-wrap;
+  text-align: left;
+  padding: 0;
+  margin: 0;
+  padding-bottom: 40px;
+  font-family: inherit;
+}
+
+.gg-writing-overlay {
+  position: absolute;
+  top: 24px;
+  left: 24px;
+  right: 24px;
+  bottom: 24px;
+  pointer-events: none;
+  background: transparent;
+  z-index: 1;
+}
+
+/* Mobile overlay positioning and font consistency */
+@media (max-width: 640px) {
+  .gg-writing-overlay {
+    top: 16px;
+    left: 16px;
+    right: 16px;
+    bottom: 16px;
+  }
+
+  .gg-writing-display {
+    font-size: 16px;
+  }
+}
+
+@media (max-width: 1024px) {
+  .gg-writing:not(.gg-writing-stats-mode) {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start !important;
+    align-items: stretch !important;
+  }
+
+  .gg-writing:not(.gg-writing-stats-mode) .gg-writing-header,
+  .gg-writing:not(.gg-writing-stats-mode) .gg-writing-box,
+  .gg-writing:not(.gg-writing-stats-mode) .gg-writing-hint-bar {
+    transition: none !important;
+    animation: none !important;
+    transform: none !important;
+  }
+}
+
+.gg-writing-overlay .gg-writing-display {
+  pointer-events: none;
+}
+
+.gg-writing-overlay .gg-error-highlight {
+  pointer-events: auto;
+}
+
+/* LLM Text Box (Hint Bar) */
+.gg-writing-hint-bar {
+  width: 100%;
+  max-width: 800px;
+  min-height: 80px;
+  margin: 0;
+  border: 1px solid rgba(0, 0, 0, .15);
+  border-radius: 16px;
+  background: rgba(248, 248, 248, .9);
+  backdrop-filter: blur(12px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  padding: 16px 20px;
+  box-shadow: 0 8px 20px -5px rgba(0, 0, 0, .1), 0 6px 8px -5px rgba(0, 0, 0, .04)
+}
+
+.gg-writing-hint-bar::before {
+  content: '';
+  position: absolute;
+  inset: -1px;
+  background: linear-gradient(45deg, rgba(120, 119, 198, .5), rgba(255, 206, 84, .5), rgba(120, 119, 198, .5), rgba(255, 206, 84, .5));
+  background-size: 400% 400%;
+  border-radius: 16px;
+  z-index: -1;
+  animation: glow 4s ease-in-out infinite;
+  opacity: .8
+}
+
+.gg-writing-hint-content {
+  text-align: center;
+  font-size: 14px;
+  font-weight: bold;
+  color: #333;
+  line-height: 1.5;
+  max-width: 100%;
+  position: relative;
+  z-index: 1;
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+  white-space: pre-line
+}
+
+.gg-writing-stats-mode {
+  gap: 24px;
+}
+
+.gg-writing-stats-panel {
+  width: 100%;
+  max-width: 800px;
+  min-height: 420px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+}
+
+.gg-writing-stats-view {
+  width: 100%;
+  display: none;
+  align-items: center;
+  justify-content: center;
+}
+
+.gg-writing-stats-view.active {
+  display: flex;
+}
+
+.gg-writing-progress-ring {
+  width: 420px;
+  height: 420px;
+  position: relative;
+}
+
+.gg-writing-progress-svg {
+  width: 100%;
+  height: 100%;
+  transform: rotate(-90deg);
+}
+
+.gg-writing-progress-track,
+.gg-writing-progress-value {
+  fill: none;
+  stroke-width: 8;
+}
+
+.gg-writing-progress-track {
+  stroke: rgba(0, 0, 0, .08);
+}
+
+.gg-writing-progress-value {
+  stroke: #22c55e;
+  stroke-linecap: round;
+  transition: stroke-dashoffset 1s ease-in-out;
+}
+
+.gg-writing-progress-center {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 240px;
+  height: 240px;
+  transform: translate(-50%, -50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+.gg-writing-progress-main {
+  color: #111;
+  font-size: 30px;
+  font-weight: 800;
+  line-height: 1.1;
+}
+
+.gg-writing-progress-sub {
+  margin-top: 6px;
+  color: rgba(0, 0, 0, .55);
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.gg-writing-evaluation-wrap {
+  width: 100%;
+  max-width: 600px;
+  height: 400px;
+  overflow-y: auto;
+  background: transparent;
+}
+
+@media (max-width: 640px) {
+  .gg-writing-stats-panel {
+    min-height: 320px;
+  }
+
+  .gg-writing-progress-ring {
+    width: 320px;
+    height: 320px;
+    max-width: 100%;
+  }
+
+  .gg-writing-progress-center {
+    width: 200px;
+    height: 200px;
+  }
+
+  .gg-writing-progress-main {
+    font-size: 24px;
+  }
+
+  .gg-writing-evaluation-wrap {
+    height: 360px;
+  }
+}
+
+.gg-writing-evaluation-list {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.gg-writing-evaluation-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  padding: 14px 12px;
+  border-bottom: 1px solid rgba(0, 0, 0, .1);
+}
+
+.gg-writing-evaluation-label {
+  flex: 1 1 auto;
+  color: rgba(0, 0, 0, .78);
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 1.35;
+  text-align: left;
+}
+
+.gg-writing-evaluation-tag {
+  flex: 0 0 auto;
+  border-radius: 999px;
+  padding: 6px 10px;
+  font-size: 11px;
+  font-weight: 900;
+  letter-spacing: 0;
+  white-space: nowrap;
+}
+
+.gg-writing-evaluation-tag-strong {
+  background: rgba(17, 124, 77, .12);
+  color: #117c4d;
+}
+
+.gg-writing-evaluation-tag-needs-practice {
+  background: rgba(196, 93, 28, .14);
+  color: #a54f18;
+}
+
+.gg-writing-evaluation-tag-not-used {
+  background: rgba(0, 0, 0, .08);
+  color: rgba(0, 0, 0, .56);
+}
+
+.gg-writing-stats-hint {
+  min-height: 64px;
+  margin-top: 0;
+  max-width: 600px;
+}
+
+.gg-writing-stats-hint--with-nav {
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.gg-writing-stats-nav {
+  width: 40px;
+  height: 40px;
+  border: 1px solid rgba(0, 0, 0, .12);
+  border-radius: 50%;
+  background: rgba(255, 255, 255, .72);
+  color: #111;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  position: relative;
+  z-index: 1;
+  flex: 0 0 auto;
+}
+
+.gg-writing-stats-nav:disabled {
+  opacity: .35;
+  cursor: not-allowed;
+}
+
+/* Selector Styles */
+.gg-custom-selector {
+  position: relative
+}
+
+.gg-selector-trigger {
+  width: 100%;
+  padding: 10px 14px;
+  border: 1px solid rgba(0, 0, 0, .15);
+  border-radius: 10px;
+  background: #fff;
+  color: #222;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  cursor: pointer;
+  min-height: 42px;
+  /* Ensure consistency */
+}
+
+.gg-selector-trigger svg {
+  opacity: .6
+}
+
+.gg-writing[data-roadmap-mode="true"] .gg-selector-trigger-static {
+  box-sizing: border-box;
+  justify-content: flex-start;
+  cursor: default;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font: inherit;
+  line-height: 1.2;
+  font-size: 0.8em;
+}
+
+.gg-dropdown-panel {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: calc(100% + 8px);
+  background: #fff;
+  border: 1px solid rgba(0, 0, 0, .12);
+  border-radius: 12px;
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, .1), 0 10px 10px -5px rgba(0, 0, 0, .04);
+  padding: 8px;
+  max-height: 260px;
+  overflow-y: auto;
+  z-index: 30
+}
+
+.gg-topic-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: 6px
+}
+
+.gg-topic-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 10px;
+  border-radius: 10px;
+  cursor: pointer;
+  justify-content: space-between;
+}
+
+.gg-topic-item:hover {
+  background: rgba(120, 119, 198, .08)
+}
+
+.gg-topic-item.selected {
+  background: rgba(120, 119, 198, .12)
+}
+
+.gg-topic-title {
+  font-size: 14px;
+  color: #222;
+  flex: 1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Error Highlights */
+.gg-error-highlight {
+  background-color: rgba(255, 0, 0, 0.1);
+  border-bottom: 2px solid #ff4d4f;
+  cursor: pointer;
+  position: relative;
+  transition: all 0.2s;
+}
+
+.gg-error-highlight:hover {
+  background-color: rgba(255, 0, 0, 0.2);
+}
+
+.gg-error-popup {
+  background: white;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  padding: 16px;
+  border-radius: 12px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+  width: min(320px, calc(100vw - 24px));
+  min-width: 0;
+  max-width: calc(100vw - 24px);
+  text-align: left;
+  z-index: 2000;
+}
+
+.gg-error-popup button {
+  margin-top: 5px;
+  margin-left: 8px;
+  padding: 6px 12px;
+  border-radius: 6px;
+  background: #fff;
+  color: #000;
+  border: 1px solid #ccc;
+  cursor: pointer;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.gg-error-popup button:hover {
+  background: #e0e0e0;
+}
+
+.gg-error-popup .replace-btn {
+  background: #000;
+  color: white;
+  border: none;
+}
+
+.gg-error-popup .replace-btn:hover {
+  background: #333;
+}
+
+/* Loading Spinner */
+.gg-spinner {
+  width: 40px;
+  height: 40px;
+  border: 3px solid rgba(0, 0, 0, 0.1);
+  border-radius: 50%;
+  border-top-color: #000;
+  animation: spin 1s ease-in-out infinite;
+  margin: auto;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes glow {
+  0% {
+    background-position: 0% 50%;
+  }
+
+  50% {
+    background-position: 100% 50%;
+  }
+
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+/* Responsive */
+@media (max-width: 640px) {
+  .gg-writing-header {
+    flex-direction: column;
+    gap: 16px;
+    align-items: stretch
+  }
+
+  .gg-field-left {
+    text-align: left;
+    flex: 1;
+    max-width: 100%
+  }
+
+  .gg-writing-actions {
+    justify-content: stretch;
+    margin-top: 8px;
+    width: 100%;
+    gap: 8px;
+    max-width: none;
+    flex: none
+  }
+
+  .gg-writing-btn {
+    min-width: 80px;
+    flex: 1;
+    padding: 0 14px;
+    font-size: 13px;
+  }
+
+  .gg-writing-box {
+    margin: 0 0 16px 0;
+    padding: 16px;
+    height: 350px
+  }
+
+  .gg-writing-textarea {
+    font-size: 16px;
+  }
+}
+@media (max-width: 1024px) {
+  .gg-writing-btn:first-child {
+    background: #000 !important;
+    border-color: #000 !important;
+    color: #fff !important;
+  }
+
+  .gg-writing-btn:first-child:disabled {
+    background: rgba(0, 0, 0, .15) !important;
+    border-color: rgba(0, 0, 0, .1) !important;
+    color: rgba(0, 0, 0, .4) !important;
+  }
+
+  .gg-writing .gg-bottom-sheet {
+    min-height: 60dvh !important;
+    max-height: 60dvh !important;
+  }
+
+  .gg-delete-passage-overlay {
+    background: rgba(0, 0, 0, .45);
+    padding: 0 20px;
+    box-sizing: border-box;
+    z-index: 1000;
+  }
+
+  .gg-delete-passage-dialog {
+    flex: 0 0 auto;
+    width: 100%;
+    max-width: 300px;
+    height: auto;
+    min-height: 0;
+    margin: 0;
+    padding: 18px 16px;
+    border: 1.5px solid #000;
+    border-radius: 14px;
+    background: #fff;
+    box-shadow: 0 12px 40px rgba(0, 0, 0, .22);
+    overflow: visible;
+  }
+
+  .gg-delete-passage-dialog h3 {
+    margin-top: 0;
+    margin-bottom: 8px;
+    font-size: 17px;
+    font-weight: 700;
+    color: #1a1a1a;
+  }
+
+  .gg-delete-passage-dialog p {
+    margin-bottom: 16px;
+    font-size: 14px;
+    line-height: 1.45;
+    color: #666;
+  }
+
+  .gg-delete-passage-dialog > div {
+    gap: 10px;
+  }
+
+  .gg-delete-passage-dialog .gg-writing-btn {
+    min-width: 0;
+    flex: 1 1 0;
+    padding: 10px 12px;
+    font-size: 14px;
+  }
+
+  .gg-writing-textarea,
+  .gg-writing-display,
+  .gg-writing-overlay {
+    font-size: 18px;
+    line-height: 28px;
+  }
+
+  .gg-writing-textarea {
+    padding: 24px;
+  }
+
+  .gg-writing-overlay {
+    top: 24px;
+    left: 24px;
+    right: 24px;
+    bottom: calc(120px + env(safe-area-inset-bottom, 0px));
+  }
+
+  .gg-writing-box-with-corrections .gg-writing-textarea {
+    display: block;
+    overflow-y: auto;
+    padding-bottom: calc(120px + env(safe-area-inset-bottom, 0px));
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .gg-writing-box-with-corrections .gg-writing-overlay {
+    position: absolute;
+    top: 24px;
+    left: 24px;
+    right: 24px;
+    bottom: 24px;
+    padding: 0;
+    overflow: hidden;
+    pointer-events: none;
+  }
+
+  .gg-writing-box-with-corrections .gg-writing-display {
+    height: 100%;
+    min-height: 0;
+    overflow-y: hidden;
+    pointer-events: none;
+    padding-bottom: calc(120px + env(safe-area-inset-bottom, 0px));
+  }
+}

@@ -1,0 +1,825 @@
+/* Settings.css */
+
+.settings-container {
+  padding: 26px;
+  min-height: calc(100vh - 88px); /* Adjust for header if necessary, or keep 100vh */
+  width: 100%;
+  max-width: 770px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+  color: #333;
+}
+
+/* Header */
+.settings-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 35px;
+  border-bottom: 1px solid #c8c8c8;
+  padding-bottom: 26px;
+}
+
+.settings-header-left {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.settings-main-title {
+  font-size: 22px;
+  font-weight: 600;
+  margin: 0;
+  color: #1a202c;
+  text-align: left;
+  line-height: 1.2;
+}
+
+.settings-contact-btn {
+  padding: 9px 18px;
+  background: transparent;
+  border: 1px solid #c8c8c8;;
+  border-radius: 7px;
+  font-size: 14px;
+  font-weight: 500;
+  color: #4a5568;
+  cursor: pointer;
+  text-decoration: none;
+  transition: all 0.2s;
+}
+
+.settings-contact-btn:hover {
+  background: rgba(0, 0, 0, 0.02);
+  border-color: #cbd5e0;
+}
+
+/* Sections */
+.settings-section {
+  margin-bottom: 26px;
+}
+
+.settings-account-section {
+  margin-bottom: 0px;
+}
+
+.settings-auth-error {
+  background: #fef2f2;
+  color: #b91c1c;
+  padding: 12px 16px;
+  border-radius: 8px;
+  font-size: 14px;
+  margin-bottom: 18px;
+}
+
+.settings-subscription-section {
+  margin-top: 26px;
+}
+
+.settings-progress-section {
+  margin-top: 0px;
+}
+
+.settings-section-title {
+  font-size: 12px;
+  font-weight: 600;
+  color: #4a5568;
+  margin: 0 0 18px 0;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  text-align: left;
+}
+
+.settings-section-header-row .settings-section-title {
+  margin-bottom: 0;
+}
+
+.settings-section-header-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 13px;
+  margin-bottom: 18px;
+}
+
+.settings-expand-toggle {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #718096;
+  transition: all 0.2s;
+  border-radius: 4px;
+}
+
+.settings-expand-toggle:hover {
+  background: rgba(0, 0, 0, 0.02);
+  color: #4a5568;
+}
+
+.settings-expand-arrow {
+  transition: transform 0.2s ease;
+}
+
+.settings-expand-arrow.expanded {
+  transform: rotate(180deg);
+}
+
+.settings-card {
+  background: rgba(255, 255, 255, 0.4) !important;
+  backdrop-filter: blur(12px) !important;
+  border: 1px solid rgba(226, 232, 240, 0.5) !important;
+  border-radius: 9px;
+  overflow: hidden;
+}
+
+/* Account Management Card */
+.settings-account-card {
+  padding: 18px 26px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.settings-subscription-card {
+  flex-direction: column;
+  align-items: stretch;
+  gap: 0;
+}
+
+.settings-subscription-summary {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.settings-plan-selection {
+  display: grid;
+  grid-template-rows: 0fr;
+  width: 100%;
+  opacity: 0;
+  transition: grid-template-rows 0.3s ease, opacity 0.2s ease;
+}
+
+.settings-subscription-card.expanded .settings-plan-selection {
+  grid-template-rows: 1fr;
+  opacity: 1;
+}
+
+.settings-plan-selection-inner {
+  min-height: 0;
+  overflow: hidden;
+  display: flex;
+  gap: 12px;
+}
+
+.settings-subscription-card.expanded .settings-plan-selection-inner {
+  padding-top: 18px;
+}
+
+.settings-plan-btn {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 11px 22px;
+  background: rgba(247, 250, 252, 0.5);
+  border: 2px solid rgba(203, 205, 205, 0.85);
+  border-radius: 7px;
+  font-size: 15px;
+  font-weight: 700;
+  color: #4a5568;
+  cursor: pointer;
+  transition: all 0.2s;
+  position: relative;
+}
+
+.settings-plan-btn:hover {
+  background: rgba(247, 250, 252, 0.8);
+  border-color: rgba(113, 128, 150, 0.8);
+}
+
+.settings-sale-tag {
+  padding: 5px 9px;
+  border-radius: 5px;
+  background: #dcfce7;
+  color: #15803d;
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 1;
+  white-space: nowrap;
+}
+
+.settings-level-card {
+  padding: 18px 26px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 18px;
+}
+
+.settings-level-options {
+  display: flex;
+  gap: 6px;
+  padding: 4px;
+  border-radius: 10px;
+  background: rgba(0, 0, 0, 0.04);
+  flex-shrink: 0;
+}
+
+.settings-level-option {
+  min-width: 48px;
+  height: 32px;
+  border: 0;
+  border-radius: 8px;
+  background: transparent;
+  color: #718096;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.settings-level-option:hover:not(.active) {
+  color: #1a202c;
+  background: rgba(255, 255, 255, 0.65);
+}
+
+.settings-level-option.active {
+  background: #fff;
+  color: #1a202c;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+}
+
+.settings-account-info {
+  display: flex;
+  align-items: center;
+  gap: 13px;
+}
+
+.settings-avatar {
+  width: 40px;
+  height: 40px;
+  background: rgba(247, 250, 252, 0.5);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.settings-level-section .settings-avatar,
+.settings-account-section .settings-avatar,
+.settings-subscription-section .settings-avatar {
+  border: 1px solid rgba(203, 213, 224, 0.85);
+}
+
+.settings-avatar-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.settings-account-text {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.settings-account-name {
+  font-size: 13px;
+  font-weight: 600;
+  color: #1a202c;
+  margin: 0 0 2px 0;
+  text-align: left;
+}
+
+.settings-subscription-title-row,
+.settings-subscription-tags {
+  display: flex;
+  align-items: center;
+}
+
+.settings-subscription-title-row {
+  gap: 8px;
+  margin-bottom: 2px;
+}
+
+.settings-subscription-title-row .settings-account-name {
+  margin-bottom: 0;
+}
+
+.settings-subscription-tags {
+  gap: 5px;
+}
+
+.settings-subscription-tag {
+  padding: 3px 6px;
+  border-radius: 4px;
+  font-size: 8px;
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: 0.04em;
+}
+
+.settings-subscription-tag.active {
+  background: rgba(220, 252, 231, 0.8);
+  color: #15803d;
+}
+
+.settings-subscription-tag.cancelled {
+  background: rgba(254, 226, 226, 0.8);
+  color: #c53030;
+}
+
+.settings-subscription-tag.plan {
+  background: rgba(226, 232, 240, 0.8);
+  color: #4a5568;
+}
+
+.settings-account-status {
+  font-size: 12px;
+  color: #718096;
+  margin: 0;
+  text-align: left;
+}
+
+.settings-account-actions {
+  display: flex;
+  align-items: center;
+  gap: 26px;
+}
+
+.settings-action-btn {
+  background: none;
+  border: none;
+  font-size: 13px;
+  font-weight: 500;
+  color: #718096;
+  cursor: pointer;
+  padding: 0;
+  transition: color 0.2s;
+}
+
+.settings-action-btn:hover {
+  color: #4a5568;
+}
+
+.settings-action-btn-disabled {
+  color: #cbd5e0;
+  cursor: default;
+}
+
+.settings-action-btn-disabled:hover {
+  color: #cbd5e0;
+}
+
+.settings-delete-text {
+  color: #e53e3e;
+}
+
+.settings-delete-text:hover {
+  color: #c53030;
+}
+
+.settings-google-btn {
+  display: flex;
+  align-items: center;
+  padding: 11px 22px;
+  background: rgba(247, 250, 252, 0.5);
+  border: 1px solid rgba(203, 205, 205, 0.85);
+  border-radius: 7px;
+  font-size: 15px;
+  font-weight: 500;
+  color: #4a5568;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.settings-google-btn:hover {
+  background: rgba(247, 250, 252, 0.8);
+  border-color: rgba(113, 128, 150, 0.8);
+}
+
+/* Legal Card */
+.settings-legal-card {
+  padding: 14px 18px;
+  display: flex;
+  gap: 12px;
+}
+
+.settings-legal-btn {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 11px 22px;
+  background: rgba(247, 250, 252, 0.5);
+  border: 1px solid rgba(203, 205, 205, 0.85);
+  border-radius: 7px;
+  font-size: 15px;
+  font-weight: 500;
+  color: #4a5568;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.settings-legal-btn:hover {
+  background: rgba(247, 250, 252, 0.8);
+  border-color: rgba(113, 128, 150, 0.8);
+}
+
+/* Upgrade to Pro Button with Animated Gradient */
+.settings-upgrade-btn {
+  display: flex;
+  align-items: center;
+  padding: 11px 22px;
+  background: rgba(248, 248, 248, 0.9);
+  border: 1px solid rgba(0, 0, 0, 0.15);
+  border-radius: 7px;
+  font-size: 15px;
+  font-weight: 600;
+  color: #1a202c;
+  cursor: pointer;
+  transition: all 0.3s;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  backdrop-filter: blur(12px);
+}
+
+.settings-upgrade-btn::before {
+  content: '';
+  position: absolute;
+  inset: -1px;
+  background: linear-gradient(
+    45deg,
+    rgba(120, 119, 198, 0.5),
+    rgba(255, 206, 84, 0.5),
+    rgba(120, 119, 198, 0.5),
+    rgba(255, 206, 84, 0.5)
+  );
+  background-size: 400% 400%;
+  border-radius: 7px;
+  z-index: -1;
+  animation: settings-glow 4s ease-in-out infinite;
+  opacity: 0.8;
+}
+
+@keyframes settings-glow {
+  0%, 100% {
+    background-position: 0% 50%;
+    opacity: 0.6;
+  }
+  50% {
+    background-position: 100% 50%;
+    opacity: 0.9;
+  }
+}
+
+.settings-upgrade-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12);
+  background: rgba(248, 248, 248, 0.95);
+}
+
+.settings-upgrade-btn:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Progress Table */
+.settings-table-card {
+  width: 100%;
+}
+
+.settings-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.settings-table th {
+  text-align: left;
+  padding: 13px 22px;
+  font-size: 12px;
+  font-weight: 600;
+  color: #718096;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  background: rgba(249, 250, 251, 0.3);
+  border-bottom: 1px solid rgba(226, 232, 240, 0.5);
+}
+
+.settings-table th:not(:first-child) {
+  text-align: center;
+  width: 15%;
+}
+
+.settings-table td {
+  padding: 4px 22px;
+  border-bottom: 1px solid #edf2f7;
+  font-size: 12px;
+  color: #2d3748;
+  vertical-align: middle;
+  height: 44px;
+}
+
+.settings-table td:not(:first-child) {
+  text-align: center;
+}
+
+.settings-table tr:last-child td {
+  border-bottom: none;
+}
+
+.settings-feature-cell {
+  display: flex;
+  align-items: center;
+  gap: 13px;
+  font-weight: 500;
+  font-size: 14px;
+}
+
+.settings-feature-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 14px;
+  color: #a0aec0;
+}
+
+.settings-badge {
+  display: inline-flex;
+  padding: 4px 9px;
+  background: rgba(247, 250, 252, 0.5);
+  color: #4a5568;
+  border-radius: 4px;
+  font-size: 10px;
+  font-weight: 500;
+}
+
+.text-gray-400 {
+  color: #cbd5e0;
+}
+
+.text-gray-600 {
+  color: #718096;
+}
+
+/* Spinner */
+.settings-spinner-small {
+  width: 16px;
+  height: 16px;
+  border: 2px solid #e2e8f0;
+  border-top: 2px solid #718096;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+.settings-spinner-large {
+  width: 48px;
+  height: 48px;
+  border: 4px solid #e2e8f0;
+  border-top: 4px solid #718096;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Loading Overlay — full viewport, sits on top of everything */
+.settings-loading-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  background:
+    radial-gradient(circle at 20% 50%, rgba(120, 119, 198, .08) 0%, transparent 50%),
+    radial-gradient(circle at 80% 20%, rgba(255, 206, 84, .08) 0%, transparent 50%),
+    radial-gradient(circle at 40% 80%, rgba(120, 119, 198, .06) 0%, transparent 50%),
+    linear-gradient(45deg, #f0f1f2 0%, #eceef0 50%, #f0f1f2 100%);
+  background-size: 100% 100%, 100% 100%, 100% 100%, 20px 20px;
+}
+
+.settings-loading-text {
+  font-size: 14px;
+  color: #718096;
+  margin: 0;
+}
+
+/* Mobile Responsiveness */
+@media (max-width: 640px) {
+  .settings-container {
+    padding: 16px;
+    width: 100%;
+    margin: 0;
+  }
+
+  .settings-title {
+    font-size: 24px;
+  }
+
+  .settings-subtitle {
+    font-size: 13px;
+  }
+  
+  .settings-header {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 24px;
+    padding-bottom: 16px;
+  }
+
+  .settings-contact-btn {
+    align-self: auto;
+    padding: 6px 12px;
+    white-space: nowrap;
+  }
+
+  .settings-main-title {
+    font-size: 20px;
+    line-height: 1.4;
+  }
+
+  .settings-section {
+    margin-bottom: 24px;
+  }
+
+  .settings-subscription-section {
+    margin-top: 0px;
+  }
+
+  .settings-progress-section {
+    margin-top: 0px;
+  }
+
+  .settings-section-title {
+    font-size: 10px;
+    margin-bottom: 12px;
+  }
+  
+  .settings-account-card {
+    padding: 16px 20px;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .settings-subscription-card {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0;
+  }
+
+  .settings-subscription-summary {
+    gap: 12px;
+  }
+
+  .settings-subscription-title-row {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 5px;
+  }
+
+  .settings-plan-selection-inner {
+    gap: 8px;
+  }
+
+  .settings-subscription-card.expanded .settings-plan-selection-inner {
+    padding-top: 16px;
+  }
+
+  .settings-plan-btn {
+    padding: 10px 8px;
+    gap: 5px;
+    font-size: 11px;
+  }
+
+  .settings-sale-tag {
+    position: absolute;
+    top: -9px;
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 4px 7px;
+    font-size: 10px;
+  }
+
+  .settings-level-card {
+    padding: 16px 20px;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .settings-level-options {
+    gap: 4px;
+    padding: 3px;
+  }
+
+  .settings-level-option {
+    min-width: 38px;
+    height: 30px;
+    font-size: 12px;
+  }
+
+  .settings-google-btn {
+    padding: 8px 14px;
+    font-size: 11px;
+  }
+
+  .settings-legal-card {
+    padding: 10px 14px;
+    gap: 8px;
+  }
+
+  .settings-legal-btn {
+    padding: 8px 14px;
+    font-size: 11px;
+  }
+
+  .settings-upgrade-btn {
+    padding: 10px 16px;
+    font-size: 12px;
+    white-space: nowrap;
+  }
+  
+  .settings-account-actions {
+    width: auto;
+    margin-left: auto;
+    justify-content: flex-end;
+    gap: 12px;
+  }
+
+  .settings-account-status {
+    display: none;
+  }
+
+  .settings-account-name {
+    font-size: 13px;
+  }
+
+  .settings-action-btn {
+    font-size: 11px;
+  }
+
+  .settings-avatar {
+    width: 40px;
+    height: 40px;
+  }
+
+  .settings-avatar svg {
+    width: 20px;
+    height: 20px;
+  }
+
+  .settings-table th,
+  .settings-table td {
+    padding: 12px 10px;
+  }
+
+  .settings-table th {
+    font-size: 9px;
+  }
+
+  .settings-feature-cell {
+    font-size: 8px;
+    gap: 8px;
+  }
+
+  .settings-feature-icon {
+    width: 20px;
+  }
+
+  .settings-feature-icon svg {
+    width: 16px;
+    height: 16px;
+  }
+
+  .settings-badge {
+    font-size: 8px;
+    padding: 3px 6px;
+  }
+  
+  .settings-table th:not(:first-child),
+  .settings-table td:not(:first-child) {
+    padding: 12px 4px;
+    width: 20%;
+  }
+}

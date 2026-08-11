@@ -1,0 +1,590 @@
+#root {
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  text-align: center;
+}
+
+/* Parent-context overrides for CreditLimitBlock (kept here while feature CSS still uses hook classes) */
+.lv-flashcard-blocked {
+  cursor: default;
+}
+
+.lv-flashcard-blocked .lv-flashcard-content {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+}
+
+.lv-flashcard-blocked .gg-credit-limit-block {
+  min-height: 0;
+  height: 100%;
+  padding: 24px;
+}
+
+.gg-writing-box > .gg-credit-limit-block {
+  min-height: 0;
+  flex: 1;
+  padding: 0;
+}
+
+.gg-exercise-box > .gg-credit-limit-block,
+.lr-exercise-box > .gg-credit-limit-block,
+.ll-exercise-box > .gg-credit-limit-block,
+.gg-speaking-display > .gg-credit-limit-block {
+  min-height: 100%;
+}
+
+.gg-limit-hint {
+  opacity: 0.6;
+  font-size: 14px;
+  color: #333;
+  text-align: center;
+}
+
+/* Only apply max-width and padding on larger screens */
+@media (min-width: 769px) {
+  #root {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 2rem;
+  }
+}
+
+/* Shared responsive layout contract for all learning modules. */
+@media (max-width: 1024px) {
+  .german-grammar-container {
+    background:
+      linear-gradient(45deg, #f0f1f2 0%, #eceef0 50%, #f0f1f2 100%);
+    background-size: 20px 20px;
+  }
+
+  .gg-section {
+    width: 100%;
+    max-width: none;
+    margin: 0;
+    padding: 54px 0 0;
+    min-height: 100dvh;
+  }
+
+  .gg-footer {
+    display: none;
+  }
+
+  .gg-practice,
+  .lr-practice,
+  .ll-practice,
+  .gg-writing {
+    width: 100%;
+    max-width: none;
+    height: calc(100dvh - 54px);
+    min-height: calc(100dvh - 54px);
+    padding: 0;
+    align-items: stretch;
+    justify-content: flex-start;
+    gap: 0;
+    overflow: hidden;
+  }
+
+  .gg-practice-header,
+  .lr-practice-header,
+  .ll-practice-header,
+  .gg-writing-header {
+    display: block;
+    width: 100%;
+    max-width: none;
+    margin: 0;
+    padding: 16px 20px 4px;
+    flex: 0 0 auto;
+    background: transparent;
+  }
+
+  .gg-mode-dropdown-item,
+  .gg-level-dropdown-item {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    padding: 10px 0;
+    text-align: center;
+    transform: none;
+  }
+
+  .gg-mode-dropdown-item:hover,
+  .gg-level-dropdown-item:hover {
+    transform: none;
+  }
+
+  .gg-mode-dropdown-list,
+  .gg-level-dropdown-list {
+    left: 50%;
+    right: auto;
+    width: 100%;
+    min-width: 100%;
+    transform: translateX(-50%);
+    animation: dropdownSlideInCentered 0.2s ease-out;
+  }
+
+  .gg-field-left,
+  .lr-field-left,
+  .ll-field-left {
+    width: 100%;
+    max-width: none;
+    text-align: left;
+  }
+
+  .gg-label,
+  .lr-label,
+  .ll-label {
+    display: none;
+  }
+
+  .gg-custom-selector,
+  .lr-custom-selector,
+  .ll-custom-selector {
+    width: 100%;
+    margin: 0 0 12px;
+  }
+
+  .gg-selector-trigger,
+  .lr-selector-trigger,
+  .ll-selector-trigger {
+    width: 100%;
+    min-height: 46px;
+    padding: 12px 16px;
+    border: 1px solid #ccc;
+    border-radius: 12px;
+    background: #fff;
+    box-shadow: none;
+    color: #333;
+    font-size: 16px;
+    font-weight: 400;
+    justify-content: space-between;
+  }
+
+  .gg-selector-trigger span,
+  .lr-selector-trigger span,
+  .ll-selector-trigger span {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .gg-writing[data-roadmap-mode="true"] .gg-selector-trigger.gg-selector-trigger-static,
+  .gg-practice[data-roadmap-mode="true"] .gg-selector-trigger.gg-selector-trigger-static {
+    font-size: calc(16px * 0.8);
+  }
+
+  .gg-action-buttons,
+  .lr-action-buttons,
+  .ll-action-buttons,
+  .gg-writing-actions {
+    display: flex;
+    width: 100%;
+    max-width: none;
+    justify-content: stretch;
+    gap: 8px;
+    margin: 0 0 10px;
+    flex: 0 0 auto;
+  }
+
+  .gg-action-btn,
+  .lr-action-btn,
+  .ll-action-btn,
+  .gg-writing-btn {
+    flex: 1 1 0 !important;
+    width: 0 !important;
+    min-width: 0 !important;
+    min-height: 46px !important;
+    height: auto !important;
+    padding: 12px 10px !important;
+    border-radius: 12px !important;
+    border: 1px solid #eee !important;
+    background: #fff !important;
+    box-shadow: none !important;
+    color: #333 !important;
+    font-size: 14px !important;
+    font-weight: 500 !important;
+    transform: none !important;
+  }
+
+  .gg-action-buttons > .gg-action-btn,
+  .lr-action-buttons > .lr-action-btn,
+  .ll-action-buttons > .ll-action-btn,
+  .gg-writing-actions > .gg-writing-btn {
+    flex: 1 1 0% !important;
+    width: 0 !important;
+    min-width: 0 !important;
+    max-width: none !important;
+  }
+
+  .gg-action-btn:disabled,
+  .lr-action-btn:disabled,
+  .ll-action-btn:disabled,
+  .gg-writing-btn:disabled {
+    background: rgba(0, 0, 0, 0.15) !important;
+    border-color: rgba(0, 0, 0, 0.1) !important;
+    color: rgba(0, 0, 0, 0.4) !important;
+  }
+
+  .gg-help-btn,
+  .lr-vocab-btn,
+  .ll-vocab-btn,
+  .gg-weak-points-btn {
+    border-color: transparent !important;
+    background: linear-gradient(90deg, #e2bea9, #b8b0d3) !important;
+    color: #000 !important;
+  }
+
+  .gg-help-btn::before,
+  .lr-vocab-btn::before,
+  .ll-vocab-btn::before,
+  .gg-weak-points-btn::before {
+    display: none !important;
+    content: none !important;
+  }
+
+  .gg-help-btn:hover:not(:disabled),
+  .lr-vocab-btn:hover:not(:disabled),
+  .ll-vocab-btn:hover:not(:disabled),
+  .gg-weak-points-btn:hover:not(:disabled) {
+    background: linear-gradient(90deg, #e2bea9, #b8b0d3) !important;
+    transform: none !important;
+  }
+
+  .gg-fullscreen-btn,
+  .lr-fullscreen-btn,
+  .ll-fullscreen-btn {
+    display: none;
+  }
+
+  .gg-exercise-box,
+  .lr-exercise-box,
+  .ll-exercise-box,
+  .gg-writing-box {
+    flex: 1 1 auto;
+    width: 100%;
+    max-width: none;
+    height: auto;
+    min-height: 0;
+    margin: 0;
+    padding: 10px 0 20px;
+    border: 0;
+    border-radius: 0;
+    background: #fff;
+    box-shadow: none;
+    backdrop-filter: none;
+    overflow-y: auto;
+  }
+
+  .gg-writing-box {
+    padding: 0 0 20px;
+  }
+
+  .gg-lecture-content {
+    box-sizing: border-box;
+    width: 100%;
+    padding: 4px 12px;
+  }
+
+  .gg-empty-state,
+  .lr-empty-state,
+  .ll-empty-state {
+    min-height: 100%;
+    padding: 24px;
+    font-size: 16px;
+    opacity: 0.6;
+    text-align: center;
+  }
+
+  /* Shared daily-limit block — same look across all features (do not wash out the CTA) */
+  .gg-credit-limit-block {
+    min-height: 100%;
+    height: 100%;
+    width: 100%;
+    padding: 32px 24px;
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 1;
+  }
+
+  .gg-credit-limit-block-inner {
+    max-width: 340px;
+  }
+
+  .gg-limit-message {
+    gap: 20px;
+  }
+
+  .gg-limit-message-text {
+    font-size: 16px;
+    line-height: 1.5;
+    color: #333;
+    opacity: 0.85;
+  }
+
+  .gg-limit-upgrade-btn {
+    padding: 14px 28px;
+    font-size: 16px;
+    border-radius: 30px;
+    opacity: 1;
+  }
+
+  .gg-limit-hint {
+    font-size: 14px;
+    opacity: 0.6;
+  }
+
+  .gg-writing-box > .gg-credit-limit-block {
+    min-height: 100%;
+    padding: 24px;
+  }
+
+  .gg-loading,
+  .lr-loading,
+  .ll-loading {
+    min-height: 100%;
+  }
+
+  .gg-hint-bar,
+  .gg-speaking-hint-bar,
+  .lr-hint-bar,
+  .ll-hint-bar,
+  .gg-writing-hint-bar,
+  .gg-stats-hint-bar,
+  .lr-stats-hint-bar,
+  .ll-stats-hint-bar,
+  .lv-llm-box,
+  .gg-about-start-llm--fixed.lv-llm-box {
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    width: 100%;
+    max-width: none;
+    min-height: calc(100px + env(safe-area-inset-bottom, 0px));
+    margin: 0;
+    padding: 24px 32px calc(24px + env(safe-area-inset-bottom, 0px));
+    border: 0;
+    border-radius: 0;
+    background: #fff;
+    box-shadow: none;
+    backdrop-filter: none;
+    overflow: hidden;
+    z-index: 420;
+  }
+
+  .gg-about-start-llm--fixed.lv-llm-box {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .gg-hint-bar::before,
+  .gg-speaking-hint-bar::before,
+  .lr-hint-bar::before,
+  .ll-hint-bar::before,
+  .gg-writing-hint-bar::before,
+  .gg-stats-hint-bar::before,
+  .lr-stats-hint-bar::before,
+  .ll-stats-hint-bar::before,
+  .lv-llm-box::before {
+    inset: 0;
+    border-radius: 0;
+    background: linear-gradient(90deg, #e2bea9, #b8b0d3);
+    opacity: 0.8;
+    z-index: 0;
+  }
+
+  .gg-hint-content,
+  .gg-speaking-hint-content,
+  .lr-hint-content,
+  .ll-hint-content,
+  .gg-writing-hint-content,
+  .lv-llm-content {
+    width: 100%;
+    max-width: none;
+    color: #1a1a1a;
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 24px;
+    text-align: center;
+    justify-content: center;
+    position: relative;
+    z-index: 1;
+  }
+
+  .gg-hint-bar,
+  .gg-speaking-hint-bar,
+  .lr-hint-bar,
+  .ll-hint-bar,
+  .gg-writing:not(.gg-writing-stats-mode) .gg-writing-hint-bar,
+  .gg-practice:not(.gg-speaking-stats-mode) .gg-speaking-hint-bar {
+    position: relative;
+    left: auto;
+    right: auto;
+    bottom: auto;
+    flex: 0 0 auto;
+  }
+
+  .gg-stats,
+  .lr-stats,
+  .ll-stats {
+    --stats-chart-size: clamp(280px, 80vw, 400px);
+    flex: 1 1 auto;
+    width: 100%;
+    max-width: none;
+    min-height: 0;
+    height: calc(100dvh - 54px);
+    padding: 0 15px calc(120px + env(safe-area-inset-bottom, 0px));
+    background: #fff;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .gg-spider-wrapper,
+  .lr-spider-wrapper,
+  .ll-spider-wrapper {
+    max-width: var(--stats-chart-size);
+    width: var(--stats-chart-size);
+    position: static;
+    margin: 0 auto;
+  }
+
+  .gg-spider-chart,
+  .lr-spider-chart,
+  .ll-spider-chart {
+    width: var(--stats-chart-size);
+    max-width: var(--stats-chart-size);
+    overflow: visible;
+  }
+
+  .gg-axis-label,
+  .lr-axis-label,
+  .ll-axis-label {
+    font-size: 9px;
+  }
+
+  .gg-sheet-overlay,
+  .lr-sheet-overlay,
+  .ll-sheet-overlay,
+  .gg-roadmap-sheet-overlay {
+    position: fixed;
+    inset: 0;
+    background: transparent;
+    z-index: 700;
+  }
+
+  .gg-bottom-sheet,
+  .lr-bottom-sheet,
+  .ll-bottom-sheet,
+  .gg-roadmap-bottom-sheet {
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    width: auto;
+    max-width: 100vw;
+    box-sizing: border-box;
+    min-height: 70dvh;
+    max-height: 70dvh;
+    padding: 16px 16px calc(16px + env(safe-area-inset-bottom, 0px));
+    border: 0;
+    border-radius: 24px 24px 0 0;
+    background: #fff;
+    box-shadow: 0 -8px 20px rgba(0, 0, 0, 0.1);
+    z-index: 701;
+    overflow-x: hidden;
+  }
+
+  .gg-sheet-header,
+  .lr-sheet-header,
+  .ll-sheet-header,
+  .gg-roadmap-sheet-header {
+    padding: 0 10px;
+    margin-bottom: 20px;
+  }
+
+  .gg-sheet-title,
+  .lr-sheet-title,
+  .ll-sheet-title,
+  .gg-roadmap-sheet-title {
+    color: #1a1a1a;
+    font-size: 20px;
+    font-weight: 700;
+  }
+
+  .gg-topic-list,
+  .lr-topic-list,
+  .ll-topic-list,
+  .gg-roadmap-topic-list {
+    max-height: none;
+    padding-bottom: 30px;
+  }
+
+  .gg-bottom-sheet .gg-topic-list,
+  .gg-roadmap-bottom-sheet .gg-roadmap-topic-list {
+    display: grid;
+    gap: 0;
+    width: 100%;
+    max-width: 100%;
+    padding: 0 4px 30px;
+    margin: 0;
+    overflow-x: hidden;
+  }
+
+  .gg-topic-item,
+  .lr-topic-item,
+  .ll-topic-item,
+  .gg-roadmap-topic-item {
+    min-height: 0;
+    padding: 14px 0;
+    border-bottom: 1px solid #f5f5f5;
+    background: transparent;
+  }
+
+  .gg-bottom-sheet .gg-topic-item,
+  .gg-roadmap-bottom-sheet .gg-roadmap-topic-item {
+    min-height: 48px;
+    border-radius: 0;
+  }
+
+  .gg-topic-item > *,
+  .lr-topic-item > *,
+  .ll-topic-item > * {
+    border-radius: 14px;
+  }
+
+  .gg-topic-item.selected,
+  .lr-topic-item.selected,
+  .ll-topic-item.selected,
+  .gg-roadmap-topic-item.selected {
+    background: #f9f9ff;
+  }
+
+  .gg-bottom-sheet .gg-topic-item.selected,
+  .gg-roadmap-bottom-sheet .gg-roadmap-topic-item.selected {
+    background: transparent;
+  }
+
+  .gg-topic-title,
+  .lr-topic-title,
+  .ll-topic-title,
+  .gg-roadmap-topic-item-text {
+    color: #333;
+    font-size: 15px;
+  }
+
+  .gg-topic-item.selected .gg-topic-title,
+  .lr-topic-item.selected .lr-topic-title,
+  .ll-topic-item.selected .ll-topic-title,
+  .gg-roadmap-topic-item.selected .gg-roadmap-topic-item-text {
+    color: #6366f1;
+    font-weight: 600;
+  }
+
+}

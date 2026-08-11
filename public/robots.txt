@@ -1,0 +1,13 @@
+User-agent: *
+Allow: /
+Disallow: /api/
+Disallow: /admin/
+Disallow: /stats
+Disallow: /original
+Disallow: /*.json$
+
+# Sitemap location
+Sitemap: https://app.langey.com/sitemap.xml
+
+# Crawl delay
+Crawl-delay: 1

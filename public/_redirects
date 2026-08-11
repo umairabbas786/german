@@ -1,0 +1,7 @@
+# Redirect the legacy modules routes to the app homepage
+/modules      /   301
+/modules/*    /   301
+
+# Netlify redirects for SPA routing
+# This ensures all routes are handled by the React app
+/*    /index.html   200

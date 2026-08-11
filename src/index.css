@@ -1,0 +1,69 @@
+@import "tailwindcss";
+
+/*
+  Tailwind v4 coexistence: existing component CSS stays until migrated.
+  Next targets: Settings.css → App.css → skill modules (vocab → … → roadmap).
+  Done: CreditLimitBlock, Legal/Privacy, FeedbackPopup, CreditLimitBlockPopup, ModulesGuideTour (animations leftover).
+*/
+
+@theme {
+  --color-langey-ink: #1d1d1f;
+  --color-langey-secondary: #515154;
+  --color-langey-muted: #86868b;
+  --color-langey-surface: #ffffff;
+  --color-langey-canvas: #f0f1f2;
+  --color-langey-canvas-mid: #eceef0;
+  --color-langey-border: #e5e7eb;
+  --color-langey-success: #22c55e;
+  --color-langey-danger: #dc2626;
+  --color-langey-danger-soft: #ef4444;
+  --shadow-langey-sm: 0 2px 8px rgba(0, 0, 0, 0.04);
+  --shadow-langey-md: 0 8px 32px rgba(0, 0, 0, 0.08);
+  --shadow-langey-lg: 0 24px 64px rgba(0, 0, 0, 0.12);
+}
+
+:root {
+  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+  color: var(--color-langey-ink);
+  background-color: var(--color-langey-canvas);
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+a {
+  font-weight: 500;
+  color: inherit;
+  text-decoration: inherit;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  min-height: 100vh;
+  overflow-x: hidden;
+  color: var(--color-langey-ink);
+  background-color: var(--color-langey-canvas);
+}
+
+#root {
+  width: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+/* Hide scrollbar globally */
+::-webkit-scrollbar {
+  display: none;
+}
+
+html {
+  scrollbar-width: none;
+  /* Firefox */
+  -ms-overflow-style: none;
+  /* IE and Edge */
+}

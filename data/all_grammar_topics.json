@@ -1,0 +1,252 @@
+{
+  "A1": [
+    {
+      "Title": "Personal Pronouns (Nominative)",
+      "slug": "personal_pronouns_nominative"
+    },
+    {
+      "Title": "The Nominative Case & Articles",
+      "slug": "the_nominative_case_and_articles"
+    },
+    {
+      "Title": "Present Tense Regular Verbs",
+      "slug": "present_tense_regular_verbs"
+    },
+    {
+      "Title": "Strong Irregular Verbs",
+      "slug": "strong_irregular_verbs"
+    },
+    {
+      "Title": "Basic Sentence Structure",
+      "slug": "basic_sentence_structure"
+    },
+    {
+      "Title": "Question Formation (W-Fragen & Ja/Nein)",
+      "slug": "question_formation_w_fragen_and_ja_nein"
+    },
+    {
+      "Title": "Numbers & Telling Time",
+      "slug": "numbers_and_telling_time"
+    },
+    {
+      "Title": "Ordinal Numbers & Dates",
+      "slug": "ordinal_numbers_and_dates"
+    },
+    {
+      "Title": "Negation (Nicht vs. Kein)",
+      "slug": "negation_nicht_vs_kein"
+    },
+    {
+      "Title": "The Accusative Case & Articles",
+      "slug": "the_accusative_case_and_articles"
+    },
+    {
+      "Title": "Personal Pronouns (Accusative)",
+      "slug": "personal_pronouns_accusative"
+    },
+    {
+      "Title": "Accusative Prepositions",
+      "slug": "accusative_prepositions"
+    },
+    {
+      "Title": "The Dative Case & Articles",
+      "slug": "the_dative_case_and_articles"
+    },
+    {
+      "Title": "Personal Pronouns (Dative)",
+      "slug": "personal_pronouns_dative"
+    },
+    {
+      "Title": "Dative Prepositions",
+      "slug": "dative_prepositions"
+    },
+    {
+      "Title": "All Possessive Articles (Nom/Akk/Dat)",
+      "slug": "all_possessive_articles_nom_akk_dat"
+    },
+    {
+      "Title": "Modal Verbs",
+      "slug": "modal_verbs"
+    },
+    {
+      "Title": "Separable Verbs",
+      "slug": "separable_verbs"
+    },
+    {
+      "Title": "Coordinating Conjunctions",
+      "slug": "coordinating_conjunctions"
+    },
+    {
+      "Title": "The Imperative",
+      "slug": "the_imperative"
+    },
+    {
+      "Title": "Past Tense (Sein/Haben)",
+      "slug": "past_tense_sein_haben"
+    },
+    {
+      "Title": "Present Perfect Tense (Perfekt)",
+      "slug": "present_perfect_tense_perfekt"
+    }
+  ],
+  "A2": [
+    {
+      "Title": "Two-Way Prepositions",
+      "slug": "two_way_prepositions"
+    },
+    {
+      "Title": "Verbs with Two Objects",
+      "slug": "verbs_with_two_objects"
+    },
+    {
+      "Title": "Reflexive Verbs",
+      "slug": "reflexive_verbs"
+    },
+    {
+      "Title": "Verbs with Fixed Prepositions",
+      "slug": "verbs_with_fixed_prepositions"
+    },
+    {
+      "Title": "Da-Words and Wo-Words",
+      "slug": "da_words_and_wo_words"
+    },
+    {
+      "Title": "Subordinating Conjunctions",
+      "slug": "subordinating_conjunctions"
+    },
+    {
+      "Title": "Indirect Questions",
+      "slug": "indirect_questions"
+    },
+    {
+      "Title": "Temporal Conjunctions",
+      "slug": "temporal_conjunctions"
+    },
+    {
+      "Title": "Adverbial Connectors",
+      "slug": "adverbial_connectors"
+    },
+    {
+      "Title": "Infinitive Clauses",
+      "slug": "infinitive_clauses"
+    },
+    {
+      "Title": "Degrees of Comparison",
+      "slug": "degrees_of_comparison"
+    },
+    {
+      "Title": "Adjective Declension after Definite Articles",
+      "slug": "adjective_declension_after_definite_articles"
+    },
+    {
+      "Title": "Adjective Declension after Indefinite Articles",
+      "slug": "adjective_declension_after_indefinite_articles"
+    },
+    {
+      "Title": "Adjective Declension without Article",
+      "slug": "adjective_declension_without_article"
+    },
+    {
+      "Title": "Indefinite Pronouns",
+      "slug": "indefinite_pronouns"
+    },
+    {
+      "Title": "The Genitive Case",
+      "slug": "the_genitive_case"
+    },
+    {
+      "Title": "Relative Clauses",
+      "slug": "relative_clauses"
+    },
+    {
+      "Title": "Modal Verbs Simple Past",
+      "slug": "modal_verbs_simple_past"
+    },
+    {
+      "Title": "The Passive Voice",
+      "slug": "the_passive_voice"
+    }
+  ],
+  "B1": [
+    {
+      "Title": "Simple Past Tense (Pr\u00e4teritum)",
+      "slug": "simple_past_tense_pr\u00e4teritum"
+    },
+    {
+      "Title": "The Past Perfect (Plusquamperfekt)",
+      "slug": "the_past_perfect_plusquamperfekt"
+    },
+    {
+      "Title": "Temporal Conjunctions (nachdem, bevor, seitdem)",
+      "slug": "temporal_conjunctions_nachdem_bevor_seitdem"
+    },
+    {
+      "Title": "The Future Tense (Futur I)",
+      "slug": "the_future_tense_futur_i"
+    },
+    {
+      "Title": "Genitive Prepositions",
+      "slug": "genitive_prepositions"
+    },
+    {
+      "Title": "n-Deklination (Weak Nouns)",
+      "slug": "n_deklination_weak_nouns"
+    },
+    {
+      "Title": "Purpose Clauses (damit vs. um... zu)",
+      "slug": "purpose_clauses_damit_vs_um_zu"
+    },
+    {
+      "Title": "Infinitive Clauses (ohne... zu, anstatt... zu)",
+      "slug": "infinitive_clauses_ohne_zu_anstatt_zu"
+    },
+    {
+      "Title": "Two-Part Connectors",
+      "slug": "two_part_connectors"
+    },
+    {
+      "Title": "Comparative Connectors (Je... desto...)",
+      "slug": "comparative_connectors_je_desto"
+    },
+    {
+      "Title": "Participles as Adjectives",
+      "slug": "participles_as_adjectives"
+    },
+    {
+      "Title": "Dative Relative Clauses",
+      "slug": "dative_relative_clauses"
+    },
+    {
+      "Title": "Genitive Relative Clauses",
+      "slug": "genitive_relative_clauses"
+    },
+    {
+      "Title": "Advanced Relative Clauses (Prepositions & was/wo)",
+      "slug": "advanced_relative_clauses_prepositions_and_was_wo"
+    },
+    {
+      "Title": "Konjunktiv II (Present)",
+      "slug": "konjunktiv_ii_present"
+    },
+    {
+      "Title": "Konjunktiv II in the Past",
+      "slug": "konjunktiv_ii_in_the_past"
+    },
+    {
+      "Title": "The Passive Voice in the Past",
+      "slug": "the_passive_voice_in_the_past"
+    },
+    {
+      "Title": "State Passive (Zustandspassiv)",
+      "slug": "state_passive_zustandspassiv"
+    },
+    {
+      "Title": "Directional Adverbs (hin und her)",
+      "slug": "directional_adverbs_hin_und_her"
+    },
+    {
+      "Title": "Alternative Verb Constructions",
+      "slug": "alternative_verb_constructions"
+    }
+  ]
+}
